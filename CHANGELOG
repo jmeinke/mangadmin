@@ -1,0 +1,31 @@
+/***********************************************/
+/**************MangAdmin ChangeLog**************/
+/***********************************************/
+
+  Official : http://mangadmin.all-mag.de
+ Subversion: http://mangadmin.googlecode.com/svn/
+
+/***********************************************/
+
+Rev. 2:
+  - french translation added, thanks to luciolis
+
+Rev. 1:
+  - initial import
+  - logo/header made
+  - new design and layout
+  - menu handling and log functions
+  - FrameLib initial import
+  - added Libraries:
+    |- AceLibrary
+    |- AceOO-2.0
+    |- AceDB-2.0
+    |- AceHook-2.1
+    |- DewDrop-2.0
+    |- AceAddon-2.0
+    |- AceLocale-2.2
+    |- AceConsole-2.0
+    |- FrameLib-1.0
+    |- Tablet-2.0
+    |- Graph-1.0
+    |- FuBarPlugin-2.0
