@@ -1,21 +1,21 @@
 local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 
 L:RegisterTranslations("frFR", function() return {
-	["slashcmds"] = { "/mangadmin", "/ma" },
-	["lang"] = "Francais",
-	["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player"),
-	["favourites"] = "Favorits",
-	["tabmenu_Main"] = "Main",
-	["tabmenu_Char"] = "Charackter",
-	["tabmenu_Tele"] = "Teleport",
-	["tabmenu_Ticket"] = "Ticketsystem",
-	["tabmenu_Server"] = "Serveur",
-	["tabmenu_Log"] = "Log",
-	["tt_Default"] = "Move your cursor over an element to toggle the tooltip!",
-	["tt_MainButton"] = "Click this button to toggle MangAdmins Mainframe.",
-	["tt_CharButton"] = "Todo.",
-	["tt_TeleButton"] = "Todo.",
-	["tt_TicketButton"] = "Todo.",
-	["tt_ServerButton"] = "Klicke diesen Button um ein Fenster mit Informationen über den Server des aktuellen Realms anzuzeigen.",
-	["tt_LogButton"] = "Klicke diesen Button um ein Fenster mit einem Protokoll aller bisher ausgeführten Aktionen von MangAdmin anzuzeigen."
+["slashcmds"] = { "/mangadmin", "/ma" },
+["lang"] = "Francais",
+["logged"] = "|cFF00FF00Royaume:|r "..GetCVar("realmName").." |cFF00FF00Personnage:|r "..UnitName("player"),
+["favourites"] = "Favoris",
+["tabmenu_Main"] = "Accueil",
+["tabmenu_Char"] = "Personnage",
+["tabmenu_Tele"] = "Teleportations",
+["tabmenu_Ticket"] = "Système de support",
+["tabmenu_Server"] = "Serveur",
+["tabmenu_Log"] = "Log",
+["tt_Default"] = "Déplacez votre curseur sur une icône pour activer l'outil correspondant.",
+["tt_MainButton"] = "Cliquez sur ce bouton pour activer la page de garde.",
+["tt_CharButton"] = "Todo.",
+["tt_TeleButton"] = "Todo.",
+["tt_TicketButton"] = "Todo.",
+["tt_ServerButton"] = "Cliquez sur ce bouton pour avoir des infomations sur le serveur.",
+["tt_LogButton"] = "Cliquez sur ce bouton pour accéder au protocole de gestion des enchères."
 } end)
