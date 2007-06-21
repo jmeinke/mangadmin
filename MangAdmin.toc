@@ -2,21 +2,21 @@
 ## Title: MangAdmin
 ## Version: 1.0
 ## Author(s): Josh (josh@all-mag.de)
-## Inspired By: The earlier version of MangAdmin by Athrus
+## Inspired By: Athrus
 ## Website: http://mangadmin.all-mag.de
 ## Documentation: http://mangadmin.all-mag.de
 ## DefaultState: Enabled
 ## OptionalDeps: Ace2
-## Notes: Get your MaNGOS-Realm managed... With this tool you gonna rule!
-## License: LGPL v2.1
-## SavedVariables: MangAdminDatabase
-## SavedVariablesPerCharacter: MangAdminDatabasePerChar
+## Notes: MaNGOS Administrator
+## License: GNU General Public License 2.0
+## SavedVariables: MangAdminDb
+## SavedVariablesPerCharacter: MangAdminDbPC
 
 Libraries\AceLibrary\AceLibrary.lua
 Libraries\AceOO-2.0\AceOO-2.0.lua
 Libraries\AceDB-2.0\AceDB-2.0.lua
 Libraries\AceHook-2.1\AceHook-2.1.lua
-Libraries\DewDrop-2.0\DewDrop-2.0.lua
+## Libraries\DewDrop-2.0\DewDrop-2.0.lua
 Libraries\AceAddon-2.0\AceAddon-2.0.lua
 Libraries\AceLocale-2.2\AceLocale-2.2.lua
 Libraries\AceConsole-2.0\AceConsole-2.0.lua
@@ -28,6 +28,9 @@ Libraries\FuBarPlugin-2.0\FuBarPlugin-2.0.lua
 Locales\enUS.lua
 Locales\deDE.lua
 Locales\frFR.lua
+Locales\fiFI.lua
+Locales\plPL.lua
+Locales\svSV.lua
 
 MangFrames.lua
 MangAdmin.lua

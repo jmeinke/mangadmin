@@ -2,7 +2,7 @@
 
 L:RegisterTranslations("deDE", function() return {
 	["slashcmds"] = { "/mangadmin", "/ma" },
-	["lang"] = "Deutsch",
+	["lang"] = "German",
 	["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player"),
 	["favourites"] = "Favoriten",
 	["tabmenu_Main"] = "Main",

@@ -1,3 +1,4 @@
+-- english by Josh
 local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 
 L:RegisterTranslations("enUS", function() return {
@@ -16,6 +17,6 @@ L:RegisterTranslations("enUS", function() return {
 	["tt_CharButton"] = "Todo.",
 	["tt_TeleButton"] = "Todo.",
 	["tt_TicketButton"] = "Todo.",
-	["tt_ServerButton"] = "Klicke diesen Button um ein Fenster mit Informationen über den Server des aktuellen Realms anzuzeigen.",
-	["tt_LogButton"] = "Klicke diesen Button um ein Fenster mit einem Protokoll aller bisher ausgeführten Aktionen von MangAdmin anzuzeigen."
+	["tt_ServerButton"] = "Click this button to show several server informations and do actions concerning the server.",
+	["tt_LogButton"] = "Click this button to show the log of all actions done with MangAdmin."
 } end)
