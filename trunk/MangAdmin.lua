@@ -17,12 +17,12 @@ local MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0",
 local FrameLib   = AceLibrary("FrameLib-1.0")
 
 MangAdmin:RegisterChatCommand(Locale["slashcmds"], opts)
-MangAdmin:RegisterDB("MangAdminDatabase", "MangAdminDatabasePerChar")
+MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
+Locale:EnableDynamicLocales(true)
 
 function MangAdmin:OnInitialize()
 	-- prepare buttons and tooltips
 	self:PrepareButtons()
-	-- setIcon(path) and Tooltip
 	self.hasNoColor = true
 	self.hasNoText = false
 	self.clickableTooltip = true
@@ -41,16 +41,10 @@ function MangAdmin:OnEnable()
 	self:UpdateText()
 end
 
-function MangAdmin:OnTextUpdate()
-  self:SetText("You have 1223 new ticket requests!")
-end
-
 function MangAdmin:OnClick()
 	if ma_bgframe:IsVisible() then 
-		-- StopMusic()
 		FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
 	else
-		-- PlayMusic("Interface\\AddOns\\MangAdmin\\Sounds\\about.mp3")
 		FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
 	end
 end
@@ -74,6 +68,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
 end
 
 function MangAdmin:PrepareButtons()
+  --here the navigating and tooltip functions are added to the buttons 
 	local function preScript(object, text, onclick)
 		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
 		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
@@ -90,6 +85,7 @@ function MangAdmin:PrepareButtons()
 end
 
 function MangAdmin:ToggleTabButton(btn)
+  --this modifies the look of tab buttons when clocked on them 
 	FrameLib:HandleGroup("tabbuttons", 
 	function(button) 
 		if button:GetName() == btn then
@@ -102,17 +98,20 @@ end
 
 function MangAdmin:ToggleContentGroup(group)
 	self:LogAction("Toggled navigation point '"..group.."'")
-	--FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
+  self:HideAllGroups()
+	FrameLib:HandleGroup(group, function(frame) frame:Show() end)
+end
+
+function MangAdmin:HideAllGroups()
+  --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
 	FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
 	FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
-	FrameLib:HandleGroup(group, function(frame) frame:Show() end)
 end
 
 function MangAdmin:LogAction(msg)
-	local down, up, lag = GetNetStats();
 	ma_logframe:AddMessage("|cFF00FF00["..date("%H:%M:%S").."]|r "..msg, 1.0, 1.0, 0.0)
 end
 

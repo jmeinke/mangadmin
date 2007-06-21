@@ -1,8 +1,9 @@
+-- french by luciolis
 local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 
 L:RegisterTranslations("frFR", function() return {
 ["slashcmds"] = { "/mangadmin", "/ma" },
-["lang"] = "Francais",
+["lang"] = "French",
 ["logged"] = "|cFF00FF00Royaume:|r "..GetCVar("realmName").." |cFF00FF00Personnage:|r "..UnitName("player"),
 ["favourites"] = "Favoris",
 ["tabmenu_Main"] = "Accueil",

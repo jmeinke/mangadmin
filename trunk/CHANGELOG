@@ -6,6 +6,14 @@
  Subversion: http://mangadmin.googlecode.com/svn/
 
 /***********************************************/
+Rev. 3:
+  - fixed a few bugs
+  - added languages:
+    |- Finnish, thanks to Seizer
+    |- Swedish, thanks to dxers
+    |- Polish, thanks to gerard
+  - a language switcher comes with the next revision, no time now
+  - updated the libraries
 
 Rev. 2:
   - french translation added, thanks to luciolis

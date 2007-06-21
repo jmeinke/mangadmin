@@ -1,5 +1,5 @@
-local FrameLib = AceLibrary("FrameLib-1.0")
 local Locale   = AceLibrary("AceLocale-2.2"):new("MangAdmin")
+local FrameLib = AceLibrary("FrameLib-1.0")
 local Graph    = AceLibrary("Graph-1.0")
 -- Create the MangAdmin Frames with lua, so we need no xml at all
 
@@ -310,6 +310,14 @@ FrameLib:BuildButton({
 })
 
 -- [[ Group Elements ]]
+--[[ MAIN
+FrameLib:BuildFrame({
+	type = "ScrollingMessageFrame",
+	name = "ma_speedslider",
+	group = "main",
+	parent = ma_midframe,]]
+  
+
 -- LOG
 FrameLib:BuildFrame({
 	type = "ScrollingMessageFrame",
@@ -368,7 +376,6 @@ FrameLib:BuildButton({
 })
 
 --SERVER
-
 FrameLib:BuildFrame({
 	name = "ma_graphframe",
 	group = "server",
@@ -389,17 +396,24 @@ FrameLib:BuildFrame({
 })
 
 local down, up, lag = GetNetStats();
+--[[local Graph=AceLibrary("Graph-1.0")
+g=Graph:CreateGraphLine("ma_netstatframe",ma_graphframe,"LEFT","LEFT",-1,-1,150,150)
+g:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+g:SetBackdropColor(0,0,0,0.5);
+local Data1={{0.05,0.05},{0.2,0.3},{0.4,0.2},{0.9,0.6}}
+local Data2={{0.05,0.8},{0.3,0.1},{0.5,0.4},{0.95,0.05}}
+g:AddDataSeries(Data1,{1.0,0.0,0.0,0.8})
+g:AddDataSeries(Data2,{0.0,1.0,0.0,0.8})]]
+
 local Graph=AceLibrary("Graph-1.0")
-local g = Graph:CreateGraphLine("ma_netstatframe",ma_graphframe,"LEFT","LEFT",1,-1,150,150)
-g:SetAutoScale(true)
-g:SetGridSpacing(1.0,10.0)
-g:SetYMax(120)
-g:SetXAxis(-11,-1)
-g:SetFilterRadius(1)
-g:SetBarColors({0.2,0.0,0.0,0.4},{1.0,0.0,0.0,1.0})
-ma_graphframe:SetScript("OnUpdate",function() g:AddTimeData(lag) end)
+g=Graph:CreateGraphRealtime("ma_netstatframe",ma_graphframe,"CENTER","CENTER",0,0,150,150)
+f = CreateFrame("Frame",name,ma_netstatframe)
+f:SetScript("OnUpdate",function() g:AddTimeData(1) end)
+f:Show()
 
 
-FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+
+--FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+--FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
 FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
 FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
