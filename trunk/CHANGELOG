@@ -10,6 +10,7 @@ Rev. 5:
   - added italian language, thanks to hybrid1907
 
 Rev. 4:
+  - added better finnish, thanks to Lone
   - added better polish translation, thanks to sahib
   - converted language files to be display characters without errors
   - added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
