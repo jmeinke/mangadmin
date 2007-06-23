@@ -6,7 +6,7 @@ Website: http://mangadmin.all-mag.de/
 Documentation: http://mangadmin.all-mag.de
 Description: Library for addons to use frame/GUI functions
 Dependencies: AceLibrary
-License: LGPL v2.1
+License: GNU 2.0
 ]]
 
 local MAJOR_VERSION = "FrameLib-1.0"

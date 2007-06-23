@@ -6,6 +6,15 @@
  Subversion: http://mangadmin.googlecode.com/svn/
 
 /***********************************************/
+Rev. 4:
+  - added better polish translation, thanks to sahib
+  - converted language files to be display characters without errors
+  - added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
+  - added a toggle gm button
+  - fixed much errors
+  - cleaned up code a bit
+  - sorry forgot language switcher today, comes later
+  
 Rev. 3:
   - fixed a few bugs
   - added languages:
