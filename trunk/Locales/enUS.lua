@@ -18,5 +18,7 @@ L:RegisterTranslations("enUS", function() return {
 	["tt_TeleButton"] = "Todo.",
 	["tt_TicketButton"] = "Todo.",
 	["tt_ServerButton"] = "Click this button to show several server informations and do actions concerning the server.",
-	["tt_LogButton"] = "Click this button to show the log of all actions done with MangAdmin."
+	["tt_LogButton"] = "Click this button to show the log of all actions done with MangAdmin.",
+  ["tt_ToogleGMButton"] = "Click this button to toggle the GameMaster mode.",
+  ["ma_tooglegmbutton"] = "Toggle GM"
 } end)

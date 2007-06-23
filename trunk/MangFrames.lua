@@ -310,12 +310,26 @@ FrameLib:BuildButton({
 })
 
 -- [[ Group Elements ]]
---[[ MAIN
-FrameLib:BuildFrame({
-	type = "ScrollingMessageFrame",
-	name = "ma_speedslider",
+-- MAIN
+FrameLib:BuildButton({
+	name = "ma_tooglegmbutton",
 	group = "main",
-	parent = ma_midframe,]]
+	parent = ma_midframe,
+	texture = {
+		name = "ma_tooglegmbutton_texture",
+		color = {33,164,210,1.0}
+	},
+	size = {
+		width = 80,
+		height = 20
+	},
+	setpoint = {
+		pos = "TOPRIGHT",
+		offX = -2,
+		offY = -2
+	},
+	text = Locale["ma_tooglegmbutton"]
+})
   
 
 -- LOG

@@ -4,19 +4,21 @@ local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 L:RegisterTranslations("svSV", function() return {
   ["slashcmds"] = { "/mangadmin", "/ma" },
   ["lang"] = "Svenska",
-  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Karaktär:|r "..UnitName("player"),
+  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Karakt\195\164r:|r "..UnitName("player"),
   ["favourites"] = "Favoriter",
   ["tabmenu_Main"] = "Huvudmeny",
-  ["tabmenu_Char"] = "Karaktärer",
+  ["tabmenu_Char"] = "Karakt\195\164rer",
   ["tabmenu_Tele"] = "Teleportering",
   ["tabmenu_Ticket"] = "Biljett system",
   ["tabmenu_Server"] = "Server",
   ["tabmenu_Log"] = "Log",
-  ["tt_Default"] = "Flytta din muspekare över ett element för att aktivera tooltipen!",
-  ["tt_MainButton"] = "Tryck på den här knappen för att visa MangAdmin huvudmeny.",
+  ["tt_Default"] = "Flytta din muspekare \195\182ver ett element f\195\182r att aktivera tooltipen!",
+  ["tt_MainButton"] = "Tryck på den h\195\164r knappen f\195\182r att visa MangAdmin huvudmeny.",
   ["tt_CharButton"] = "Inte klart.",
   ["tt_TeleButton"] = "Inte klar.",
   ["tt_TicketButton"] = "Inte klart.",
-  ["tt_ServerButton"] = "Tryck på den här knappen för att öppna ett fönster med information om servern på den aktuella realmen.",
-  ["tt_LogButton"] = "Tryck på den här knappen för att öppna ett protokoll över allting som du/MangAdmin har gjort än så länge."
+  ["tt_ServerButton"] = "Tryck på den h\195\164r knappen f\195\182r att \195\182ppna ett f\195\182nster med information om servern på den aktuella realmen.",
+  ["tt_LogButton"] = "Tryck på den h\195\164r knappen f\195\182r att \195\182ppna ett protokoll \195\182ver allting som du/MangAdmin har gjort \195\164n så l\195\164nge.",
+  ["tt_ToogleGMButton"] = "Click this button to toggle the GameMaster mode.",
+  ["ma_tooglegmbutton"] = "Toggle GM"
 } end)
