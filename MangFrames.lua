@@ -158,6 +158,22 @@ FrameLib:BuildFontString({
 	}
 })
 
+--[[FrameLib:BuildFrame({
+	name = "ma_languagedropdown",
+	group = "bg",
+	parent = ma_topframe,
+	size = {
+		width = 80,
+		height = 20
+	},
+	setpoint = {
+		pos = "TOPRIGHT",
+		offX = -90,
+    offY = -10
+	},
+	inherits = "UIDropDownMenuTemplate"
+})]]
+
 -- [[ Tab Buttons ]]
 FrameLib:BuildButton({
 	name = "ma_mainbutton",
@@ -312,11 +328,11 @@ FrameLib:BuildButton({
 -- [[ Group Elements ]]
 -- MAIN
 FrameLib:BuildButton({
-	name = "ma_tooglegmbutton",
+	name = "ma_togglegmbutton",
 	group = "main",
 	parent = ma_midframe,
 	texture = {
-		name = "ma_tooglegmbutton_texture",
+		name = "ma_togglegmbutton_texture",
 		color = {33,164,210,1.0}
 	},
 	size = {
@@ -325,10 +341,30 @@ FrameLib:BuildButton({
 	},
 	setpoint = {
 		pos = "TOPRIGHT",
-		offX = -2,
-		offY = -2
+		offX = -4,
+		offY = -4
 	},
-	text = Locale["ma_tooglegmbutton"]
+	text = Locale["ma_ToggleGMButton"]
+})
+
+FrameLib:BuildButton({
+	name = "ma_toggleflybutton",
+	group = "main",
+	parent = ma_midframe,
+	texture = {
+		name = "ma_toggleflybutton_texture",
+		color = {33,164,210,1.0}
+	},
+	size = {
+		width = 80,
+		height = 20
+	},
+	setpoint = {
+		pos = "TOPRIGHT",
+		offX = -4,
+		offY = -28
+	},
+	text = Locale["ma_ToggleFlyButton"]
 })
   
 

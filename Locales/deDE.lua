@@ -4,7 +4,8 @@ local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 L:RegisterTranslations("deDE", function() return {
   ["slashcmds"] = { "/mangadmin", "/ma" },
   ["lang"] = "German",
-  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player"),
+  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
+  ["charguid"] = "|cFF00FF00Guid:|r ",
   ["favourites"] = "Favoriten",
   ["tabmenu_Main"] = "Main",
   ["tabmenu_Char"] = "Charackter",
@@ -19,6 +20,9 @@ L:RegisterTranslations("deDE", function() return {
   ["tt_TicketButton"] = "Todo.",
   ["tt_ServerButton"] = "Klicke diesen Button um ein Fenster mit Informationen \195\188ber den Server des aktuellen Realms anzuzeigen.",
   ["tt_LogButton"] = "Klicke diesen Button um ein Fenster mit einem Protokoll aller bisher ausgef\195\188hrten Aktionen von MangAdmin anzuzeigen.",
-  ["tt_ToogleGMButton"] = "Klicke diesen Button um dich als GM anzeigen zu lassen.",
-  ["ma_tooglegmbutton"] = "Toggle GM"
+  ["tt_LanguageDropdown"] = "Klicke diesen Button um die Sprache des Addons neu einzustellen.",
+  ["tt_ToggleGMButton"] = "Klicke diesen Button um den GameMaster-Modus zu aktivieren oder zu deaktivieren.",
+  ["tt_ToggleFlyButton"] = "Klicke diesen Button um den Flug-Modus zu aktivieren oder zu deaktivieren.",
+  ["ma_ToggleGMButton"] = "GM-Modus",
+  ["ma_ToggleFlyButton"] = "Fly-Modus"
 } end)
