@@ -4,7 +4,8 @@ local L = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 L:RegisterTranslations("plPL", function() return {
   ["slashcmds"] = { "/mangadmin", "/ma" },
   ["lang"] = "Polish",
-  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player"),
+  ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
+  ["charguid"] = "|cFF00FF00Guid:|r ",
   ["favourites"] = "Ulubione",
   ["tabmenu_Main"] = "Gl\195\179wna",
   ["tabmenu_Char"] = "Postac",
@@ -19,6 +20,9 @@ L:RegisterTranslations("plPL", function() return {
   ["tt_TicketButton"] = "Todo.",
   ["tt_ServerButton"] = "Nacisnij przycisk, aby wyswietlic informacje o serwerze i przeprowadzic na nim operacje.",
   ["tt_LogButton"] = "Nacisnij przycisk, aby zobaczyc historie operacji wykonanych przez MangAdmin.",
-  ["tt_ToogleGMButton"] = "Click this button to toggle the GameMaster mode.",
-  ["ma_tooglegmbutton"] = "Toggle GM"
+  ["tt_LanguageDropdown"] = "Clickthis button to change MangAdmins language.",
+  ["tt_ToggleGMButton"] = "Click this button to toggle GM-mode.",
+  ["tt_ToggleFlyButton"] = "Click this button to toggle Fly-mode",
+  ["ma_ToggleGMButton"] = "GM-mode",
+  ["ma_ToggleFlyButton"] = "Fly-mode"
 } end)

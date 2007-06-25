@@ -106,7 +106,7 @@ function FrameLib:BuildFrame(def)
 		if t then frame:SetMinResizeBounds(t[1] or t.width,t[2] or t.height) end
 		t = def.resizableMaxBounds
 		if t then frame:SetMaxResizeBounds(t[1] or t.width,t[2] or t.height) end
-	end	
+	end
 	t = def.frameStrata
 	if t then frame:SetFrameStrata(t) end	
 	t = def.frameLevel
@@ -125,10 +125,6 @@ function FrameLib:BuildFrame(def)
 		frame:SetJustifyH(def.justify.h or "LEFT")
 		frame:SetJustifyV(def.justify.v or "TOP")
 		frame:SetMaxLines(def.maxLines or 1000000)
-		if def.scrollMouseWheel then
-			frame:EnableMouseWheel(true)
-			frame:SetScript("OnMouseWheel", function(arg1) if arg1 == '1' then frame:ScrollUp() elseif arg1 == '-1' then frame:ScrollDown() end end)
-		end
 	end
 	return frame
 end
@@ -225,6 +221,7 @@ function FrameLib:BuildFontString(def)
 	if def.text then fontstr:SetText(def.text) end
 	return fontstr
 end
+
 
 --maybe not going--
 

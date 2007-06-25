@@ -2,15 +2,30 @@
 /**************MangAdmin ChangeLog**************/
 /***********************************************/
 
-  Official : http://mangadmin.all-mag.de
+ Official  : http://mangadmin.all-mag.de
+ Google    : http://code.google.com/p/mangadmin/
  Subversion: http://mangadmin.googlecode.com/svn/
 
 /***********************************************/
+Rev. 6:
+  - few changes to translations
+  - removed MaNGOS .togglegm patch from Rev. 4 because it was rejected and won't be applied to MaNGOS svn,
+    for details look here: http://www.mangosproject.org/forum/index.php?showtopic=13397
+  - fixed few typos
+  - partly implemented language switcher, not yet usable
+  - restructuring, optimizing and commenting of nearly all code in MangAdmin.lua
+  - added hooking function: GetValueCallHandler
+  - added function ordering list, to garantee that functions added in the future, 
+    using the same .getvalue request are handled in the right order
+  - sorry the fly mode button does only deactivate fly mode if you are flying, this will be fixed later
+  - there are several optimization changes todo before I can start implementing real usable ingame functions,
+    so please be patient! ty
+  
 Rev. 5:
   - added italian language, thanks to hybrid1907
 
 Rev. 4:
-  - added better finnish, thanks to Lone
+  - added better finnish translation, thanks to Lone
   - added better polish translation, thanks to sahib
   - converted language files to be display characters without errors
   - added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
