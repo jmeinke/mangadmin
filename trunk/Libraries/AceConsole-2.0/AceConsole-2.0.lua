@@ -1,6 +1,6 @@
 --[[
 Name: AceConsole-2.0
-Revision: $Rev: 39326 $
+Revision: $Rev: 42014 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -14,7 +14,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceConsole-2.0"
-local MINOR_VERSION = "$Revision: 39326 $"
+local MINOR_VERSION = "$Revision: 42014 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -517,12 +517,15 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 	for i = 1, index - 1 do
 		path = path .. " " .. tostring(work[i])
 	end
+
+	local passValue = options.passValue or (passTable and work[index-1])
+	passTable = passTable or options
 	
 	if type(options.args) == "table" then
 		local disabled, hidden = options.disabled, options.cmdHidden or options.hidden
 		if hidden then
 			if type(hidden) == "function" then
-				hidden = hidden(options.passValue or passTable and work[index - 1])
+				hidden = hidden(passValue)
 			elseif type(hidden) == "string" then
 				local handler = options.handler or self
 				local f = hidden
@@ -533,7 +536,7 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 				if type(handler[f]) ~= "function" then
 					AceConsole:error("%s: %s", handler, OPTION_HANDLER_NOT_FOUND:format(tostring(f)))
 				end
-				hidden = handler[f](handler, options.passValue or passTable and work[index - 1])
+				hidden = handler[f](handler, passValue)
 				if neg then
 					hidden = not hidden
 				end
@@ -543,7 +546,7 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 			disabled = true
 		elseif disabled then
 			if type(disabled) == "function" then
-				disabled = disabled(options.passValue or passTable and work[index - 1])
+				disabled = disabled(passValue)
 			elseif type(disabled) == "string" then
 				local handler = options.handler or self
 				local f = disabled
@@ -554,7 +557,7 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 				if type(handler[f]) ~= "function" then
 					AceConsole:error("%s: %s", handler, OPTION_HANDLER_NOT_FOUND:format(tostring(f)))
 				end
-				disabled = handler[f](handler, options.passValue or passTable and work[index - 1])
+				disabled = handler[f](handler, passValue)
 				if neg then
 					disabled = not disabled
 				end
@@ -581,7 +584,7 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 						good = true
 					end
 					if good then
-						return findTableLevel(options.handler or self, v, chat, text, index + 1, options.pass and options or nil)
+						return findTableLevel(options.handler or self, v, chat, text, index + 1, options.pass and (passTable or options))
 					end
 				end
 			end
@@ -590,7 +593,7 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 	for i = index, #work do
 		table.insert(argwork, work[i])
 	end
-	return options, path, argwork, options.handler or self, passTable, options.passValue or passTable and work[index - 1]
+	return options, path, argwork, options.handler or self, passTable, passValue
 end
 
 local function validateOptionsMethods(self, options, position)
@@ -1332,7 +1335,7 @@ local function printUsage(self, handler, realOptions, options, path, args, passV
 					if v.passValue then
 						passValue = v.passValue
 					end
-					local k = k:gsub("%s", "-")
+					local k = tostring(k):gsub("%s", "-")
 					local disabled = v.disabled
 					if disabled then
 						if type(disabled) == "function" then

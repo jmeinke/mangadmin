@@ -1,6 +1,6 @@
 --[[
 Name: AceModuleCore-2.0
-Revision: $Rev: 38546 $
+Revision: $Rev: 42442 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceModuleCore-2.0"
-local MINOR_VERSION = "$Revision: 38546 $"
+local MINOR_VERSION = "$Revision: 42442 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -33,7 +33,9 @@ local AceModuleCore = AceOO.Mixin {
 									"GetModule",
 									"IsModule",
 									"IterateModules",
-									"SetModuleMixins", 
+									"IterateModulesWithMethod",
+									"CallMethodOnAllModules",
+									"SetModuleMixins",
 									"SetModuleClass",
 									"IsModuleActive",
 									"ToggleModuleActive",
@@ -71,6 +73,7 @@ do
 end
 
 local iterList = setmetatable({}, {__mode='v'})
+local modulesWithMethod = setmetatable({}, {__mode='kv'})
 do
 	local function func(t)
 		local i = t.i + 1
@@ -98,6 +101,39 @@ do
 		t.i = 0
 		t.l = list
 		return func, t, nil
+	end
+	
+	function AceModuleCore:IterateModulesWithMethod(method)
+		local masterList = modulesWithMethod[self]
+		if not masterList then
+			masterList = new()
+			modulesWithMethod[self] = masterList
+		end
+		local list = masterList[method]
+		if not list then
+			list = new()
+			for k, v in pairs(self.modules) do
+				if type(v[method]) == "function" then
+					list[#list+1] = k
+				end
+			end
+			table.sort(list)
+			list.m = self.modules
+			masterList[method] = list
+		end
+		local t = new()
+		t.i = 0
+		t.l = list
+		return func, t, nil
+	end
+	
+	function AceModuleCore:CallMethodOnAllModules(method, ...)
+		for name, module in self:IterateModulesWithMethod(method) do
+			local success, ret = pcall(module[method], module, ...)
+			if not success then
+				geterrorhandler(ret)
+			end
+		end
 	end
 end
 
@@ -143,6 +179,12 @@ function AceModuleCore:NewModule(name, ...)
 	module.title = name
 
 	AceModuleCore.totalModules[module] = self
+	
+	if modulesWithMethod[self] then
+		for k,v in pairs(modulesWithMethod[self]) do
+			modulesWithMethod[self] = del(v)
+		end
+	end
 	
 	if type(self.OnModuleCreated) == "function" then
 		safecall(self.OnModuleCreated, self, name, module)
@@ -477,6 +519,12 @@ function AceModuleCore:Ace2_AddonEnabled(module, first)
 	if not addon then
 		return
 	end
+	
+	if modulesWithMethod[addon] then
+		for k,v in pairs(modulesWithMethod[addon]) do
+			modulesWithMethod[addon] = del(v)
+		end
+	end
 	if type(addon.OnModuleEnable) == "function" then
 		safecall(addon.OnModuleEnable, addon, module, first)
 	end
@@ -486,6 +534,12 @@ function AceModuleCore:Ace2_AddonDisabled(module)
 	local addon = self.totalModules[module]
 	if not addon then
 		return
+	end
+	
+	if modulesWithMethod[addon] then
+		for k,v in pairs(modulesWithMethod[addon]) do
+			modulesWithMethod[addon] = del(v)
+		end
 	end
 	if type(addon.OnModuleDisable) == "function" then
 		safecall(addon.OnModuleDisable, addon, module)

@@ -1,6 +1,6 @@
 --[[
 Name: AceDB-2.0
-Revision: $Rev: 39076 $
+Revision: $Rev: 42013 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceDB-2.0"
-local MINOR_VERSION = "$Revision: 39076 $"
+local MINOR_VERSION = "$Revision: 42013 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -26,6 +26,11 @@ local function safecall(func,...)
 end
 
 local ACTIVE, ENABLED, STATE, TOGGLE_ACTIVE, MAP_ACTIVESUSPENDED, SET_PROFILE, SET_PROFILE_USAGE, PROFILE, PLAYER_OF_REALM, CHOOSE_PROFILE_DESC, CHOOSE_PROFILE_GUI, COPY_PROFILE_DESC, COPY_PROFILE_GUI, OTHER_PROFILE_DESC, OTHER_PROFILE_GUI, OTHER_PROFILE_USAGE, RESET_PROFILE, RESET_PROFILE_DESC, CHARACTER_COLON, REALM_COLON, CLASS_COLON, DEFAULT, ALTERNATIVE
+
+-- Move these into "enUS" when they've been translated in all other locales
+local DELETE_PROFILE = "Delete"
+local DELETE_PROFILE_DESC = "Deletes a profile. Note that no check is made whether this profile is in use by other characters or not."
+local DELETE_PROFILE_USAGE = "<profile name>"
 
 if GetLocale() == "deDE" then
 	ACTIVE = "Aktiv"
@@ -232,6 +237,7 @@ local AceDB = Mixin {
 						"SetProfile",
 						"GetProfile",
 						"CopyProfileFrom",
+						"DeleteProfile",
 						"ToggleActive",
 						"IsActive",
 						"AcquireDBNamespace",
@@ -1573,11 +1579,7 @@ function AceDB:SetProfile(name)
 		RecalculateAceDBCopyFromList(self)
 	end
 	if Dewdrop then
-		Dewdrop:Refresh(1)
-		Dewdrop:Refresh(2)
-		Dewdrop:Refresh(3)
-		Dewdrop:Refresh(4)
-		Dewdrop:Refresh(5)
+		Dewdrop:Refresh()
 	end
 end
 
@@ -1707,11 +1709,69 @@ function AceDB:CopyProfileFrom(copyFrom)
 		RecalculateAceDBCopyFromList(self)
 	end
 	if Dewdrop then
-		Dewdrop:Refresh(1)
-		Dewdrop:Refresh(2)
-		Dewdrop:Refresh(3)
-		Dewdrop:Refresh(4)
-		Dewdrop:Refresh(5)
+		Dewdrop:Refresh()
+	end
+end
+
+function AceDB:DeleteProfile(profile, noconfirm)
+	AceDB:argCheck(profile , 2, "string")
+	if not self.db or not self.db.raw then
+		AceDB:error("Cannot call \"DeleteProfile\" before \"RegisterDB\" has been called and before \"ADDON_LOADED\" has been fired.")
+	end
+	local db = self.db
+	
+	local currentProfile = db.raw.currentProfile[charID]
+	if currentProfile:lower() == profile:lower() then
+		AceDB:error("Cannot delete profile %q, it is currently in use.", profile)
+	end
+
+	if not (noconfirm or IsShiftKeyDown()) then
+		if not StaticPopupDialogs["ACEDB20_CONFIRM_DELETE_DIALOG"] then
+			StaticPopupDialogs["ACEDB20_CONFIRM_DELETE_DIALOG"] = {}
+		end
+		local t = StaticPopupDialogs["ACEDB20_CONFIRM_DELETE_DIALOG"]
+		t.text = format("%s: %s?", DELETE_PROFILE, profile)
+		t.button1 = DELETE_PROFILE
+		t.button2 = CANCEL or "Cancel"
+		t.OnAccept = function()
+			self:DeleteProfile(profile, true)
+		end
+		t.timeout = 0
+		t.whileDead = 1
+		t.hideOnEscape = 1
+		
+		StaticPopup_Show("ACEDB20_CONFIRM_DELETE_DIALOG")
+		return;
+	end
+	
+	local good = false
+	if db.raw.profiles and db.raw.profiles[profile] then
+		good = true;
+		db.raw.profiles[profile] = nil;
+	end
+		
+	if db.raw.namespaces then
+		for _,n in pairs(db.raw.namespaces) do
+			if n.profiles and n.profiles[profile] then
+				n.profiles[profile] = nil;
+				good = true
+			end
+		end
+	end
+
+	if not good then
+		AceDB:error("Cannot delete profile %q, it does not exist.", profile)
+	end
+
+	if self['acedb-profile-list'] then
+		RecalculateAceDBProfileList(self)
+	end
+	if self['acedb-profile-copylist'] then
+		RecalculateAceDBCopyFromList(self)
+	end
+	
+	if Dewdrop then
+		Dewdrop:Refresh()
 	end
 end
 
@@ -2039,6 +2099,18 @@ function AceDB:GetAceOptionsDataTable(target)
 					type = 'text',
 					get = "GetProfile",
 					set = "SetProfile",
+				},
+				delete = {
+					name = DELETE_PROFILE,
+					desc = DELETE_PROFILE_DESC,
+					usage = DELETE_PROFILE_USAGE,
+					type = 'text',
+					set = "DeleteProfile",
+					get = false,
+					validate = target['acedb-profile-copylist'],
+					disabled = function()
+						return not next(target['acedb-profile-copylist'])
+					end,
 				},
 				reset = {
 					name = RESET_PROFILE,

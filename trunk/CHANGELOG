@@ -7,6 +7,12 @@
  Subversion: http://mangadmin.googlecode.com/svn/
 
 /***********************************************/
+Rev. 7:
+  - few bugs fixed
+  - moved MangFrames code into MangAdmin.lua to make the code more handy
+  - flymode button defect, need to know getvalue of PLAYER_MOVEMENT_FLAGS, if exists
+  - finally implemented language switcher, now translators can test their translations!
+  
 Rev. 6:
   - few changes to translations
   - removed MaNGOS .togglegm patch from Rev. 4 because it was rejected and won't be applied to MaNGOS svn,

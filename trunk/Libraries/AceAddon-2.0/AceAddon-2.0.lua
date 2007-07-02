@@ -1,6 +1,6 @@
 --[[
 Name: AceAddon-2.0
-Revision: $Rev: 40905 $
+Revision: $Rev: 42430 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -12,7 +12,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceAddon-2.0"
-local MINOR_VERSION = "$Revision: 40905 $"
+local MINOR_VERSION = "$Revision: 42430 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
@@ -636,6 +636,7 @@ local function createAboutFrame()
 	aboutFrame:SetBackdropColor(0,0,0,1)
 	
 	local donateButton = CreateFrame("Button", "AceAddon20AboutFrameDonateButton", aboutFrame, "UIPanelButtonTemplate2")
+	aboutFrame.donateButton = donateButton
 	donateButton:SetPoint("BOTTOMRIGHT", -20, 20)
 	_G.AceAddon20AboutFrameDonateButtonText:SetText(DONATE)
 	donateButton:SetWidth(_G.AceAddon20AboutFrameDonateButtonText:GetWidth()+20)
@@ -776,6 +777,12 @@ function AceAddon.prototype:PrintAddonInfo()
 	aboutFrame.currentAddon = self
 	
 	aboutFrame:Show()
+	
+	if self.donate then
+		aboutFrame.donateButton:Show()
+	else
+		aboutFrame.donateButton:Hide()
+	end
 end
 
 local function createDonateFrame()
@@ -851,15 +858,16 @@ function AceAddon.prototype:OpenDonationFrame()
 	end
 	local donate = self.donate
 	if type(donate) ~= "string" then
-		donate = "Website:http://www.wowace.com/wiki/Donations"
+		donate = "Wowace"
 	end
 	local style, data = (":"):split(donate, 2)
 	style = style:lower()
 	if style ~= "website" and style ~= "paypal" then
-		style = "website"
-		data = "http://www.wowace.com/wiki/Donations"
+		style = "wowace"
 	end
-	if style == "website" then
+	if style == "wowace" then
+		donateFrame.editBox.text = "http://www.wowace.com/wiki/Donations"
+	elseif style == "website" then
 		donateFrame.editBox.text = data
 	else -- PayPal
 		local text = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=" .. urlencode(unobfuscateEmail(data))
@@ -888,25 +896,25 @@ end
 
 local options
 function AceAddon:GetAceOptionsDataTable(target)
-	if not options then
-		options = {
-			about = {
-				name = ABOUT,
-				desc = PRINT_ADDON_INFO,
-				type = "execute",
-				func = "PrintAddonInfo",
-				order = -1,
-			},
-			donate = {
-				name = DONATE,
-				desc = DONATE_DESC,
-				type = "execute",
-				func = "OpenDonationFrame",
-				order = -1,
-			}
+	return {
+		about = {
+			name = ABOUT,
+			desc = PRINT_ADDON_INFO,
+			type = "execute",
+			func = "PrintAddonInfo",
+			order = -1,
+		},
+		donate = {
+			name = DONATE,
+			desc = DONATE_DESC,
+			type = "execute",
+			func = "OpenDonationFrame",
+			order = -1,
+			hidden = function()
+				return not target.donate
+			end
 		}
-	end
-	return options
+	}
 end
 
 function AceAddon:PLAYER_LOGIN()
