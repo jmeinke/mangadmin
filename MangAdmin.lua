@@ -14,27 +14,529 @@ if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
 local MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0")
-local Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")      
+local Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 local FrameLib   = AceLibrary("FrameLib-1.0")
+local Graph      = AceLibrary("Graph-1.0")
 
-Locale:EnableDynamicLocales(true)
-
-MangAdmin:RegisterChatCommand(Locale["slashcmds"], opts)
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
-
 MangAdmin:RegisterDefaults("char", 
   {
     getValueCallHandler = {
       functionOrder = {},
-      callingFunctions = {"ToggleGMMode", "Testmode1", "Testmode2"},
+      callingFunctions = {"ToggleGMMode", "ToggleFlyMode", "Testfunction1", "Testfunction2"},
       calledGetGuid = false,
       realGuid = nil
-    }  
+    },
+    language = nil
   }
 )
 
+-- Register Translations
+Locale:EnableDynamicLocales(true)
+--Locale:EnableDebugging()
+Locale:RegisterTranslations("enUS", function() return Return_enUS() end)
+Locale:RegisterTranslations("deDE", function() return Return_deDE() end)
+Locale:RegisterTranslations("frFR", function() return Return_frFR() end)
+Locale:RegisterTranslations("itIT", function() return Return_itIT() end)
+Locale:RegisterTranslations("fiFI", function() return Return_fiFI() end)
+Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
+Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
+--Locale:Debug()
+--Locale:SetLocale("enUS")
+
+--===============================================================================================================--
+--== Initializing Frames
+--== This lua script is like the xml files to create the frames
+--===============================================================================================================--
+
+function MangAdmin:CreateFrames()
+  -- [[ Main Elements ]]
+  FrameLib:BuildFrame({
+  	name = "ma_bgframe",
+  	group = "bg",
+  	parent = UIParent,
+  	texture = {
+  		color = {0,0,0,0.5}
+  	},
+  	draggable = true,
+  	size = {
+  		width = 680,
+  		height = 440
+  	},
+  	setpoint = {
+  		pos = "CENTER"
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_menubgframe",
+  	group = "bg",
+  	parent = ma_bgframe,
+  	texture = {
+  		color = {0,0,0,0.5}
+  	},
+  	size = {
+  		width = 570,
+  		height = 22
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offY = 22,
+  		offX = 10
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_topframe",
+  	group = "bg",
+  	parent = ma_bgframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 675,
+  		height = 80
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offY = -2
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_midframe",
+  	group = "bg",
+  	parent = ma_bgframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 675,
+  		height = 254
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offY = -83
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_leftframe",
+  	group = "bg",
+  	parent = ma_bgframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 374,
+  		height = 100
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offX = -150.5,
+  		offY = -338
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_rightframe",
+  	group = "bg",
+  	parent = ma_bgframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 300,
+  		height = 100
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offX = 187.5,
+  		offY = -338
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_logoframe",
+  	group = "bg",
+  	parent = ma_topframe,
+  	texture = {
+  		file = ROOT_PATH.."Textures\\logo.tga"
+  	},
+  	size = {
+  		width = 512,
+  		height = 64
+  	},
+  	setpoint = {
+  		pos = "LEFT",
+  		offX = 10
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFontString({
+  	name = "ma_loggedtext",
+  	group = "bg",
+  	parent = ma_topframe,
+  	text = Locale["logged"],
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -10,
+  		offY = 10
+  	}
+  })
+
+  FrameLib:BuildFontString({
+  	name = "ma_tooltiptext",
+  	group = "bg",
+  	parent = ma_rightframe,
+  	text = Locale["tt_Default"],
+  	color = {
+  		r = 0,
+  		g = 255,
+  		b = 0,
+  		a = 1.0
+  	}
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_languagedropdown",
+  	group = "bg",
+  	parent = ma_topframe,
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -130,
+      offY = -10
+  	},
+  	inherits = "UIDropDownMenuTemplate"
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_languagebutton",
+  	group = "bg",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_languagebutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -14
+  	},
+  	text = Locale["ma_LanguageButton"]
+  })
+
+  -- [[ Tab Buttons ]]
+  FrameLib:BuildButton({
+  	name = "ma_mainbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_mainbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,1},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 12,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Main"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_charbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_charbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 94,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Char"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_telebutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_telebutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 100,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 176,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Tele"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_ticketbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_ticketbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 130,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 278,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Ticket"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_serverbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_serverbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 410,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Server"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_logbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_logbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 492,
+  		offY = 20
+  	},
+  	text = Locale["tabmenu_Log"]
+  })
+
+  -- [[ Group Elements ]]
+  -- MAIN
+  FrameLib:BuildButton({
+  	name = "ma_togglegmbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_togglegmbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -4
+  	},
+  	text = Locale["ma_ToggleGMButton"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_toggleflybutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_toggleflybutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -28
+  	},
+  	text = Locale["ma_ToggleFlyButton"]
+  })
+    
+
+  -- LOG
+  FrameLib:BuildFrame({
+  	type = "ScrollingMessageFrame",
+  	name = "ma_logframe",
+  	group = "log",
+  	parent = ma_midframe,
+  	texture = {
+  		color = {10,10,10,0.7},
+  		gradient = {
+  			orientation = "horizontal",
+  			min = {10,10,10,0.7},
+  			max = {10,10,10,0}
+  		}
+  	},
+  	size = {
+  		width = 400,
+  		height = 234
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -10
+  	},
+  	justify = {
+  		h = "LEFT",
+  		v = "TOP"
+  	},
+  	fading = false,
+  	scrollMouseWheel = true
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_logscrollupbutton",
+  	group = "log",
+  	parent = ma_midframe,
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -10
+  	},
+  	inherits = "UIPanelScrollUpButtonTemplate",
+  	script = function() ma_logframe:ScrollUp() end
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_logscrolldownbutton",
+  	group = "log",
+  	parent = ma_midframe,
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -10,
+  		offY = 10
+  	},
+  	inherits = "UIPanelScrollDownButtonTemplate",
+  	script = function() ma_logframe:ScrollDown() end
+  })
+
+  --SERVER
+  FrameLib:BuildFrame({
+  	name = "ma_graphframe",
+  	group = "server",
+  	parent = ma_midframe,
+  	texture = {
+  		color = {0,0,0,0.7}
+  	},
+  	size = {
+  		width = 152,
+  		height = 152
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -10
+  	},
+  	inherits = nil
+  })
+
+  local down, up, lag = GetNetStats();
+  g=Graph:CreateGraphRealtime("ma_netstatframe",ma_graphframe,"CENTER","CENTER",0,0,150,150)
+  f = CreateFrame("Frame",name,ma_netstatframe)
+  f:SetScript("OnUpdate",function() g:AddTimeData(1) end)
+  f:Show()
+
+  --FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+  --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
+
+end
+
+--===============================================================================================================--
+--== MangAdmin Frame Generation End
+--== MangAdmin Official Start
+--===============================================================================================================--
+
+
+
 function MangAdmin:OnInitialize()
-	-- initializing MangAdmin
+  -- initializing MangAdmin
+  self:SetLanguage()
+  self:CreateFrames()
+  self:RegisterChatCommand(Locale["slashcmds"], opts) -- this registers the chat commands
 	self:PrepareButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
   -- FuBar plugin config
 	self.hasNoColor = true
@@ -51,11 +553,13 @@ function MangAdmin:OnInitialize()
     local cf = getglobal("ChatFrame"..i)
     self:Hook(cf, "AddMessage", true)
   end
+  -- initializing Dropdowns
+  self:LangDropDownInit()
 end
 
 function MangAdmin:OnEnable()
-  -- init guid for callhandler
-  self.GetGuid()
+  -- init guid for callhandler, not implemented yet, comes in next revision
+  --self.GetGuid()
 end
 
 function MangAdmin:OnDisable()
@@ -75,8 +579,10 @@ end
 function MangAdmin:PrepareButtons()
   --here the function of all buttons are defined
 	local function preScript(object, text, script)
-		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
-		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+    if text then
+  		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
+  		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+    end
 		if type(script) == "function" then
   		object:SetScript("OnClick", script)
   	elseif type(script) == "table" then
@@ -92,8 +598,8 @@ function MangAdmin:PrepareButtons()
 	--preScript(ma_ticketbutton, Locale["tt_TicketButton"], function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
 	preScript(ma_serverbutton, Locale["tt_ServerButton"], function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
 	preScript(ma_logbutton, Locale["tt_LogButton"], function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
-  --[[Language dropdown]]
-  --preScript(ma_logbutton, Locale["tt_LanguageDropdown"], {{"OnLoad", MangAdmin:LangDropDownOnLoad()},{"OnClick", MangAdmin:LangDropDownOnClick()}})
+  --[[Language changing]]
+  preScript(ma_languagebutton, Locale["tt_LanguageButton"], function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
   --[[other buttons]]
   preScript(ma_togglegmbutton, Locale["tt_ToggleGMButton"], function() MangAdmin:ToggleGMMode() end)
   preScript(ma_toggleflybutton, Locale["tt_ToggleFlyButton"], function() MangAdmin:ToggleFlyMode() end)  
@@ -173,6 +679,9 @@ function MangAdmin:GetValueCallHandler(guid, field, value)
         -- not found in function order list, so put normal values out
         return true
       end
+    else
+      -- not a registered field case, so put normal values out
+      return true
     end
   else
     MangAdmin:LogAction("DEBUG: Getvalues are: GUID = "..guid.."; field = "..field.."; value = "..value..";")
@@ -217,21 +726,46 @@ function MangAdmin:ChatMsg(msg)
 end
 
 function MangAdmin:GetGuid()
-  MangAdmin:ChatMsg(".getvalue 0")
+  local called = self.db.char.getValueCallHandler.calledGetGuid
+  local realGuid = self.db.char.getValueCallHandler.realGuid
+  if not called then
+    if self:SelectionCheck() then
+      MangAdmin:ChatMsg(".getvalue 0")
+    end
+  else
+    ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..realGuid)
+  end
 end
 
 function MangAdmin:SelectionCheck()
   if UnitIsUnit("target", "player") then
     return true
   elseif not UnitName("target") then 
-      return true
+    return true
   else
-      self:Print("You have to select yourself or nothing first!")
-      return false
+    self:Print("You have to select yourself or nothing first!")
+    return false
   end
 end
 
+function MangAdmin:AndBit(value, test) 
+	return mod(value, test*2) >= test 
+end
+
 --[[USABILITY FUNCTIONS - MANGADMIN MAIN PART]]
+function MangAdmin:SetLanguage()
+  if self.db.char.language then
+    Locale:SetLocale(self.db.char.language)
+  else
+    self.db.char.language = Locale:GetLocale()
+  end
+end
+
+function MangAdmin:ChangeLanguage(locale)
+  self.db.char.language = locale
+  ReloadUI()
+end
+
 function MangAdmin:ToggleGMMode(value)
   if not value then
     if MangAdmin:SelectionCheck() then
@@ -241,62 +775,57 @@ function MangAdmin:ToggleGMMode(value)
     end
   else
     local status
-    if value == "8" or value == "40" then status = "off" else status = "on" end
+    if MangAdmin:AndBit(value, 8) then status = "off" else status = "on" end
     MangAdmin:ChatMsg(".gm"..status)
     MangAdmin:LogAction("Turned GM-mode to "..status..".")
     return false
   end
 end
 
-function MangAdmin:ToggleFlyMode()
-  local status = "on"
-  if IsFlying() then
-    status = "off"
-  end
-  MangAdmin:ChatMsg(".flymode "..status)
-  MangAdmin:LogAction("Turned Fly-mode to "..status..".")
+function MangAdmin:ToggleFlyMode(value)
+  -- function DEFECT, have to find getvalue of PLAYER_MOVEMENT_FLAGS
+  self:Print("Sorry, this function is defect and not available yet!")
+  return true
+  -- function DEFECT stop
+  --[[if not value then
+    if MangAdmin:SelectionCheck() then
+      MangAdmin:InsertFunctionOrder("ToggleFlyMode")
+      MangAdmin:ChatMsg(".getvalue ??") -- ??? = PLAYER_MOVEMENT_FLAGS (? = MOVEMENTFLAG_CAN_FLY)
+      return true
+    end
+  else
+    local status
+    if MangAdmin:AndBit(value, 8388608) then status = "off" else status = "on" end
+    MangAdmin:ChatMsg(".flymode "..status)
+    MangAdmin:LogAction("Turned Fly-mode to "..status..".")
+    return false
+  end]]
 end
 
 --[[DROPDOWN FUNCTIONS]]
---[[function MangAdmin:LangDropDownOnLoad()
-  UIDropDownMenu_Initialize(this, LangDropDownInitialize)
-	UIDropDownMenu_SetSelectedID(this, 1)
-	UIDropDownMenu_SetWidth(90, ma_languagedropdown)
+function MangAdmin:LangDropDownInit()
+  local function LangDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"}}  
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value) end
+      if v[2] == Locale:GetLocale() then
+        info.checked = true
+      else
+        info.checked = nil
+      end
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
+	UIDropDownMenu_SetWidth(100, ma_languagedropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
 end
-
-function LangDropDownInitialize()
-  --local selectedValue = UIDropDownMenu_GetSelectedValue(ma_languagedropdown)
-	local option
-  
-  for optval in Locale:IterateAvailableLocales() do
-    --MangAdmin:LogAction("DEBUG: "..optval)
-    option = {}
-  	option.text = optval
-  	option.func = MangAdmin:LangDropDownOnClick()
-  	option.value = optval
-  	if ( option.value == selectedValue ) then
-  		option.checked = optval
-  	end
-  	UIDropDownMenu_AddButton(option)
-  end	
-  local selectedValue = UIDropDownMenu_GetSelectedValue(ma_languagedropdown);
-	local info;
-
-	info = {};
-	info.text = "Hello Button";
-	info.func = HelloDropDownMenu_OnClick;
-	info.value = 1;
-	if ( info.value == selectedValue ) then
-		info.checked = 1;
-	end
-	UIDropDownMenu_AddButton(info);
-end
-
-function MangAdmin:LangDropDownOnClick()
-  UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value)
-  --MangAdmin:ChatMsg(this.value)
-end
-]]
 
 
 
