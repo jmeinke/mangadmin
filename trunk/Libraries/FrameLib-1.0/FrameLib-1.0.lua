@@ -46,21 +46,29 @@ end
 function FrameLib:BuildFrame(def)
 	local frame = CreateFrame(def.type or "Frame", def.name, def.parent, def.inherits)	
 	self:AddGroupFrame(def.group, frame)
-	local t = def.size
-	frame:SetWidth(t.width or nil)
-	frame:SetHeight(t.height or nil)	
-	frame:SetScale(def.scale or 1)	
-	t = def.hitRectInsets
+  
+  if def.size then
+    if def.size.width then frame:SetWidth(def.size.width) end
+    if def.size.height then frame:SetHeight(def.size.height) end
+    frame:SetScale(def.size.scale or 1)
+  end
+	
+  t = def.hitRectInsets
 	if t then frame:SetHitRectInsets(t[1] or t.minX or t.left,t[2] or t.maxX or t.right, t[3] or t.maxY or t.top, t[4] or t.minY or t.bottom) end	
-	t = def.backdrop
+	
+  t = def.backdrop
 	if t then frame:SetBackdrop(t) end	
-	t = def.backdropColor
+	
+  t = def.backdropColor
 	if t then frame:SetBackdropColor(t[1] or t.r,t[2] or t.g, t[3] or t.b,t[4] or t.a) end	
-	t = def.backdropBorderColor
+	
+  t = def.backdropBorderColor
 	if t then frame:SetBackdropBorderColor(t[1] or t.r,t[2] or t.g, t[3] or t.b,t[4] or t.a) end	
-	frame:EnableKeyboard(def.enableKeyboard)
-	frame:EnableMouseWheel(def.enableMouseWheel)	
-	t = def.texture
+	
+  --frame:EnableKeyboard(def.enableKeyboard)
+	--frame:EnableMouseWheel(def.enableMouseWheel)	
+	
+  t = def.texture
 	if t then
 		local texture = frame:CreateTexture(nil, "BACKGROUND")
 		if t.color then
@@ -87,19 +95,24 @@ function FrameLib:BuildFrame(def)
 			texture:SetGradientAlpha(t.gradient.orientation, min.r or min[1], min.g or min[2], min.b or min[3], min.a or min[4] or 1, max.r or max[2], max.g or max[2], max.b or max[3], max.a or max[4] or 1)
 		end		
 	end
-	frame:ClearAllPoints()
-	frame:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or frame:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)	
-	if def.draggable then
+  
+	if def.clear then frame:ClearAllPoints() end
+	
+  frame:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or frame:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)	
+	
+  if def.draggable then
 		frame:EnableMouse(true)
 		frame:SetMovable(true)
 		frame:RegisterForDrag("LeftButton")
 		frame:SetScript("OnDragStart", function() this:StartMoving() end)
 		frame:SetScript("OnDragStop", function() this:StopMovingOrSizing() end)
 	end	
-	if def.clickable then
+	
+  if def.clickable then
 		frame:EnableMouse(true)
 	end
-	t = def.resizable
+	
+  t = def.resizable
 	if t then
 		frame:SetResizable(true)
 		t = def.resizableMinBounds
@@ -107,13 +120,16 @@ function FrameLib:BuildFrame(def)
 		t = def.resizableMaxBounds
 		if t then frame:SetMaxResizeBounds(t[1] or t.width,t[2] or t.height) end
 	end
-	t = def.frameStrata
+	
+  t = def.frameStrata
 	if t then frame:SetFrameStrata(t) end	
-	t = def.frameLevel
+	
+  t = def.frameLevel
 	if t then frame:SetFrameLevel(t) end	
-	t = def.id
-	if t then frame:SetID(def.id) end	
-	if def.type == "ScrollingMessageFrame" then
+
+	if def.id then frame:SetID(def.id) end	
+	
+  if def.type == "ScrollingMessageFrame" then
     if def.fading then 
 			frame:SetFading(true)
 			frame:SetFadeDuration(def.fading.duration)
@@ -126,6 +142,7 @@ function FrameLib:BuildFrame(def)
 		frame:SetJustifyV(def.justify.v or "TOP")
 		frame:SetMaxLines(def.maxLines or 1000000)
 	end
+  
 	return frame
 end
 

@@ -13,7 +13,7 @@ local ROOT_PATH     = "Interface\\AddOns\\MangAdmin\\"
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
-local MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0")
+local MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0")
 local Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
 local FrameLib   = AceLibrary("FrameLib-1.0")
 local Graph      = AceLibrary("Graph-1.0")
@@ -240,7 +240,103 @@ function MangAdmin:CreateFrames()
   	},
   	text = Locale["ma_LanguageButton"]
   })
+  
+  FrameLib:BuildButton({
+  	name = "ma_itembutton",
+  	group = "bg",
+  	parent = ma_leftframe,
+  	texture = {
+  		name = "ma_itembutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -4
+  	},
+  	text = Locale["ma_ItemButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_spellbutton",
+  	group = "bg",
+  	parent = ma_leftframe,
+  	texture = {
+  		name = "ma_spellbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 94,
+  		offY = -4
+  	},
+  	text = Locale["ma_SpellButton"]
+  })
 
+  -- [[Popup Frame]]
+  FrameLib:BuildFrame({
+  	name = "ma_popupframe",
+  	group = "popup",
+  	parent = UIParent,
+  	texture = {
+  		color = {0,0,0,0.5}
+  	},
+  	draggable = true,
+  	size = {
+  		width = 440,
+  		height = 380
+  	},
+  	setpoint = {
+  		pos = "CENTER"
+  	},
+    frameStrata = "HIGH",
+  	inherits = nil
+  })
+  
+  FrameLib:BuildFrame({
+  	name = "ma_popuptopframe",
+  	group = "popup",
+  	parent = ma_popupframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 435,
+  		height = 80
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offY = -2
+  	},
+  	inherits = nil
+  })
+
+  FrameLib:BuildFrame({
+  	name = "ma_popupmidframe",
+  	group = "popup",
+  	parent = ma_popupframe,
+  	texture = {
+  		color = {102,102,102,0.7}
+  	},
+  	size = {
+  		width = 435,
+  		height = 294
+  	},
+  	setpoint = {
+  		pos = "TOP",
+  		offY = -83
+  	},
+  	inherits = nil
+  })
+  
   -- [[ Tab Buttons ]]
   FrameLib:BuildButton({
   	name = "ma_mainbutton",
@@ -434,7 +530,22 @@ function MangAdmin:CreateFrames()
   	text = Locale["ma_ToggleFlyButton"]
   })
     
-
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_speedslider",
+  	group = "main",
+  	parent = ma_midframe,
+    size = {
+      width = 80
+    },
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+      offY = -62
+  	},
+  	inherits = "OptionsSliderTemplate"
+  })
+    
   -- LOG
   FrameLib:BuildFrame({
   	type = "ScrollingMessageFrame",
@@ -522,7 +633,8 @@ function MangAdmin:CreateFrames()
   --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
-
+  FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
+  
 end
 
 --===============================================================================================================--
@@ -545,21 +657,24 @@ function MangAdmin:OnInitialize()
 	self.hasIcon = true
 	self.hideWithoutStandby = true
 	self:SetIcon(ROOT_PATH.."Textures\\icon.tga")
-  -- make MangAdmin closable with escape key
+  -- make MangAdmin frames closable with escape key
   tinsert(UISpecialFrames,"ma_bgframe")
+  tinsert(UISpecialFrames,"ma_popupframe")
 	-- those all hook the AddMessage method of the chat frames.
   -- They will be redirected to MangAdmin:AddMessage(...)
 	for i=1,NUM_CHAT_WINDOWS do
     local cf = getglobal("ChatFrame"..i)
     self:Hook(cf, "AddMessage", true)
   end
-  -- initializing Dropdowns
+  -- initializing Frames, like DropDowns, Sliders, aso
   self:LangDropDownInit()
+  self:SpeedSliderInit()
 end
 
 function MangAdmin:OnEnable()
+  self:SetDebugging(true) -- to have debugging through the whole app.    
   -- init guid for callhandler, not implemented yet, comes in next revision
-  --self.GetGuid()
+  self.GetGuid()
 end
 
 function MangAdmin:OnDisable()
@@ -569,8 +684,9 @@ end
 
 function MangAdmin:OnClick()
   -- this toggles the MangAdmin frame when clicking on the mini icon
-	if ma_bgframe:IsVisible() then 
+	if ma_bgframe:IsVisible() or ma_popupframe:IsVisible() then 
 		FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+    FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
 	else
 		FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
 	end
@@ -598,11 +714,15 @@ function MangAdmin:PrepareButtons()
 	--preScript(ma_ticketbutton, Locale["tt_TicketButton"], function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
 	preScript(ma_serverbutton, Locale["tt_ServerButton"], function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
 	preScript(ma_logbutton, Locale["tt_LogButton"], function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
-  --[[Language changing]]
+  --Language changing
   preScript(ma_languagebutton, Locale["tt_LanguageButton"], function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  --[[other buttons]]
+  --Speed Slider
+  preScript(ma_speedslider, Locale["tt_SpeedSlider"], {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  --buttons
+  preScript(ma_itembutton, Locale["tt_ItemButton"], function() MangAdmin:TogglePopup() end)
+  preScript(ma_spellbutton, Locale["tt_SpellButton"], function() MangAdmin:TogglePopup() end)
   preScript(ma_togglegmbutton, Locale["tt_ToggleGMButton"], function() MangAdmin:ToggleGMMode() end)
-  preScript(ma_toggleflybutton, Locale["tt_ToggleFlyButton"], function() MangAdmin:ToggleFlyMode() end)  
+  preScript(ma_toggleflybutton, Locale["tt_ToggleFlyButton"], function() MangAdmin:ToggleFlyMode() end)
 end
 
 function MangAdmin:ToggleTabButton(btn)
@@ -621,6 +741,15 @@ function MangAdmin:ToggleContentGroup(group)
 	MangAdmin:LogAction("Toggled navigation point '"..group.."'.")
   MangAdmin:HideAllGroups()
 	FrameLib:HandleGroup(group, function(frame) frame:Show() end)
+end
+
+function MangAdmin:TogglePopup()
+  -- this toggles the MangAdmin Popup frame
+	if ma_popupframe:IsVisible() then 
+		FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
+	else
+		FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
+	end
 end
 
 function MangAdmin:HideAllGroups()
@@ -707,7 +836,7 @@ function MangAdmin:ProcessFunctionOrder(fname)
   if not key then    
     return false
   else
-    --check for function with more high proirity before key
+    --check for function with more high priority before key
     --[[for k,v in pairs(self.db.char.getValueCallHandler.functionOrder) do
       if k = key then break end
     end]]
@@ -726,10 +855,10 @@ function MangAdmin:ChatMsg(msg)
 end
 
 function MangAdmin:GetGuid()
-  local called = self.db.char.getValueCallHandler.calledGetGuid
-  local realGuid = self.db.char.getValueCallHandler.realGuid
+  local called = MangAdmin.db.char.getValueCallHandler.calledGetGuid
+  local realGuid = MangAdmin.db.char.getValueCallHandler.realGuid
   if not called then
-    if self:SelectionCheck() then
+    if MangAdmin:Selection("self") or MangAdmin:Selection("none") then
       MangAdmin:ChatMsg(".getvalue 0")
     end
   else
@@ -737,13 +866,21 @@ function MangAdmin:GetGuid()
   end
 end
 
-function MangAdmin:SelectionCheck()
-  if UnitIsUnit("target", "player") then
-    return true
-  elseif not UnitName("target") then 
-    return true
+function MangAdmin:Selection(selection)
+  if selection == "player" then
+    if UnitIsPlayer("target") then
+      return true
+    end
+  elseif selection == "self" then
+    if UnitIsUnit("target", "player") then
+      return true
+    end
+  elseif selection == "none" then
+    if not UnitName("target") then
+      return true
+    end
   else
-    self:Print("You have to select yourself or nothing first!")
+    error("Argument 'selection' can be 'player',''self', or 'none'!")
     return false
   end
 end
@@ -768,10 +905,12 @@ end
 
 function MangAdmin:ToggleGMMode(value)
   if not value then
-    if MangAdmin:SelectionCheck() then
+    if MangAdmin:Selection("self") or MangAdmin:Selection("none") then
       MangAdmin:InsertFunctionOrder("ToggleGMMode")
       MangAdmin:ChatMsg(".getvalue 228") -- 228 = PLAYER_FLAGS (8 = GMMODE)
       return true
+    else
+      self:Print("Please select nothing or yourself!")
     end
   else
     local status
@@ -802,7 +941,18 @@ function MangAdmin:ToggleFlyMode(value)
   end]]
 end
 
---[[DROPDOWN FUNCTIONS]]
+function MangAdmin:SetSpeed()
+  local value = string.format("%.1f", ma_speedslider:GetValue())
+  local player = "todo"
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    self:ChatMsg(".modify speed "..value)
+    self:LogAction("Set speed of "..player.." to "..value..".")
+  else
+    self:Print("Please select nothing, yourself or another player!")
+  end
+end
+
+--[[FRAME INIT FUNCTIONS]]
 function MangAdmin:LangDropDownInit()
   local function LangDropDownInitialize()
     local level = 1
@@ -826,6 +976,15 @@ function MangAdmin:LangDropDownInit()
 	UIDropDownMenu_SetWidth(100, ma_languagedropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
 end
+
+function MangAdmin:SpeedSliderInit()
+  ma_speedslider:SetOrientation("HORIZONTAL")
+  ma_speedslider:SetMinMaxValues(1, 10)
+  ma_speedslider:SetValueStep(0.1)
+  ma_speedslider:SetValue(1)
+	ma_speedsliderText:SetText("1.0")
+end
+
 
 
 
