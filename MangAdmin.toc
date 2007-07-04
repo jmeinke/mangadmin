@@ -34,5 +34,6 @@ Locales\plPL.lua
 Locales\svSV.lua
 Locales\itIT.lua
 Locales\liLI.lua
+Locales\roRO.lua
 
 MangAdmin.lua

@@ -53,6 +53,7 @@ Locale:RegisterTranslations("fiFI", function() return Return_fiFI() end)
 Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
 Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
 Locale:RegisterTranslations("liLI", function() return Return_liLI() end)
+Locale:RegisterTranslations("liLI", function() return Return_roRO() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -969,7 +970,7 @@ function MangAdmin:LangDropDownInit()
   local function LangDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
-    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"},{"Lithuania","liLI"}}  
+    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"},{"Lithuania","liLI"},{"Romania","roRO"}}  
     for k,v in ipairs(buttons) do
       info.text = v[1]
       info.value = v[2]

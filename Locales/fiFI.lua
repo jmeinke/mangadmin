@@ -37,15 +37,15 @@ function Return_fiFI()
     ["tt_ServerButton"] = "N\195\177yt\195\177 serverin realmien nykyinen tila sek\195\177 tee serveriin liittyvi\195\177 muokkauksia.",
     ["tt_LogButton"] = "N\195\177yt\195\177 MangAdminilla tehtyjen toimenpiteiden loki.",
     ["tt_LanguageButton"] = "Click this button to change the language and reload MangAdmin.",
-    ["tt_ToggleGMButton"] = "Painamalla t\195\177st\195\177 sallit GM-mode napin k\195\177yt\195\182n.",
-    ["tt_ToggleFlyButton"] = "Painamalla t\195\177st\195\177 sallit Fly-mode napin k\195\177yt\195\182n",
+    ["tt_ToggleGMButton"] = "Painamalla t\195\177st\195\177 sallit GM-moodi napin k\195\177yt\195\182n.",
+    ["tt_ToggleFlyButton"] = "Painamalla t\195\177st\195\177 sallit Lento-moodi napin k\195\177yt\195\182n",
     ["tt_SpeedSlider"] = "Slide this slider to increase or decrease the speed for the targeted character.",
     ["tt_ItemButton"] = "Click this button to toggle a popup with the function to search for items and manage your favorites.",
     ["tt_SpellButton"] = "Click this button to toggle a popup with the function to search for spells and manage your favorites.",
     ["ma_ItemButton"] = "Items",
     ["ma_SpellButton"] = "Spells",
     ["ma_LanguageButton"] = "Change language",
-    ["ma_ToggleGMButton"] = "GM-mode",
-    ["ma_ToggleFlyButton"] = "Fly-mode"
+    ["ma_ToggleGMButton"] = "GM-moodi",
+    ["ma_ToggleFlyButton"] = "Lento-moodi"
   }
 end
