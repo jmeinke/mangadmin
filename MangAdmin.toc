@@ -33,5 +33,6 @@ Locales\fiFI.lua
 Locales\plPL.lua
 Locales\svSV.lua
 Locales\itIT.lua
+Locales\liLI.lua
 
 MangAdmin.lua
