@@ -7,6 +7,12 @@
  Subversion: http://mangadmin.googlecode.com/svn/
 
 /***********************************************/
+Rev. 8:
+  - little fix: added DewDrop-2.0
+  - little fix: downgraded all ace libs to fit interface version 20003 (2.0.12),
+    there shouldn't popup any ace errors anymore (!)otherwise please tell me
+  - added a speed-slider and two buttons (that do nothing so far)
+  
 Rev. 7:
   - few bugs fixed
   - moved MangFrames code into MangAdmin.lua to make the code more handy
