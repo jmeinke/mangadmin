@@ -1,13 +1,21 @@
---[[
-Name: FrameLib-1.0
-Revision: $Rev: 00001 $
-Developed by: Josh - MangAdmin Development (http://mangadmin.all-mag.de)
-Website: http://mangadmin.all-mag.de/
-Documentation: http://mangadmin.all-mag.de
-Description: Library for addons to use frame/GUI functions
-Dependencies: AceLibrary
-License: GNU 2.0
-]]
+-------------------------------------------------------------------------------------------------------------
+--
+-- MangAdmin Version 1.0
+--
+-- Copyright (C) 2007 Free Software Foundation, Inc.
+-- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+-- This is free software: you are free to change and redistribute it.
+-- There is NO WARRANTY, to the extent permitted by law.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program; if not, write to the Free Software
+-- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+--
+--   Official Website    : http://mangadmin.all-mag.de
+-- GoogleCode Website    : http://code.google.com/p/mangadmin/
+-- Subversion Repository : http://mangadmin.googlecode.com/svn/
+--
+-------------------------------------------------------------------------------------------------------------
 
 local MAJOR_VERSION = "FrameLib-1.0"
 local MINOR_VERSION = "$Revision: 1 $"
