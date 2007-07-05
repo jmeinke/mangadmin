@@ -37,10 +37,20 @@ MangAdmin:RegisterDefaults("char",
       callingFunctions = {"ToggleGMMode", "ToggleFlyMode", "Testfunction1", "Testfunction2"},
       calledGetGuid = false,
       realGuid = nil
-    },
-    language = nil
+    }
   }
 )
+MangAdmin:RegisterDefaults("account", 
+  {
+    language = nil,
+    favourites = {
+      items = {},
+      spells = {}
+    },
+    scrollbuffer = {}
+  }
+)
+
 
 -- Register Translations
 Locale:EnableDynamicLocales(true)
@@ -53,7 +63,7 @@ Locale:RegisterTranslations("fiFI", function() return Return_fiFI() end)
 Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
 Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
 Locale:RegisterTranslations("liLI", function() return Return_liLI() end)
-Locale:RegisterTranslations("liLI", function() return Return_roRO() end)
+Locale:RegisterTranslations("roRO", function() return Return_roRO() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -349,6 +359,73 @@ function MangAdmin:CreateFrames()
   	},
   	inherits = nil
   })
+  --[[ Popup ScrollFrame
+  FrameLib:BuildFrame({
+  	name = "ma_PopupScrollBar",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "CENTER"
+  	},
+  	inherits = "FauxScrollFrameTemplate"
+  })]]
+  --[[<ScrollFrame name="MyModScrollBar" inherits="FauxScrollFrameTemplate" hidden="true">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+          <Anchor point="BOTTOMRIGHT">
+            <Offset>
+              <AbsDimension x="-30" y="8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(16, MyModScrollBar_Update);
+          </OnVerticalScroll>
+          <OnShow>
+            MyModScrollBar_Update()
+          </OnShow>
+        </Scripts>
+      </ScrollFrame>
+
+      <Button name="MyModEntry1" inherits="MyModEntryTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="MyModScrollBar" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="8" y="0"/>
+            </Offset>
+           </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="MyModEntry2" inherits="MyModEntryTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="MyModEntry1" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="MyModEntry3" inherits="MyModEntryTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="MyModEntry2" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="MyModEntry4" inherits="MyModEntryTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="MyModEntry3" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="MyModEntry5" inherits="MyModEntryTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="MyModEntry4" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>]]
+
   
   -- [[ Tab Buttons ]]
   FrameLib:BuildButton({
@@ -904,15 +981,15 @@ end
 
 --[[USABILITY FUNCTIONS - MANGADMIN MAIN PART]]
 function MangAdmin:SetLanguage()
-  if self.db.char.language then
-    Locale:SetLocale(self.db.char.language)
+  if self.db.account.language then
+    Locale:SetLocale(self.db.account.language)
   else
-    self.db.char.language = Locale:GetLocale()
+    self.db.account.language = Locale:GetLocale()
   end
 end
 
 function MangAdmin:ChangeLanguage(locale)
-  self.db.char.language = locale
+  self.db.account.language = locale
   ReloadUI()
 end
 
@@ -965,7 +1042,7 @@ function MangAdmin:SetSpeed()
   end
 end
 
---[[FRAME INIT FUNCTIONS]]
+--[[FRAME FUNCTIONS]]
 function MangAdmin:LangDropDownInit()
   local function LangDropDownInitialize()
     local level = 1
@@ -996,6 +1073,44 @@ function MangAdmin:SpeedSliderInit()
   ma_speedslider:SetValueStep(0.1)
   ma_speedslider:SetValue(1)
 	ma_speedsliderText:SetText("1.0")
+end
+
+function MangAdmin:PopupScrollBarFill(category, sub)
+  local count = 0
+  if category == "favourites" then
+    if sub == "items" then
+      for k,v in self.db.account.favourites.items do
+        self.db.account.favourites.scrollbuffer[count] = v
+        count = count + 1
+      end
+    elseif sub == "spells" then
+      for k,v in self.db.account.favourites.spells do
+        self.db.account.favourites.scrollbuffer[count] = v
+        count = count + 1
+      end
+    else
+      -- nothing to do so far (placeholder)
+      self.db.account.favourites.scrollbuffer = {}
+    end
+  else
+    -- nothing to do so far (placeholder)
+    self.db.account.favourites.scrollbuffer = {}
+  end
+end
+
+function MangAdmin:PopupOnScrollUpdate()
+  local line -- 1 through 5 of our window to scroll
+  local lineplusoffset -- an index into our data calculated from the scroll offset
+  FauxScrollFrame_Update(ma_PopupScrollBar,50,5,16)
+  for line = 1,10 do
+    lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+    if lineplusoffset < 50 then
+      getglobal("ma_PopupScrollBarEntry"..line):SetText(ScrollBarData[lineplusoffset])
+      getglobal("ma_PopupScrollBarEntry"..line):Show()
+    else
+      getglobal("ma_PopupScrollBarEntry"..line):Hide()
+    end
+  end
 end
 
 
