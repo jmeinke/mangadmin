@@ -19,6 +19,12 @@
 
 =CHANGELOG=
 
+Rev. 12:
+  - added support for 2.1.3 client version, due to new compability with MaNGOS
+  - uploaded all included libraries to the newest revisions
+  - implemented scale slider
+  - todo for next revs: finish implementing item-lookup and favourites
+
 Rev. 11:
   - added romania translation, thanks to x_ray
   - updated finnish translation, by Lone

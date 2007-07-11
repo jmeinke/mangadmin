@@ -40,6 +40,7 @@ function Return_deDE()
     ["tt_ToggleGMButton"] = "Klicke diesen Button um den GameMaster-Modus zu aktivieren oder zu deaktivieren.",
     ["tt_ToggleFlyButton"] = "Klicke diesen Button um den Flug-Modus zu aktivieren oder zu deaktivieren.",
     ["tt_SpeedSlider"] = "Verschiebe den Regler auf die gew\195\188nschte Position um die Schnelligkeit des ausgew\195\164hlten Charakters zu ver\195\164ndern.",
+    ["tt_ScaleSlider"] = "Verschiebe den Regler auf die gew\195\188nschte Position um die Gr\195\182\195\159e des ausgew\195\164hlten Charakters zu ver\195\164ndern.",
     ["tt_ItemButton"] = "Klicke diesen Button um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Items suchen und sie als Favoriten verwalten kann.",
     ["tt_SpellButton"] = "Klicke diesen Button um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Spells suchen und sie als Favoriten verwalten kann.",
     ["ma_ItemButton"] = "Items",

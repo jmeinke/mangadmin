@@ -40,6 +40,7 @@ function Return_roRO()
     ["tt_ToggleGMButton"] = "Apasa acest buton pentru a activa GM-mode (modul gm).",
     ["tt_ToggleFlyButton"] = "Apasa acest buton pentru a activa Fly-mode (modul zburator).",
     ["tt_SpeedSlider"] = "Misca aceasta bara in stanga sau in dreapta pentru a mari sau a micsora viteza caracterului selectat.",
+    ["tt_ScaleSlider"] = "Slide this slider to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Apasa acest buton pentru a activa o noua fereastra care va avea rolul de a cauta iteme noi sau de a le  mentena pe cele deja existente.",
     ["tt_SpellButton"] = "Apasa acest buton pentru a activa o noua fereastra ceva va avea rolul de a cauta spell-uri noi sau de a le mentena pe cele deja existente.",
     ["ma_ItemButton"] = "Iteme",
