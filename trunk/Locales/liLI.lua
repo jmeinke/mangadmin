@@ -40,6 +40,7 @@ function Return_liLI()
     ["tt_ToggleGMButton"] = "Spausk si mygtuka, kad ijungti GM-rezima.",
     ["tt_ToggleFlyButton"] = "Spausk si mygtuka, kad ijungti Fly-rezima",
     ["tt_SpeedSlider"] = "Paslink si slideri, kad padidintum arba sumazintum pasirinkto zaidejo greiti.",
+    ["tt_ScaleSlider"] = "Slide this slider to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti daiktu, bei sudaryti savo populiariu daiktu sarasa.",
     ["tt_SpellButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti magiju, bei sudaryti savo populiariu magiju sarasa.",
     ["ma_ItemButton"] = "Daiktai",

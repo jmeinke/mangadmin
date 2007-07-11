@@ -359,17 +359,21 @@ function MangAdmin:CreateFrames()
   	},
   	inherits = nil
   })
-  --[[ Popup ScrollFrame
-  FrameLib:BuildFrame({
+  -- Popup ScrollFrame
+  --[[FrameLib:BuildFrame({
   	name = "ma_PopupScrollBar",
   	group = "popup",
   	parent = ma_popupmidframe,
+    texture = {
+  		color = {0,0,0,0.7}
+  	},
   	size = {
-  		width = 80,
-  		height = 20
+  		width = 405,
+  		height = 280
   	},
   	setpoint = {
-  		pos = "CENTER"
+  		pos = "CENTER",
+      offX = -10
   	},
   	inherits = "FauxScrollFrameTemplate"
   })]]
@@ -635,6 +639,22 @@ function MangAdmin:CreateFrames()
   	},
   	inherits = "OptionsSliderTemplate"
   })
+  
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_scaleslider",
+  	group = "main",
+  	parent = ma_midframe,
+    size = {
+      width = 80
+    },
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+      offY = -100
+  	},
+  	inherits = "OptionsSliderTemplate"
+  })
     
   -- LOG
   FrameLib:BuildFrame({
@@ -759,6 +779,7 @@ function MangAdmin:OnInitialize()
   -- initializing Frames, like DropDowns, Sliders, aso
   self:LangDropDownInit()
   self:SpeedSliderInit()
+  self:ScaleSliderInit()
 end
 
 function MangAdmin:OnEnable()
@@ -804,10 +825,11 @@ function MangAdmin:PrepareButtons()
 	--preScript(ma_ticketbutton, Locale["tt_TicketButton"], function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
 	preScript(ma_serverbutton, Locale["tt_ServerButton"], function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
 	preScript(ma_logbutton, Locale["tt_LogButton"], function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
-  --Language changing
+  --Special
   preScript(ma_languagebutton, Locale["tt_LanguageButton"], function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  --Speed Slider
   preScript(ma_speedslider, Locale["tt_SpeedSlider"], {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  preScript(ma_scaleslider, Locale["tt_ScaleSlider"], {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})
+  --preScript(ma_PopupScrollBar, nil, {{"OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, PopupScrollUpdate) end},{"OnShow", function() PopupScrollUpdate() end}})
   --buttons
   preScript(ma_itembutton, Locale["tt_ItemButton"], function() MangAdmin:TogglePopup() end)
   preScript(ma_spellbutton, Locale["tt_SpellButton"], function() MangAdmin:TogglePopup() end)
@@ -1033,10 +1055,21 @@ end
 
 function MangAdmin:SetSpeed()
   local value = string.format("%.1f", ma_speedslider:GetValue())
-  local player = "todo"
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
     self:ChatMsg(".modify speed "..value)
     self:LogAction("Set speed of "..player.." to "..value..".")
+  else
+    self:Print("Please select nothing, yourself or another player!")
+  end
+end
+
+function MangAdmin:SetScale()
+  local value = string.format("%.1f", ma_scaleslider:GetValue())
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".modify scale "..value)
+    self:LogAction("Set scale of "..player.." to "..value..".")
   else
     self:Print("Please select nothing, yourself or another player!")
   end
@@ -1075,7 +1108,15 @@ function MangAdmin:SpeedSliderInit()
 	ma_speedsliderText:SetText("1.0")
 end
 
-function MangAdmin:PopupScrollBarFill(category, sub)
+function MangAdmin:ScaleSliderInit()
+  ma_scaleslider:SetOrientation("HORIZONTAL")
+  ma_scaleslider:SetMinMaxValues(0.1, 3)
+  ma_scaleslider:SetValueStep(0.1)
+  ma_scaleslider:SetValue(1)
+	ma_scalesliderText:SetText("1.0")
+end
+
+--[[function MangAdmin:PopupScrollBarFill(category, sub)
   local count = 0
   if category == "favourites" then
     if sub == "items" then
@@ -1098,7 +1139,7 @@ function MangAdmin:PopupScrollBarFill(category, sub)
   end
 end
 
-function MangAdmin:PopupOnScrollUpdate()
+function PopupScrollUpdate()
   local line -- 1 through 5 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
   FauxScrollFrame_Update(ma_PopupScrollBar,50,5,16)
@@ -1111,7 +1152,7 @@ function MangAdmin:PopupOnScrollUpdate()
       getglobal("ma_PopupScrollBarEntry"..line):Hide()
     end
   end
-end
+end]]
 
 
 
