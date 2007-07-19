@@ -23,6 +23,7 @@ function Return_roRO()
     ["lang"] = "Romania",
     ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["selectionerror1"] = "Please select yourself or another player or nothing!",
     ["tabmenu_Main"] = "Main",
     ["tabmenu_Char"] = "Character",
     ["tabmenu_Tele"] = "Teleportare",
@@ -43,10 +44,18 @@ function Return_roRO()
     ["tt_ScaleSlider"] = "Slide this slider to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Apasa acest buton pentru a activa o noua fereastra care va avea rolul de a cauta iteme noi sau de a le  mentena pe cele deja existente.",
     ["tt_SpellButton"] = "Apasa acest buton pentru a activa o noua fereastra ceva va avea rolul de a cauta spell-uri noi sau de a le mentena pe cele deja existente.",
+    ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
     ["ma_ItemButton"] = "Iteme",
     ["ma_SpellButton"] = "Spell-uri",
     ["ma_LanguageButton"] = "Schimba limba",
     ["ma_ToggleGMButton"] = "GM-mode",
-    ["ma_ToggleFlyButton"] = "Fly-mode"
+    ["ma_ToggleFlyButton"] = "Fly-mode",
+    ["ma_LearnAllButton"] = "All spells",
+    ["ma_LearnCraftsButton"] = "All professions and recipes",
+    ["ma_LearnGMButton"] = "Default GM spells",
+    ["ma_LearnLangButton"] = "All languages",
+    ["ma_LearnClassButton"] = "All class-spells",
+    ["ma_SearchButton"] = "Search...",
+    ["ma_ResetButton"] = "Reset"
   }
 end

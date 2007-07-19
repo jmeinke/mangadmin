@@ -23,6 +23,7 @@ function Return_svSV()
     ["lang"] = "Svenska",
     ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Karakt\195\164r:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["selectionerror1"] = "Please select yourself or another player or nothing!",
     ["tabmenu_Main"] = "Huvudmeny",
     ["tabmenu_Char"] = "Karakt\195\164rer",
     ["tabmenu_Tele"] = "Teleportering",
@@ -43,10 +44,18 @@ function Return_svSV()
     ["tt_ScaleSlider"] = "Slide this slider to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Click this button to toggle a popup with the function to search for items and manage your favorites.",
     ["tt_SpellButton"] = "Click this button to toggle a popup with the function to search for spells and manage your favorites.",
+    ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
     ["ma_ItemButton"] = "Items",
     ["ma_SpellButton"] = "Spells",
     ["ma_LanguageButton"] = "Change language",
     ["ma_ToggleGMButton"] = "GM-mode",
-    ["ma_ToggleFlyButton"] = "Fly-mode"
+    ["ma_ToggleFlyButton"] = "Fly-mode",
+    ["ma_LearnAllButton"] = "All spells",
+    ["ma_LearnCraftsButton"] = "All professions and recipes",
+    ["ma_LearnGMButton"] = "Default GM spells",
+    ["ma_LearnLangButton"] = "All languages",
+    ["ma_LearnClassButton"] = "All class-spells",
+    ["ma_SearchButton"] = "Search...",
+    ["ma_ResetButton"] = "Reset"
   }
 end

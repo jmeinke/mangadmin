@@ -34,10 +34,15 @@ MangAdmin:RegisterDefaults("char",
   {
     getValueCallHandler = {
       functionOrder = {},
-      callingFunctions = {"ToggleGMMode", "ToggleFlyMode", "Testfunction1", "Testfunction2"},
+      callingFunctions = {"ToggleGMMode", "Testfunction1", "Testfunction2"},
       calledGetGuid = false,
       realGuid = nil
-    }
+    },
+    workaroundValues = {
+      flymode = nil
+    },
+    itemrequest = true,
+    spellrequest = false
   }
 )
 MangAdmin:RegisterDefaults("account", 
@@ -45,9 +50,16 @@ MangAdmin:RegisterDefaults("account",
     language = nil,
     favourites = {
       items = {},
-      spells = {}
+      spells = {
+        id = {},
+        name = {},
+      }
     },
-    scrollbuffer = {}
+    buffer = {
+      items = {},
+      spells = {},
+      counter = 0
+    },
   }
 )
 
@@ -64,6 +76,7 @@ Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
 Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
 Locale:RegisterTranslations("liLI", function() return Return_liLI() end)
 Locale:RegisterTranslations("roRO", function() return Return_roRO() end)
+Locale:RegisterTranslations("csCZ", function() return Return_csCZ() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -359,8 +372,92 @@ function MangAdmin:CreateFrames()
   	},
   	inherits = nil
   })
+  
+  -- Popup Editbox and  Searchbutton
+  FrameLib:BuildFontString({
+  	name = "ma_lookuptext",
+  	group = "popup",
+  	parent = ma_popuptopframe,
+  	text = "You should not see this text!",
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -10
+  	}
+  })
+  
+  FrameLib:BuildFontString({
+  	name = "ma_lookupresulttext",
+  	group = "popup",
+  	parent = ma_popuptopframe,
+  	text = "0 Results",
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -10
+  	}
+  })
+  
+  FrameLib:BuildFrame({
+    type = "EditBox",
+  	name = "ma_searcheditbox",
+  	group = "popup",
+  	parent = ma_popuptopframe,
+  	size = {
+  		width = 80,
+      height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 10,
+  		offY = 4
+  	},
+    inherits = "InputBoxTemplate"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_searchbutton",
+  	group = "popup",
+  	parent = ma_popuptopframe,
+  	texture = {
+  		name = "ma_searchbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 94,
+  		offY = 4
+  	},
+  	text = Locale["ma_SearchButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_resetsearchbutton",
+  	group = "popup",
+  	parent = ma_popuptopframe,
+  	texture = {
+  		name = "ma_resetsearchbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 178,
+  		offY = 4
+  	},
+  	text = Locale["ma_ResetButton"]
+  })
+  
   -- Popup ScrollFrame
-  --[[FrameLib:BuildFrame({
+  FrameLib:BuildFrame({
+    type = "ScrollFrame",
   	name = "ma_PopupScrollBar",
   	group = "popup",
   	parent = ma_popupmidframe,
@@ -368,68 +465,158 @@ function MangAdmin:CreateFrames()
   		color = {0,0,0,0.7}
   	},
   	size = {
-  		width = 405,
-  		height = 280
+  		width = 400,
+  		height = 274
   	},
   	setpoint = {
   		pos = "CENTER",
       offX = -10
   	},
   	inherits = "FauxScrollFrameTemplate"
-  })]]
-  --[[<ScrollFrame name="MyModScrollBar" inherits="FauxScrollFrameTemplate" hidden="true">
-        <Anchors>
-          <Anchor point="TOPLEFT">
-            <Offset>
-              <AbsDimension x="0" y="-8"/>
-            </Offset>
-          </Anchor>
-          <Anchor point="BOTTOMRIGHT">
-            <Offset>
-              <AbsDimension x="-30" y="8"/>
-            </Offset>
-          </Anchor>
-        </Anchors>
-        <Scripts>
-          <OnVerticalScroll>
-            FauxScrollFrame_OnVerticalScroll(16, MyModScrollBar_Update);
-          </OnVerticalScroll>
-          <OnShow>
-            MyModScrollBar_Update()
-          </OnShow>
-        </Scripts>
-      </ScrollFrame>
+  })
+  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
+  ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry1",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBar",
+      relPos = "TOPLEFT",
+      offX = 10,
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry1_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })
 
-      <Button name="MyModEntry1" inherits="MyModEntryTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="MyModScrollBar" relativePoint="TOPLEFT">
-            <Offset>
-              <AbsDimension x="8" y="0"/>
-            </Offset>
-           </Anchor>
-        </Anchors>
-      </Button>
-      <Button name="MyModEntry2" inherits="MyModEntryTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="MyModEntry1" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-      </Button>
-      <Button name="MyModEntry3" inherits="MyModEntryTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="MyModEntry2" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-      </Button>
-      <Button name="MyModEntry4" inherits="MyModEntryTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="MyModEntry3" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-      </Button>
-      <Button name="MyModEntry5" inherits="MyModEntryTemplate">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="MyModEntry4" relativePoint="BOTTOMLEFT"/>
-        </Anchors>
-      </Button>]]
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry2",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry1",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry2_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })  
 
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry3",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry2",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry3_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry4",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry3",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry4_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })  
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry5",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry4",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry5_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry6",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry5",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry6_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntry7",
+  	group = "popup",
+  	parent = ma_popupmidframe,
+    setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_PopupScrollBarEntry6",
+      relPos = "BOTTOMLEFT",
+      offY = -8
+  	},
+    texture = {
+  		name = "ma_PopupScrollBarEntry7_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 380,
+  		height = 30
+  	}
+  })
   
   -- [[ Tab Buttons ]]
   FrameLib:BuildButton({
@@ -713,6 +900,127 @@ function MangAdmin:CreateFrames()
   	script = function() ma_logframe:ScrollDown() end
   })
 
+  --CHARACTER
+  FrameLib:BuildButton({
+  	name = "ma_learnallbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_learnallbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -4
+  	},
+  	text = Locale["ma_LearnAllButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_learncraftsbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_learncraftsbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 160,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 94,
+  		offY = -4
+  	},
+  	text = Locale["ma_LearnCraftsButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_learngmbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_learngmbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 258,
+  		offY = -4
+  	},
+  	text = Locale["ma_LearnGMButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_learnclassbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_learnclassbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 382,
+  		offY = -4
+  	},
+  	text = Locale["ma_LearnClassButton"]
+  })
+
+  FrameLib:BuildButton({
+  	name = "ma_learnlangbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_learnlangbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -28
+  	},
+  	text = Locale["ma_LearnLangButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_kickbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_kickbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -10,
+  		offY = 10
+  	},
+  	text = Locale["ma_KickButton"]
+  })
+  
   --SERVER
   FrameLib:BuildFrame({
   	name = "ma_graphframe",
@@ -738,9 +1046,104 @@ function MangAdmin:CreateFrames()
   f = CreateFrame("Frame",name,ma_netstatframe)
   f:SetScript("OnUpdate",function() g:AddTimeData(1) end)
   f:Show()
+  
+  FrameLib:BuildFrame({
+    type = "EditBox",
+  	name = "ma_announceeditbox",
+  	group = "server",
+  	parent = ma_midframe,
+  	size = {
+  		width = 480,
+      height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 15,
+  		offY = 10
+  	},
+    inherits = "InputBoxTemplate"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_announcebutton",
+  	group = "server",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_announcebutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -94,
+  		offY = 10
+  	},
+  	text = Locale["ma_AnnounceButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_resetannouncebutton",
+  	group = "server",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_resetannouncebutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -10,
+  		offY = 10
+  	},
+  	text = Locale["ma_ResetButton"]
+  })
+  
+  FrameLib:BuildFrame({
+    type = "EditBox",
+  	name = "ma_shutdowneditbox",
+  	group = "server",
+  	parent = ma_midframe,
+  	size = {
+  		width = 30,
+      height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -98,
+  		offY = -10
+  	},
+    inherits = "InputBoxTemplate"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_shutdownbutton",
+  	group = "server",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_shutdownbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -10
+  	},
+  	text = Locale["ma_ShutdownButton"]
+  })
 
   --FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
   --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
@@ -778,8 +1181,7 @@ function MangAdmin:OnInitialize()
   end
   -- initializing Frames, like DropDowns, Sliders, aso
   self:LangDropDownInit()
-  self:SpeedSliderInit()
-  self:ScaleSliderInit()
+  self:InitSliders()
 end
 
 function MangAdmin:OnEnable()
@@ -820,7 +1222,7 @@ function MangAdmin:PrepareButtons()
 	end
   --[[tab buttons]]
 	preScript(ma_mainbutton, Locale["tt_MainButton"], function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
-	--preScript(ma_charbutton, Locale["tt_CharButton"], function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
+	preScript(ma_charbutton, Locale["tt_CharButton"], function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
 	--preScript(ma_telebutton, Locale["tt_TeleButton"], function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
 	--preScript(ma_ticketbutton, Locale["tt_TicketButton"], function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
 	preScript(ma_serverbutton, Locale["tt_ServerButton"], function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
@@ -829,12 +1231,22 @@ function MangAdmin:PrepareButtons()
   preScript(ma_languagebutton, Locale["tt_LanguageButton"], function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
   preScript(ma_speedslider, Locale["tt_SpeedSlider"], {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
   preScript(ma_scaleslider, Locale["tt_ScaleSlider"], {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})
-  --preScript(ma_PopupScrollBar, nil, {{"OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, PopupScrollUpdate) end},{"OnShow", function() PopupScrollUpdate() end}})
-  --buttons
-  preScript(ma_itembutton, Locale["tt_ItemButton"], function() MangAdmin:TogglePopup() end)
-  preScript(ma_spellbutton, Locale["tt_SpellButton"], function() MangAdmin:TogglePopup() end)
+  --Buttons
+  preScript(ma_itembutton, Locale["tt_ItemButton"], function() MangAdmin:ToggleSearchPopup("item") end)
+  preScript(ma_spellbutton, Locale["tt_SpellButton"], function() MangAdmin:ToggleSearchPopup("spell") end)
   preScript(ma_togglegmbutton, Locale["tt_ToggleGMButton"], function() MangAdmin:ToggleGMMode() end)
   preScript(ma_toggleflybutton, Locale["tt_ToggleFlyButton"], function() MangAdmin:ToggleFlyMode() end)
+  preScript(ma_learnallbutton, nil, function() MangAdmin:LearnSpell("all") end)
+  preScript(ma_learncraftsbutton, nil, function() MangAdmin:LearnSpell("all_crafts") end)
+  preScript(ma_learngmbutton, nil, function() MangAdmin:LearnSpell("all_gm") end)
+  preScript(ma_learnlangbutton, nil, function() MangAdmin:LearnSpell("all_lang") end)
+  preScript(ma_learnclassbutton, nil, function() MangAdmin:LearnSpell("all_myclass") end)
+  preScript(ma_searchbutton, nil, function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  preScript(ma_resetsearchbutton, nil, function() MangAdmin:SearchReset() end)
+  preScript(ma_kickbutton, Locale["tt_KickButton"], function() MangAdmin:KickPlayer() end)
+  preScript(ma_announcebutton, Locale["tt_AnnounceButton"], function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
+  preScript(ma_resetannouncebutton, nil, function() ma_announceeditbox:SetText("") end)
+  preScript(ma_shutdownbutton, Locale["tt_ShutdownButton"], function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
 end
 
 function MangAdmin:ToggleTabButton(btn)
@@ -855,18 +1267,25 @@ function MangAdmin:ToggleContentGroup(group)
 	FrameLib:HandleGroup(group, function(frame) frame:Show() end)
 end
 
-function MangAdmin:TogglePopup()
-  -- this toggles the MangAdmin Popup frame
+function MangAdmin:ToggleSearchPopup(value)
+  -- this toggles the MangAdmin Search Popup frame
 	if ma_popupframe:IsVisible() then 
-		FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
+		FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end)
 	else
+    ma_searchbutton:SetScript("OnClick", function() self:SearchStart(value, ma_searcheditbox:GetText()) end)
 		FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
 	end
+  if value == "item" then
+    ma_lookuptext:SetText("Item-Lookup")
+  else
+    ma_lookuptext:SetText("Spell-Lookup")
+  end
+  self:SearchReset()
 end
 
 function MangAdmin:HideAllGroups()
   FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
-	--FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
+	FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
 	FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
@@ -880,7 +1299,44 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- hooking all uint32 .getvalue requests
   for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
     catchedSth = true
-    output = MangAdmin:GetValueCallHandler(guid, field, value)
+    output = self:GetValueCallHandler(guid, field, value)
+  end
+  
+  -- hooking all item lookups
+  for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
+    if self.db.char.itemrequest then
+      table.insert(self.db.account.buffer.items, {iId = id, iName = name})
+      -- for item info in cache
+      local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(id);						
+      if not itemName then
+        GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
+        GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
+        GameTooltip:Hide()
+      end
+      --self.db.account.buffer.counter = self.db.account.buffer.counter +1
+      --if self.db.account.buffer.counter == 10 then
+      --  self.db.account.buffer.counter = 0
+        PopupScrollUpdate()
+      --end
+      --self:LogAction("Debug: Found item "..name.." with id: "..id..".")
+      catchedSth = true
+      output = false  
+    end
+  end
+  
+  -- hooking all spell lookups
+  for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
+    if self.db.char.spellrequest then
+      self:LogAction("Debug: Found spell "..name.." with id: "..id..".")
+      table.insert(self.db.account.buffer.spells, {spId = id, spName = name})
+      --self.db.account.buffer.counter = self.db.account.buffer.counter +1
+      --if self.db.account.buffer.counter == 1 then
+      --  self.db.account.buffer.counter = 0
+        PopupScrollUpdate()
+      --end
+      catchedSth = true
+      output = false      
+    end
   end
   
   if not catchedSth then
@@ -1033,24 +1489,17 @@ function MangAdmin:ToggleGMMode(value)
   end
 end
 
-function MangAdmin:ToggleFlyMode(value)
-  -- function DEFECT, have to find getvalue of PLAYER_MOVEMENT_FLAGS
-  self:Print("Sorry, this function is defect and not available yet!")
-  return true
-  -- function DEFECT stop
-  --[[if not value then
-    if MangAdmin:SelectionCheck() then
-      MangAdmin:InsertFunctionOrder("ToggleFlyMode")
-      MangAdmin:ChatMsg(".getvalue ??") -- ??? = PLAYER_MOVEMENT_FLAGS (? = MOVEMENTFLAG_CAN_FLY)
-      return true
-    end
+function MangAdmin:ToggleFlyMode()
+  local status
+  if not self.db.char.workaroundValues.flymode then
+    status = "on"
+    self.db.char.workaroundValues.flymode = true
   else
-    local status
-    if MangAdmin:AndBit(value, 8388608) then status = "off" else status = "on" end
-    MangAdmin:ChatMsg(".flymode "..status)
-    MangAdmin:LogAction("Turned Fly-mode to "..status..".")
-    return false
-  end]]
+    status = "off"
+    self.db.char.workaroundValues.flymode = nil
+  end
+  MangAdmin:ChatMsg(".flymode "..status)
+  MangAdmin:LogAction("Turned Fly-mode to "..status..".")
 end
 
 function MangAdmin:SetSpeed()
@@ -1058,9 +1507,11 @@ function MangAdmin:SetSpeed()
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
     self:ChatMsg(".modify speed "..value)
+    self:ChatMsg(".modify fly "..value)
     self:LogAction("Set speed of "..player.." to "..value..".")
   else
-    self:Print("Please select nothing, yourself or another player!")
+    self:Print(Locale["selectionerror1"])
+    ma_speedslider:SetValue(1)
   end
 end
 
@@ -1071,8 +1522,113 @@ function MangAdmin:SetScale()
     self:ChatMsg(".modify scale "..value)
     self:LogAction("Set scale of "..player.." to "..value..".")
   else
-    self:Print("Please select nothing, yourself or another player!")
+    self:Print(Locale["selectionerror1"])
+    ma_scaleslider:SetValue(1)
   end
+end
+
+function MangAdmin:LearnSpell(value)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    local class = UnitClass("target") or UnitClass("player")
+    if type(value) == "string" then
+      if value == "all" then
+        self:ChatMsg(".learn all")
+        self:LogAction("Learned all spells to "..player..".")
+      elseif value == "all_crafts" then
+        self:ChatMsg(".learn all_crafts")
+        self:LogAction("Learned all professions and recipes to "..player..".")
+      elseif value == "all_gm" then
+        self:ChatMsg(".learn all_gm")
+        self:LogAction("Learned all default spells for Game Masters to "..player..".")
+      elseif value == "all_lang" then
+        self:ChatMsg(".learn all_lang")
+        self:LogAction("Learned all languages to "..player..".")
+      elseif value == "all_myclass" then
+        self:ChatMsg(".learn all_myclass")
+        self:LogAction("Learned all spells available to the "..class.."-class to "..player..".")
+      else
+        self:ChatMsg(".learn "..value)
+        self:LogAction("Learned spell "..value.." to "..player..".")
+      end
+    elseif type(value) == "table" then
+      for k,v in ipairs(value) do
+        self:ChatMsg(".learn "..v)
+        self:LogAction("Learned spell "..v.." to "..player..".")
+      end
+    elseif type(value) == "number" then
+      self:ChatMsg(".learn "..value)
+      self:LogAction("Learned spell "..value.." to "..player..".")
+    end
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:AddItem(value, amount)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    if not amount then
+      self:ChatMsg(".additem "..value)
+      self:LogAction("Added item with id "..value.." to "..player..".")
+    else
+      self:ChatMsg(".additem "..value.." "..amount)
+      self:LogAction("Added "..amount.." items with id "..value.." to "..player..".")
+    end
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:KickPlayer()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".kick")
+    self:LogAction("Kicked player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:Announce(value)
+  self:ChatMsg(".announce "..value)
+  self:LogAction("Announced message: "..value)
+end
+
+function MangAdmin:Shutdown(value)
+  if value == "" then
+    self:ChatMsg(".shutdown 0")
+    self:LogAction("Shut down server instantly.")
+  else
+    self:ChatMsg(".shutdown "..value)
+    self:LogAction("Shut down server in "..value.." seconds.")
+  end
+end
+
+-- Other
+function MangAdmin:SearchStart(var, value)
+  if var == "item" then
+    self.db.char.itemrequest = true
+    self.db.account.buffer.items = {}
+    self:ChatMsg(".lookupitem "..value)
+  elseif var == "spell" then
+    self.db.char.spellrequest = true
+    self.db.account.buffer.spells = {}
+    self:ChatMsg(".lookupspell "..value)    
+  end
+  self.db.account.buffer.counter = 0
+  self:LogAction("Started search for "..var.."s with the keyword '"..value.."'.")
+end
+
+function MangAdmin:SearchReset()
+  ma_searcheditbox:SetText("")
+  ma_lookupresulttext:SetText("0 Results")
+  self.db.char.itemrequest = false
+  self.db.char.spellrequest = false
+  self.db.account.buffer.items = {}
+  self.db.account.buffer.spells = {}
+  self.db.account.buffer.counter = 0
+  PopupScrollUpdate()
 end
 
 --[[FRAME FUNCTIONS]]
@@ -1080,7 +1636,7 @@ function MangAdmin:LangDropDownInit()
   local function LangDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
-    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"},{"Lithuania","liLI"},{"Romania","roRO"}}  
+    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"},{"Lithuania","liLI"},{"Romania","roRO"},{"Czech","csCZ"}}  
     for k,v in ipairs(buttons) do
       info.text = v[1]
       info.value = v[2]
@@ -1100,15 +1656,14 @@ function MangAdmin:LangDropDownInit()
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
 end
 
-function MangAdmin:SpeedSliderInit()
+function MangAdmin:InitSliders()
+  -- Speed Slider
   ma_speedslider:SetOrientation("HORIZONTAL")
   ma_speedslider:SetMinMaxValues(1, 10)
   ma_speedslider:SetValueStep(0.1)
   ma_speedslider:SetValue(1)
 	ma_speedsliderText:SetText("1.0")
-end
-
-function MangAdmin:ScaleSliderInit()
+  -- Scale Slider
   ma_scaleslider:SetOrientation("HORIZONTAL")
   ma_scaleslider:SetMinMaxValues(0.1, 3)
   ma_scaleslider:SetValueStep(0.1)
@@ -1116,44 +1671,75 @@ function MangAdmin:ScaleSliderInit()
 	ma_scalesliderText:SetText("1.0")
 end
 
---[[function MangAdmin:PopupScrollBarFill(category, sub)
-  local count = 0
-  if category == "favourites" then
-    if sub == "items" then
-      for k,v in self.db.account.favourites.items do
-        self.db.account.favourites.scrollbuffer[count] = v
-        count = count + 1
-      end
-    elseif sub == "spells" then
-      for k,v in self.db.account.favourites.spells do
-        self.db.account.favourites.scrollbuffer[count] = v
-        count = count + 1
-      end
+function MangAdmin:NoSearchOrResult()
+  ma_lookupresulttext:SetText("0 Results")
+  FauxScrollFrame_Update(ma_PopupScrollBar,7,7,40)
+  for line = 1,7 do
+    getglobal("ma_PopupScrollBarEntry"..line):Disable()
+    if line == 1 then
+      getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["tt_SearchDefault"])
     else
-      -- nothing to do so far (placeholder)
-      self.db.account.favourites.scrollbuffer = {}
+      getglobal("ma_PopupScrollBarEntry"..line):Hide()
     end
-  else
-    -- nothing to do so far (placeholder)
-    self.db.account.favourites.scrollbuffer = {}
   end
 end
 
 function PopupScrollUpdate()
   local line -- 1 through 5 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
-  FauxScrollFrame_Update(ma_PopupScrollBar,50,5,16)
-  for line = 1,10 do
-    lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-    if lineplusoffset < 50 then
-      getglobal("ma_PopupScrollBarEntry"..line):SetText(ScrollBarData[lineplusoffset])
-      getglobal("ma_PopupScrollBarEntry"..line):Show()
+  local itemCount = 0
+  local spellCount = 0
+  table.foreachi(MangAdmin.db.account.buffer.items, function() itemCount = itemCount +1 end)
+  table.foreachi(MangAdmin.db.account.buffer.spells, function() spellCount = spellCount +1 end)
+  
+  if MangAdmin.db.char.itemrequest then --get items
+    if itemCount > 0 then
+      ma_lookupresulttext:SetText(itemCount.." Results")
+      FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,40)
+      for line = 1,7 do
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+        if lineplusoffset <= itemCount then
+          --local itemId = MangAdmin.db.account.buffer.items[lineplusoffset]
+          --local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(itemId)
+          --local _, _, _, hex = GetItemQualityColor(itemQuality)
+          --getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..itemId.."|r Name: "..hex..itemName.."|r Quality: "..itemQuality)
+          local item = MangAdmin.db.account.buffer.items[lineplusoffset]
+          getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..item["iId"].."|r Name: |cffffffff"..item["iName"].."|r")
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddItem(item["iId"]) end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..item["iId"]..":0:0:0:0:0:0:0"); GameTooltip:Show() end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
+          getglobal("ma_PopupScrollBarEntry"..line):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_PopupScrollBarEntry"..line):Hide()
+        end
+      end
     else
-      getglobal("ma_PopupScrollBarEntry"..line):Hide()
+      MangAdmin:NoSearchOrResult()
     end
+  elseif MangAdmin.db.char.spellrequest then --get spells
+    if spellCount > 0 then
+      ma_lookupresulttext:SetText(spellCount.." Results")
+      FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,40)
+      for line = 1,7 do
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+        if lineplusoffset <= spellCount then
+          local spell = MangAdmin.db.account.buffer.spells[lineplusoffset]
+          getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..spell["spId"].."|r Name: |cffffffff"..spell["spName"].."|r")
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:LearnSpell(spell["spId"]) end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)     
+          getglobal("ma_PopupScrollBarEntry"..line):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_PopupScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      MangAdmin:NoSearchOrResult()
+    end
+  else
+    MangAdmin:NoSearchOrResult()
   end
-end]]
-
-
-
+end
 

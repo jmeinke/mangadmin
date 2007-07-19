@@ -19,6 +19,22 @@
 
 =CHANGELOG=
 
+Rev. 13:
+  - finally implemented item-lookup and spell-lookup
+  - reactivated Character Tab and implemented new buttons: 
+    - learn all spells
+    - learn all professions and recipes
+    - learn all languages
+    - learn default spells for Game Masters    
+    - learn spells available for the characters class
+    - kick player
+  - implemented these functions into server tab:
+    - announce
+    - shutdown in * seconds
+  - tempotary fixed "Toggle Flymode" button, flymode satus will not be queried from server, but from
+    ingame variable. If you only click the flymode button and not type the command manually, it is fine
+  - added Czech language, thanks to Virnik
+
 Rev. 12:
   - added support for 2.1.3 client version, due to new compability with MaNGOS
   - uploaded all included libraries to the newest revisions
@@ -42,9 +58,9 @@ Rev. 8:
   - added a speed-slider
   - several changes to FrameLib
   - fixes: 
-    |- added DewDrop-2.0
-    |- downgraded all Ace2 libraries to fit the interface version 20003 (2.0.12),
-    |- there shouldn't popup any ace errors anymore (!)otherwise tell me
+    - added DewDrop-2.0
+    - downgraded all Ace2 libraries to fit the interface version 20003 (2.0.12),
+    - there shouldn't popup any ace errors anymore (!)otherwise tell me
   
 Rev. 7:
   - few bugs fixed
@@ -82,9 +98,9 @@ Rev. 4:
 Rev. 3:
   - fixed a few bugs
   - added languages:
-    |- Finnish, thanks to Seizer
-    |- Swedish, thanks to dxers
-    |- Polish, thanks to gerard
+    - Finnish, thanks to Seizer
+    - Swedish, thanks to dxers
+    - Polish, thanks to gerard
   - a language switcher comes with the next revision, no time now
   - updated the libraries
 
@@ -98,5 +114,5 @@ Rev. 1:
   - menu handling and log functions
   - FrameLib initial import
   - added Libraries:
-    |- AceLibrary, AceOO-2.0, AceDB-2.0, AceHook-2.1, DewDrop-2.0, AceAddon-2.0,
-    |- AceLocale-2.2, AceConsole-2.0, FrameLib-1.0, Tablet-2.0, Graph-1.0, FuBarPlugin-2.0
+    - AceLibrary, AceOO-2.0, AceDB-2.0, AceHook-2.1, DewDrop-2.0, AceAddon-2.0,
+    - AceLocale-2.2, AceConsole-2.0, FrameLib-1.0, Tablet-2.0, Graph-1.0, FuBarPlugin-2.0
