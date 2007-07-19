@@ -23,6 +23,7 @@ function Return_liLI()
     ["lang"] = "Lietuviu",
     ["logged"] = "|cFF00FF00Karalyste:|r "..GetCVar("realmName").." |cFF00FF00Veikejas:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["selectionerror1"] = "Please select yourself or another player or nothing!",
     ["tabmenu_Main"] = "Pagrindinis",
     ["tabmenu_Char"] = "Veikejas",
     ["tabmenu_Tele"] = "Perkelimas",
@@ -43,10 +44,18 @@ function Return_liLI()
     ["tt_ScaleSlider"] = "Slide this slider to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti daiktu, bei sudaryti savo populiariu daiktu sarasa.",
     ["tt_SpellButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti magiju, bei sudaryti savo populiariu magiju sarasa.",
+    ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
     ["ma_ItemButton"] = "Daiktai",
     ["ma_SpellButton"] = "Burtai",
     ["ma_LanguageButton"] = "Pakeisti kalba",
     ["ma_ToggleGMButton"] = "GM-Rezimas",
-    ["ma_ToggleFlyButton"] = "Fly-Rezimas"
+    ["ma_ToggleFlyButton"] = "Fly-Rezimas",
+    ["ma_LearnAllButton"] = "All spells",
+    ["ma_LearnCraftsButton"] = "All professions and recipes",
+    ["ma_LearnGMButton"] = "Default GM spells",
+    ["ma_LearnLangButton"] = "All languages",
+    ["ma_LearnClassButton"] = "All class-spells",
+    ["ma_SearchButton"] = "Search...",
+    ["ma_ResetButton"] = "Reset"
   }
 end

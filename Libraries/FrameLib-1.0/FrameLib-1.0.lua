@@ -61,6 +61,8 @@ function FrameLib:BuildFrame(def)
     frame:SetScale(def.size.scale or 1)
   end
 	
+  if def.hidden then frame:Hide() end
+  
   t = def.hitRectInsets
 	if t then frame:SetHitRectInsets(t[1] or t.minX or t.left,t[2] or t.maxX or t.right, t[3] or t.maxY or t.top, t[4] or t.minY or t.bottom) end	
 	
@@ -149,7 +151,7 @@ function FrameLib:BuildFrame(def)
 		frame:SetJustifyH(def.justify.h or "LEFT")
 		frame:SetJustifyV(def.justify.v or "TOP")
 		frame:SetMaxLines(def.maxLines or 1000000)
-	end
+  end
   
 	return frame
 end
