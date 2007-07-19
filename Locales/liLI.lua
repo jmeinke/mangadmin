@@ -45,6 +45,9 @@ function Return_liLI()
     ["tt_ItemButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti daiktu, bei sudaryti savo populiariu daiktu sarasa.",
     ["tt_SpellButton"] = "Spausk si mygtuka kad atidaryti langa su galimybe ieskoti magiju, bei sudaryti savo populiariu magiju sarasa.",
     ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
+    ["tt_AnnounceButton"] = "Click to announce a system message.",
+    ["tt_KickButton"] = "Click to kick the selected player from the server.",
+    ["tt_ShutdownButton"] = "Click to shut down the server in the amount of seconds from the field, if omitted shut down immediately!",
     ["ma_ItemButton"] = "Daiktai",
     ["ma_SpellButton"] = "Burtai",
     ["ma_LanguageButton"] = "Pakeisti kalba",
@@ -56,6 +59,9 @@ function Return_liLI()
     ["ma_LearnLangButton"] = "All languages",
     ["ma_LearnClassButton"] = "All class-spells",
     ["ma_SearchButton"] = "Search...",
-    ["ma_ResetButton"] = "Reset"
+    ["ma_ResetButton"] = "Reset",
+    ["ma_KickButton"] = "Kick",
+    ["ma_AnnounceButton"] = "Announce",
+    ["ma_ShutdownButton"] = "Shut down!"
   }
 end

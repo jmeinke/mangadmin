@@ -45,6 +45,9 @@ function Return_roRO()
     ["tt_ItemButton"] = "Apasa acest buton pentru a activa o noua fereastra care va avea rolul de a cauta iteme noi sau de a le  mentena pe cele deja existente.",
     ["tt_SpellButton"] = "Apasa acest buton pentru a activa o noua fereastra ceva va avea rolul de a cauta spell-uri noi sau de a le mentena pe cele deja existente.",
     ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
+    ["tt_AnnounceButton"] = "Click to announce a system message.",
+    ["tt_KickButton"] = "Click to kick the selected player from the server.",
+    ["tt_ShutdownButton"] = "Click to shut down the server in the amount of seconds from the field, if omitted shut down immediately!",
     ["ma_ItemButton"] = "Iteme",
     ["ma_SpellButton"] = "Spell-uri",
     ["ma_LanguageButton"] = "Schimba limba",
@@ -56,6 +59,9 @@ function Return_roRO()
     ["ma_LearnLangButton"] = "All languages",
     ["ma_LearnClassButton"] = "All class-spells",
     ["ma_SearchButton"] = "Search...",
-    ["ma_ResetButton"] = "Reset"
+    ["ma_ResetButton"] = "Reset",
+    ["ma_KickButton"] = "Kick",
+    ["ma_AnnounceButton"] = "Announce",
+    ["ma_ShutdownButton"] = "Shut down!"
   }
 end

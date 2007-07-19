@@ -46,6 +46,9 @@ function Return_csCZ()
     ["tt_ItemButton"] = "Klikni sem pro prepnutí na správu predmetu, funkce hledání vecí, správu položek oblíbených.",
     ["tt_SpellButton"] = "Klikni sem pro prepnutí na správu kouzel, funce hledání vecí, položek oblíbených.",
     ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
+    ["tt_AnnounceButton"] = "Click to announce a system message.",
+    ["tt_KickButton"] = "Click to kick the selected player from the server.",
+    ["tt_ShutdownButton"] = "Click to shut down the server in the amount of seconds from the field, if omitted shut down immediately!",
     ["ma_ItemButton"] = "Predmety",
     ["ma_SpellButton"] = "Kouzla",
     ["ma_LanguageButton"] = "Zmenit Jazyk",
@@ -57,6 +60,9 @@ function Return_csCZ()
     ["ma_LearnLangButton"] = "All languages",
     ["ma_LearnClassButton"] = "All class-spells",
     ["ma_SearchButton"] = "Search...",
-    ["ma_ResetButton"] = "Reset"
+    ["ma_ResetButton"] = "Reset",
+    ["ma_KickButton"] = "Kick",
+    ["ma_AnnounceButton"] = "Announce",
+    ["ma_ShutdownButton"] = "Shut down!"
   }
 end
