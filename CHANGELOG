@@ -19,6 +19,10 @@
 
 =CHANGELOG=
 
+Rev. 14:
+  - applied UTF-8 encoding to the language files
+  - updated Czech language, thanks to Virnik
+
 Rev. 13:
   - finally implemented item-lookup and spell-lookup
   - reactivated Character Tab and implemented new buttons: 

@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+Ôªø-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -27,7 +27,7 @@ function Return_frFR()
     ["tabmenu_Main"] = "Accueil",
     ["tabmenu_Char"] = "Personnage",
     ["tabmenu_Tele"] = "Teleportations",
-    ["tabmenu_Ticket"] = "Syst√\168me de support",
+    ["tabmenu_Ticket"] = "Syst√É\168me de support",
     ["tabmenu_Server"] = "Serveur",
     ["tabmenu_Log"] = "Log",
     ["tt_Default"] = "D\195\169placez votre curseur sur une ic\195\180ne pour activer l'outil correspondant.",
@@ -36,7 +36,7 @@ function Return_frFR()
     ["tt_TeleButton"] = "Todo.",
     ["tt_TicketButton"] = "Todo.",
     ["tt_ServerButton"] = "Cliquez sur ce bouton pour avoir des infomations sur le serveur.",
-    ["tt_LogButton"] = "Cliquez sur ce bouton pour acc\195\169der au protocole de gestion des ench√\168res.",
+    ["tt_LogButton"] = "Cliquez sur ce bouton pour acc\195\169der au protocole de gestion des ench√É\168res.",
     ["tt_LanguageButton"] = "Click this button to change the language and reload MangAdmin.",
     ["tt_ToggleGMButton"] = "Click this button to toggle GM-mode.",
     ["tt_ToggleFlyButton"] = "Click this button to toggle Fly-mode",
