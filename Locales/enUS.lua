@@ -62,6 +62,6 @@ function Return_enUS()
     ["ma_ResetButton"] = "Reset",
     ["ma_KickButton"] = "Kick",
     ["ma_AnnounceButton"] = "Announce",
-    ["ma_ShutdownButton"] = "Shut down!"
+    ["ma_ShutdownButton"] = "Shutdown!"
   }
 end

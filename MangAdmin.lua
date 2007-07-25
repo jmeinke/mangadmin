@@ -910,7 +910,7 @@ function MangAdmin:CreateFrames()
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 80,
+  		width = 120,
   		height = 20
   	},
   	setpoint = {
@@ -930,12 +930,12 @@ function MangAdmin:CreateFrames()
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 160,
+  		width = 180,
   		height = 20
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 94,
+  		offX = 134,
   		offY = -4
   	},
   	text = Locale["ma_LearnCraftsButton"]
@@ -950,12 +950,12 @@ function MangAdmin:CreateFrames()
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 120,
+  		width = 140,
   		height = 20
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 258,
+  		offX = 318,
   		offY = -4
   	},
   	text = Locale["ma_LearnGMButton"]
@@ -970,12 +970,12 @@ function MangAdmin:CreateFrames()
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 120,
+  		width = 200,
   		height = 20
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 382,
+  		offX = 462,
   		offY = -4
   	},
   	text = Locale["ma_LearnClassButton"]
