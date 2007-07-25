@@ -31,7 +31,7 @@ function Return_deDE()
     ["tabmenu_Server"] = "Server",
     ["tabmenu_Log"] = "Log",
     ["tt_Default"] = "Bewege deine Maus \195\188ber ein Element um die jeweils dazugeh\195\182rige Hilfe anzuzeigen!",
-    ["tt_MainButton"] = "Klicke diesen Button um das Hauptfenster von MangAdmin anzuzeigen.",
+    ["tt_MainButton"] = "Klicke um das Hauptfenster von MangAdmin anzuzeigen.",
     ["tt_CharButton"] = "Todo.",
     ["tt_TeleButton"] = "Todo.",
     ["tt_TicketButton"] = "Todo.",
@@ -44,10 +44,10 @@ function Return_deDE()
     ["tt_ScaleSlider"] = "Verschiebe den Regler auf die gew\195\188nschte Position um die Gr\195\182\195\159e des ausgew\195\164hlten Charakters zu ver\195\164ndern.",
     ["tt_ItemButton"] = "Klicke um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Items suchen und sie als Favoriten verwalten kann.",
     ["tt_SpellButton"] = "Klicke um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Spells suchen und sie als Favoriten verwalten kann.",
-    ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
-    ["tt_AnnounceButton"] = "Click to announce a system message.",
-    ["tt_KickButton"] = "Click to kick the selected player from the server.",
-    ["tt_ShutdownButton"] = "Click to shut down the server in the amount of seconds from the field, if omitted shut down immediately!",
+    ["tt_SearchDefault"] = "Jetzt kannst du ein Suchwort eingeben und die Suche starten.",
+    ["tt_AnnounceButton"] = "Klicke um eine System-Nachricht anzuzeigen, die von allen Spielern gesehen wird.",
+    ["tt_KickButton"] = "Klicke um den selektierten Spieler zu kicken.",
+    ["tt_ShutdownButton"] = "Klicke um den Server nach einem Countdown herunterzufahren. Wenn im Feld keine Zahl eingegeben wurde wird der Server sofort heruntergefahren!",
     ["ma_ItemButton"] = "Items",
     ["ma_SpellButton"] = "Spells",
     ["ma_LanguageButton"] = "Sprache \195\164ndern",
@@ -58,10 +58,10 @@ function Return_deDE()
     ["ma_LearnGMButton"] = "Default GM Spells",
     ["ma_LearnLangButton"] = "Alle Sprachen",
     ["ma_LearnClassButton"] = "Alle Class-Spells",
-    ["ma_SearchButton"] = "Search...",
+    ["ma_SearchButton"] = "Suchen...",
     ["ma_ResetButton"] = "Reset",
     ["ma_KickButton"] = "Kick",
     ["ma_AnnounceButton"] = "Announce",
-    ["ma_ShutdownButton"] = "Shut down!"
+    ["ma_ShutdownButton"] = "Shutdown!"
   } 
 end

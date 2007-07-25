@@ -19,6 +19,14 @@
 
 =CHANGELOG=
 
+Rev. 15:
+  - corrected a few typos
+  - made the learn buttons greater, to support more languages and don't mess up the design
+  - added the TODO file with the idea for a GameObject onglet provided by killerdead
+  - updated Italian language, thanks to hybrid1907
+  - updated Finnish language, thanks to Lone
+  - updated Czech language, thanks to Virnik
+
 Rev. 14:
   - applied UTF-8 encoding to the language files
   - updated Czech language, thanks to Virnik
