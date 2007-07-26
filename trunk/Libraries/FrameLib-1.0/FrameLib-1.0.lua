@@ -230,14 +230,21 @@ end
 
 --[[BUILD FONTSTRING]]
 function FrameLib:BuildFontString(def)
-	local fontstr = def.parent:CreateFontString(def.name, def.level or "ARTWORK", def.fontObject or "GameFontNormal")
-	local t = def.color	if(t) then fontstr:SetTextColor(t.r or t[1], t.g or t[2], t.b or t[3], t.a or t[4] or 1) end	
+	local fontstr = def.parent:CreateFontString(def.name, def.level or "ARTWORK", def.object or "GameFontNormal")
+	local t = def.color	
+  if t then 
+    fontstr:SetTextColor(t.r or t[1], t.g or t[2], t.b or t[3], t.a or t[4] or 1) 
+  end	
 	if def.setpoint then
 		fontstr:ClearAllPoints()
 		fontstr:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or fontstr:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)
 	else
 		fontstr:SetAllPoints()
 	end
+  t = def.font
+  if t then
+    fontstr:SetFont(def.object or "GameFontNormal", t.size or 14, t.flags or nil)
+  end
 	t = def.justifyH
 	if t then fontstr:SetJustifyH(def.justifyH) end
 	t = def.justifyV

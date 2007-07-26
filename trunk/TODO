@@ -30,4 +30,23 @@
       By clicking move up with +4 the command, the result is: 
       .move 0 0 4 0 (with a gameobject coordinate at 0 0 0 0)
     - provided by killerdead
+   
+  - buttons:
+    - reset level/spells/stats/talents
+    - levelup level*
+    - create guild leader* name*
+    - learn profession* with skill*
+    - modify money*/energy*/rage*/hp*/mana*
+    - delete
+    - add creature guid*
+    - kill
+    - respawn
+    - distance
+    - info
+    - modify level*/spawn distance*/spawn time*/model id*/faction*/flags*
+    - add gameobject id*
+    - delete gameobject
+    - turn gameobject
+    - move up/down/left/right gameobject
+    - * these are input fields
     
