@@ -36,5 +36,8 @@ Locales\itIT.lua
 Locales\liLI.lua
 Locales\roRO.lua
 Locales\csCZ.lua
+Locales\huHU.lua
+Locales\esES.lua
+Locales\zhCN.lua
 
 MangAdmin.lua

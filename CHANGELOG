@@ -19,6 +19,27 @@
 
 =CHANGELOG=
 
+Rev. 16:
+  - added Spanish language, thanks to Riven
+  - added Chinese language, thanks to galaxyvis/Elvis --please test, on german wow I see no chinese chars
+  - added Hungarian language, thanks to Kabraxis
+  - added Misc tab with no buttons so far
+  - many changes in the language files
+  - changed buttons:
+    - toggle gm ->> GM on / GM off
+    - toggle flymode ->> Flymode on / Flymode off
+  - new buttons:
+    - hover on/off
+    - whispers on/off
+    - invisibility on/off
+    - taxi cheat on/off
+    - revive
+    - dismount
+    - save player
+    - show bank
+    - make screenshot
+  - stopped spamming of log with navigation-messages
+
 Rev. 15:
   - corrected a few typos
   - made the learn buttons greater, to support more languages and don't mess up the design
@@ -54,17 +75,17 @@ Rev. 12:
   - todo for next revs: finish implementing item-lookup and favourites
 
 Rev. 11:
-  - added romania translation, thanks to x_ray
-  - updated finnish translation, by Lone
+  - added Romania translation, thanks to x_ray
+  - updated Finnish translation, by Lone
 
 Rev. 10:
-  - added lithuania translation, thanks to visagalis
+  - added Lithuania translation, thanks to visagalis
 
 Rev. 9:
   - upgraded MangAdmin's License to GPL v.3
   - applied GPL v.3 headers to nearly all MangAdmin files
   - added a more clearly format to this changelog now each lines maximum is 110 columns
-  - updated finnish translation, thanks to Lone
+  - updated Finnish translation, thanks to Lone
 
 Rev. 8:
   - added a speed-slider
@@ -95,11 +116,11 @@ Rev. 6:
     so please be patient! ty
   
 Rev. 5:
-  - added italian language, thanks to hybrid1907
+  - added Italian language, thanks to hybrid1907
 
 Rev. 4:
-  - added better finnish translation, thanks to Lone
-  - added better polish translation, thanks to sahib
+  - updated Finnish translation, thanks to Lone
+  - updated Polish translation, thanks to sahib
   - converted language files to be display characters without errors
   - added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
   - added a toggle gm button

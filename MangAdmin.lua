@@ -77,6 +77,9 @@ Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
 Locale:RegisterTranslations("liLI", function() return Return_liLI() end)
 Locale:RegisterTranslations("roRO", function() return Return_roRO() end)
 Locale:RegisterTranslations("csCZ", function() return Return_csCZ() end)
+Locale:RegisterTranslations("huHU", function() return Return_huHU() end)
+Locale:RegisterTranslations("esES", function() return Return_esES() end)
+Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -113,13 +116,13 @@ function MangAdmin:CreateFrames()
   		color = {0,0,0,0.5}
   	},
   	size = {
-  		width = 570,
+  		width = 670,
   		height = 22
   	},
   	setpoint = {
   		pos = "TOPLEFT",
   		offY = 22,
-  		offX = 10
+  		offX = 4
   	},
   	inherits = nil
   })
@@ -383,7 +386,11 @@ function MangAdmin:CreateFrames()
   		pos = "TOPLEFT",
   		offX = 10,
   		offY = -10
-  	}
+  	},
+    font = {
+      size = 20,
+      flags = "THICKOUTLINE"
+    }
   })
   
   FrameLib:BuildFontString({
@@ -638,8 +645,10 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 12,
-  		offY = 20
+      relTo = "ma_menubgframe",
+      relPos = "TOPLEFT",
+      offX = 4,
+      offY = -4
   	},
   	text = Locale["tabmenu_Main"]
   })
@@ -663,8 +672,9 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 94,
-  		offY = 20
+      relTo = "ma_mainbutton",
+      relPos = "TOPRIGHT",
+      offX = 2
   	},
   	text = Locale["tabmenu_Char"]
   })
@@ -688,8 +698,9 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 176,
-  		offY = 20
+      relTo = "ma_charbutton",
+      relPos = "TOPRIGHT",
+      offX = 2
   	},
   	text = Locale["tabmenu_Tele"]
   })
@@ -713,10 +724,37 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 278,
-  		offY = 20
+      relTo = "ma_telebutton",
+      relPos = "TOPRIGHT",
+      offX = 2
   	},
   	text = Locale["tabmenu_Ticket"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_miscbutton",
+  	group = "tabbuttons",
+  	parent = ma_topframe,
+  	texture = {
+  		name = "ma_miscbutton_texture",
+  		color = {102,102,102,0.7},
+  		gradient = {
+  			orientation = "vertical",
+  			min = {102,102,102,0},
+  			max = {102,102,102,0.7}
+  		}
+  	},
+  	size = {
+  		width = 100,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+      relTo = "ma_ticketbutton",
+      relPos = "TOPRIGHT",
+      offX = 2
+  	},
+  	text = Locale["tabmenu_Misc"]
   })
 
   FrameLib:BuildButton({
@@ -738,8 +776,9 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 410,
-  		offY = 20
+      relTo = "ma_miscbutton",
+      relPos = "TOPRIGHT",
+      offX = 2
   	},
   	text = Locale["tabmenu_Server"]
   })
@@ -763,8 +802,9 @@ function MangAdmin:CreateFrames()
   	},
   	setpoint = {
   		pos = "TOPLEFT",
-  		offX = 492,
-  		offY = 20
+      relTo = "ma_serverbutton",
+      relPos = "TOPRIGHT",
+      offX = 2
   	},
   	text = Locale["tabmenu_Log"]
   })
@@ -772,75 +812,283 @@ function MangAdmin:CreateFrames()
   -- [[ Group Elements ]]
   -- MAIN
   FrameLib:BuildButton({
-  	name = "ma_togglegmbutton",
+  	name = "ma_gmonbutton",
   	group = "main",
   	parent = ma_midframe,
   	texture = {
-  		name = "ma_togglegmbutton_texture",
+  		name = "ma_gmonbutton_texture",
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 80,
+  		width = 120,
   		height = 20
   	},
   	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -4
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -10
   	},
-  	text = Locale["ma_ToggleGMButton"]
-  })
-
-  FrameLib:BuildButton({
-  	name = "ma_toggleflybutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_toggleflybutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -28
-  	},
-  	text = Locale["ma_ToggleFlyButton"]
-  })
-    
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_speedslider",
-  	group = "main",
-  	parent = ma_midframe,
-    size = {
-      width = 80
-    },
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-      offY = -62
-  	},
-  	inherits = "OptionsSliderTemplate"
+  	text = Locale["ma_GMOnButton"]
   })
   
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_scaleslider",
+  FrameLib:BuildButton({
+  	name = "ma_gmoffbutton",
   	group = "main",
   	parent = ma_midframe,
-    size = {
-      width = 80
-    },
+  	texture = {
+  		name = "ma_gmoffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -10
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_flyonbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_flyonbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -34
+  	},
+  	text = Locale["ma_FlyOnButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_flyoffbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_flyoffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -34
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_hoveronbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_hoveronbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -58
+  	},
+  	text = Locale["ma_HoverOnButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_hoveroffbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_hoveroffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -58
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_whisperonbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_whisperonbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -82
+  	},
+  	text = Locale["ma_WhisperOnButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_whisperoffbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_whisperoffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -82
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_invisibleonbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_invisibleonbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -106
+  	},
+  	text = Locale["ma_InvisOnButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_invisibleoffbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_invisibleoffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -106
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_taxicheatonbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_taxicheatonbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 120,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 10,
+  		offY = -130
+  	},
+  	text = Locale["ma_TaxiOnButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_taxicheatoffbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_taxicheatoffbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 40,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPLEFT",
+  		offX = 134,
+  		offY = -130
+  	},
+  	text = Locale["ma_OffButton"]
+  })
+    
+  FrameLib:BuildButton({
+  	name = "ma_screenshotbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_screenshotbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
   	setpoint = {
   		pos = "TOPRIGHT",
   		offX = -10,
-      offY = -100
+  		offY = -10
   	},
-  	inherits = "OptionsSliderTemplate"
+  	text = Locale["ma_ScreenshotButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_bankbutton",
+  	group = "main",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_bankbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "TOPRIGHT",
+  		offX = -10,
+  		offY = -34
+  	},
+  	text = Locale["ma_BankButton"]
   })
     
   -- LOG
@@ -1001,6 +1249,58 @@ function MangAdmin:CreateFrames()
   	text = Locale["ma_LearnLangButton"]
   })
   
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_speedslider",
+  	group = "char",
+  	parent = ma_midframe,
+    size = {
+      width = 80
+    },
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 10,
+      offY = 60
+  	},
+  	inherits = "OptionsSliderTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_scaleslider",
+  	group = "char",
+  	parent = ma_midframe,
+    size = {
+      width = 80
+    },
+  	setpoint = {
+  		pos = "BOTTOMLEFT",
+  		offX = 10,
+      offY = 20
+  	},
+  	inherits = "OptionsSliderTemplate"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_killbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_killbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -10,
+  		offY = 10
+  	},
+  	text = "Kill"
+  })
+  
   FrameLib:BuildButton({
   	name = "ma_kickbutton",
   	group = "char",
@@ -1010,15 +1310,75 @@ function MangAdmin:CreateFrames()
   		color = {33,164,210,1.0}
   	},
   	size = {
-  		width = 120,
+  		width = 80,
   		height = 20
   	},
   	setpoint = {
   		pos = "BOTTOMRIGHT",
-  		offX = -10,
+  		offX = -94,
   		offY = 10
   	},
   	text = Locale["ma_KickButton"]
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_dismountbutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_dismountbutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -178,
+  		offY = 10
+  	},
+  	text = "Dismount"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_revivebutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_revivebutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -262,
+  		offY = 10
+  	},
+  	text = "Revive"
+  })
+  
+  FrameLib:BuildButton({
+  	name = "ma_savebutton",
+  	group = "char",
+  	parent = ma_midframe,
+  	texture = {
+  		name = "ma_savebutton_texture",
+  		color = {33,164,210,1.0}
+  	},
+  	size = {
+  		width = 80,
+  		height = 20
+  	},
+  	setpoint = {
+  		pos = "BOTTOMRIGHT",
+  		offX = -346,
+  		offY = 10
+  	},
+  	text = "Save"
   })
   
   --SERVER
@@ -1206,47 +1566,67 @@ function MangAdmin:OnClick()
 end
 
 function MangAdmin:PrepareButtons()
-  --here the function of all buttons are defined
+  --here the functions of all buttons are defined
 	local function preScript(object, text, script)
-    if text then
-  		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
-  		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
-    end
-		if type(script) == "function" then
-  		object:SetScript("OnClick", script)
-  	elseif type(script) == "table" then
-  		for k,v in pairs(script) do
-  			object:SetScript(unpack(v))
-  		end
-    end
+    --if object then
+      if text then
+    		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
+    		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+      end
+  		if type(script) == "function" then
+    		object:SetScript("OnClick", script)
+    	elseif type(script) == "table" then
+    		for k,v in pairs(script) do
+    			object:SetScript(unpack(v))
+    		end
+      end
+    --end
 	end
-  --[[tab buttons]]
-	preScript(ma_mainbutton, Locale["tt_MainButton"], function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
-	preScript(ma_charbutton, Locale["tt_CharButton"], function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
-	--preScript(ma_telebutton, Locale["tt_TeleButton"], function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
-	--preScript(ma_ticketbutton, Locale["tt_TicketButton"], function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
-	preScript(ma_serverbutton, Locale["tt_ServerButton"], function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
-	preScript(ma_logbutton, Locale["tt_LogButton"], function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
-  --Special
-  preScript(ma_languagebutton, Locale["tt_LanguageButton"], function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  preScript(ma_speedslider, Locale["tt_SpeedSlider"], {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
-  preScript(ma_scaleslider, Locale["tt_ScaleSlider"], {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})
-  --Buttons
-  preScript(ma_itembutton, Locale["tt_ItemButton"], function() MangAdmin:ToggleSearchPopup("item") end)
-  preScript(ma_spellbutton, Locale["tt_SpellButton"], function() MangAdmin:ToggleSearchPopup("spell") end)
-  preScript(ma_togglegmbutton, Locale["tt_ToggleGMButton"], function() MangAdmin:ToggleGMMode() end)
-  preScript(ma_toggleflybutton, Locale["tt_ToggleFlyButton"], function() MangAdmin:ToggleFlyMode() end)
-  preScript(ma_learnallbutton, nil, function() MangAdmin:LearnSpell("all") end)
-  preScript(ma_learncraftsbutton, nil, function() MangAdmin:LearnSpell("all_crafts") end)
-  preScript(ma_learngmbutton, nil, function() MangAdmin:LearnSpell("all_gm") end)
-  preScript(ma_learnlangbutton, nil, function() MangAdmin:LearnSpell("all_lang") end)
-  preScript(ma_learnclassbutton, nil, function() MangAdmin:LearnSpell("all_myclass") end)
-  preScript(ma_searchbutton, nil, function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
-  preScript(ma_resetsearchbutton, nil, function() MangAdmin:SearchReset() end)
-  preScript(ma_kickbutton, Locale["tt_KickButton"], function() MangAdmin:KickPlayer() end)
-  preScript(ma_announcebutton, Locale["tt_AnnounceButton"], function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
-  preScript(ma_resetannouncebutton, nil, function() ma_announceeditbox:SetText("") end)
-  preScript(ma_shutdownbutton, Locale["tt_ShutdownButton"], function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
+  
+  -- start tab buttons
+	preScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
+	preScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
+	preScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele")]] MangAdmin:Print("Not available yet!") end)
+	preScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() --[[MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket")]] MangAdmin:Print("Not available yet!") end)
+	preScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
+	preScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
+  preScript(ma_logbutton           , Locale["tt_LogButton"]       , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
+  --end tab buttons
+  
+  preScript(ma_languagebutton      , Locale["tt_LanguageButton"]  , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
+  preScript(ma_speedslider         , Locale["tt_SpeedSlider"]     , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  preScript(ma_scaleslider         , Locale["tt_ScaleSlider"]     , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
+  preScript(ma_itembutton          , Locale["tt_ItemButton"]      , function() MangAdmin:ToggleSearchPopup("item") end)
+  preScript(ma_spellbutton         , Locale["tt_SpellButton"]     , function() MangAdmin:ToggleSearchPopup("spell") end)
+  preScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]    , function() MangAdmin:Screenshot() end)
+  preScript(ma_gmonbutton          , Locale["tt_GMOnButton"]      , function() MangAdmin:ToggleGMMode("on") end)
+  preScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]     , function() MangAdmin:ToggleGMMode("off") end)
+  preScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]     , function() MangAdmin:ToggleFlyMode("on") end)
+  preScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]    , function() MangAdmin:ToggleFlyMode("off") end)
+  preScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]   , function() MangAdmin:ToggleHoverMode(1) end)
+  preScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]  , function() MangAdmin:ToggleHoverMode(0) end)
+  preScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]   , function() MangAdmin:ToggleWhisper("on") end)
+  preScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]  , function() MangAdmin:ToggleWhisper("off") end)
+  preScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]   , function() MangAdmin:ToggleVisible(0) end)
+  preScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]  , function() MangAdmin:ToggleVisible(1) end)
+  preScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]    , function() MangAdmin:ToggleTaxicheat(1) end)
+  preScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]   , function() MangAdmin:ToggleTaxicheat(0) end)
+  preScript(ma_bankbutton          , Locale["tt_BankButton"]      , function() MangAdmin:ChatMsg(".bank") end)
+  preScript(ma_learnallbutton      , nil                          , function() MangAdmin:LearnSpell("all") end)
+  preScript(ma_learncraftsbutton   , nil                          , function() MangAdmin:LearnSpell("all_crafts") end)
+  preScript(ma_learngmbutton       , nil                          , function() MangAdmin:LearnSpell("all_gm") end)
+  preScript(ma_learnlangbutton     , nil                          , function() MangAdmin:LearnSpell("all_lang") end)
+  preScript(ma_learnclassbutton    , nil                          , function() MangAdmin:LearnSpell("all_myclass") end)
+  preScript(ma_searchbutton        , nil                          , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  preScript(ma_resetsearchbutton   , nil                          , function() MangAdmin:SearchReset() end)
+  preScript(ma_revivebutton        , nil                          , function() MangAdmin:RevivePlayer() end)
+  preScript(ma_killbutton          , nil                          , function() MangAdmin:KillSomething() end)
+  preScript(ma_savebutton          , nil                          , function() MangAdmin:SavePlayer() end)
+  preScript(ma_dismountbutton      , nil                          , function() MangAdmin:DismountPlayer() end)
+  preScript(ma_kickbutton          , Locale["tt_KickButton"]      , function() MangAdmin:KickPlayer() end)
+  preScript(ma_announcebutton      , Locale["tt_AnnounceButton"]  , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
+  preScript(ma_resetannouncebutton , nil                          , function() ma_announceeditbox:SetText("") end)
+  preScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]  , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
 end
 
 function MangAdmin:ToggleTabButton(btn)
@@ -1262,7 +1642,7 @@ function MangAdmin:ToggleTabButton(btn)
 end
 
 function MangAdmin:ToggleContentGroup(group)
-	MangAdmin:LogAction("Toggled navigation point '"..group.."'.")
+	--MangAdmin:LogAction("Toggled navigation point '"..group.."'.")
   MangAdmin:HideAllGroups()
 	FrameLib:HandleGroup(group, function(frame) frame:Show() end)
 end
@@ -1276,9 +1656,9 @@ function MangAdmin:ToggleSearchPopup(value)
 		FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
 	end
   if value == "item" then
-    ma_lookuptext:SetText("Item-Lookup")
+    ma_lookuptext:SetText(Locale["ma_ItemButton"])
   else
-    ma_lookuptext:SetText("Spell-Lookup")
+    ma_lookuptext:SetText(Locale["ma_SpellButton"])
   end
   self:SearchReset()
 end
@@ -1289,6 +1669,7 @@ function MangAdmin:HideAllGroups()
 	--FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
 	--FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
 	FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
+  --FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
 	FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
 end
 
@@ -1367,7 +1748,7 @@ function MangAdmin:GetValueCallHandler(guid, field, value)
     ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..guid)
     return false    
   elseif guid == realGuid then
-    if field == "228" then
+    --[[if field == "228" then
       -- 228 = PLAYER_FLAGS
       if MangAdmin:ProcessFunctionOrder("ToggleGMMode") then
         -- Toggling Gamemaster mode
@@ -1379,7 +1760,8 @@ function MangAdmin:GetValueCallHandler(guid, field, value)
     else
       -- not a registered field case, so put normal values out
       return true
-    end
+    end]]
+    return true
   else
     MangAdmin:LogAction("DEBUG: Getvalues are: GUID = "..guid.."; field = "..field.."; value = "..value..";")
     return true
@@ -1472,7 +1854,7 @@ function MangAdmin:ChangeLanguage(locale)
 end
 
 function MangAdmin:ToggleGMMode(value)
-  if not value then
+  --[[if not value then
     if MangAdmin:Selection("self") or MangAdmin:Selection("none") then
       MangAdmin:InsertFunctionOrder("ToggleGMMode")
       MangAdmin:ChatMsg(".getvalue 228") -- 228 = PLAYER_FLAGS (8 = GMMODE)
@@ -1482,24 +1864,60 @@ function MangAdmin:ToggleGMMode(value)
     end
   else
     local status
-    if MangAdmin:AndBit(value, 8) then status = "off" else status = "on" end
-    MangAdmin:ChatMsg(".gm"..status)
-    MangAdmin:LogAction("Turned GM-mode to "..status..".")
-    return false
+    if MangAdmin:AndBit(value, 8) then status = "off" else status = "on" end]]
+    MangAdmin:ChatMsg(".gm"..value)
+    MangAdmin:LogAction("Turned GM-mode to "..value..".")
+  --  return false
+  --end
+end
+
+function MangAdmin:ToggleFlyMode(value)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    MangAdmin:ChatMsg(".flymode "..value)
+    MangAdmin:LogAction("Turned Fly-mode "..value.." for "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
   end
 end
 
-function MangAdmin:ToggleFlyMode()
+function MangAdmin:ToggleHoverMode(value)
+  MangAdmin:ChatMsg(".hover "..value)
   local status
-  if not self.db.char.workaroundValues.flymode then
+  if value == 1 then
     status = "on"
-    self.db.char.workaroundValues.flymode = true
   else
     status = "off"
-    self.db.char.workaroundValues.flymode = nil
   end
-  MangAdmin:ChatMsg(".flymode "..status)
-  MangAdmin:LogAction("Turned Fly-mode to "..status..".")
+  MangAdmin:LogAction("Turned Hover-mode "..status..".")
+end
+
+function MangAdmin:ToggleWhisper(value)
+  MangAdmin:ChatMsg(".whispers "..value)
+  MangAdmin:LogAction("Turned accepting whispers to "..value..".")
+end
+
+function MangAdmin:ToggleVisible(value)
+  MangAdmin:ChatMsg(".visible "..value)
+  if value == 1 then
+    MangAdmin:LogAction("Turned you visible.")
+  else
+    MangAdmin:LogAction("Turned you invisible.")
+  end  
+end
+
+function MangAdmin:ToggleTaxicheat(value)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    MangAdmin:ChatMsg(".taxicheat "..value)
+    if value == 1 then
+      MangAdmin:LogAction("Activated taxicheat to "..player..".")
+    else
+      MangAdmin:LogAction("Disabled taxicheat to "..player..".")
+    end
+  else
+    self:Print(Locale["selectionerror1"])
+  end
 end
 
 function MangAdmin:SetSpeed()
@@ -1590,6 +2008,63 @@ function MangAdmin:KickPlayer()
   end
 end
 
+function MangAdmin:RevivePlayer()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".revive")
+    self:LogAction("Revived player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:DismountPlayer()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".dismount")
+    self:LogAction("Dismounted player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:SavePlayer()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".save")
+    self:LogAction("Saved player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:KillSomething()
+  local target = UnitName("target") or UnitName("player")
+  self:ChatMsg(".die")
+  self:LogAction("Killed "..target..".")
+end
+
+function MangAdmin:LevelupPlayer(value)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".levelup "..value)
+    self:LogAction("Leveled up player "..player.." by "..value.." levels.")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:CreateGuild(leader, name)
+  self:ChatMsg(".createguild "..leader.." "..name)
+  self:LogAction("Created guild '"..name.."' with leader "..leader..".")
+end
+
+function MangAdmin:Screenshot()
+  --UIParent:Hide()  -does not go?
+  TakeScreenshot()
+  --UIParent:Show()
+end
+
 function MangAdmin:Announce(value)
   self:ChatMsg(".announce "..value)
   self:LogAction("Announced message: "..value)
@@ -1622,7 +2097,7 @@ end
 
 function MangAdmin:SearchReset()
   ma_searcheditbox:SetText("")
-  ma_lookupresulttext:SetText("0 Results")
+  ma_lookupresulttext:SetText(Locale["searchResults"].."0")
   self.db.char.itemrequest = false
   self.db.char.spellrequest = false
   self.db.account.buffer.items = {}
@@ -1636,7 +2111,21 @@ function MangAdmin:LangDropDownInit()
   local function LangDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
-    local buttons = {{"English","enUS"},{"German","deDE"},{"French","frFR"},{"Italian","itIT"},{"Finnish","fiFI"},{"Polish","plPL"},{"Swedish","svSV"},{"Lithuania","liLI"},{"Romania","roRO"},{"Czech","csCZ"}}  
+    local buttons = {
+      {"English","enUS"},
+      {"German","deDE"},
+      {"French","frFR"},
+      {"Italian","itIT"},
+      {"Finnish","fiFI"},
+      {"Polish","plPL"},
+      {"Swedish","svSV"},
+      {"Lithuania","liLI"},
+      {"Romania","roRO"},
+      {"Czech","csCZ"},
+      {"Hungarian","huHU"},
+      {"Spanish","esES"},
+      {"Chinese","zhCN"}
+    }
     for k,v in ipairs(buttons) do
       info.text = v[1]
       info.value = v[2]
@@ -1672,7 +2161,7 @@ function MangAdmin:InitSliders()
 end
 
 function MangAdmin:NoSearchOrResult()
-  ma_lookupresulttext:SetText("0 Results")
+  ma_lookupresulttext:SetText(Locale["searchResults"].."0")
   FauxScrollFrame_Update(ma_PopupScrollBar,7,7,40)
   for line = 1,7 do
     getglobal("ma_PopupScrollBarEntry"..line):Disable()
@@ -1694,7 +2183,7 @@ function PopupScrollUpdate()
   
   if MangAdmin.db.char.itemrequest then --get items
     if itemCount > 0 then
-      ma_lookupresulttext:SetText(itemCount.." Results")
+      ma_lookupresulttext:SetText(Locale["searchResults"]..itemCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,40)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -1719,7 +2208,7 @@ function PopupScrollUpdate()
     end
   elseif MangAdmin.db.char.spellrequest then --get spells
     if spellCount > 0 then
-      ma_lookupresulttext:SetText(spellCount.." Results")
+      ma_lookupresulttext:SetText(Locale["searchResults"]..spellCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,40)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)

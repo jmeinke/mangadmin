@@ -14,6 +14,7 @@
 --   Official Website    : http://mangadmin.all-mag.de
 -- GoogleCode Website    : http://code.google.com/p/mangadmin/
 -- Subversion Repository : http://mangadmin.googlecode.com/svn/
+--
 -------------------------------------------------------------------------------------------------------------
 
 -- Czech Mangos Testing  : http://wow.fakaheda.eu/
