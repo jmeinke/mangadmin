@@ -25,6 +25,7 @@ Rev. 17:
   - updated Chinese language, thanks to Elvis
   - added Portuguese language, thanks to Nano-Dread
   - fixed some typos in nearly all language files
+  - added a levelup button plus editbox
   - added on todo-list: 
     - add X-close buttons
     - finish the ticket system (about half completed, but not able to implement yet)
