@@ -1,6 +1,6 @@
 --[[
 Name: AceAddon-2.0
-Revision: $Rev: 42430 $
+Revision: $Rev: 44196 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -12,7 +12,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceAddon-2.0"
-local MINOR_VERSION = "$Revision: 42430 $"
+local MINOR_VERSION = "$Revision: 44196 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
@@ -213,10 +213,10 @@ elseif GetLocale() == "zhTW" then
 	
 	ABOUT = "關於"
 	PRINT_ADDON_INFO = "顯示插件資訊。"
-	DONATE = "Donate" -- fix
-	DONATE_DESC = "Give a much-needed donation to the author of this addon." -- fix
-	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
+	DONATE = "捐贈"
+	DONATE_DESC = "捐贈金錢給插件作者。"
+	HOWTO_DONATE_WINDOWS = "請按Ctrl-A選擇網站連結，Ctrl-C複製網址，Alt-Tab切換到電腦桌面，打開瀏覽器，在網址列貼上網址。"
+	HOWTO_DONATE_MAC = "請按Cmd-A選擇網站連結，Cmd-C複製網址，Cmd-Tab切換到電腦桌面，打開瀏覽器，在網址列貼上網址。"
 	
 	CATEGORIES = {
 		["Action Bars"] = "動作條",

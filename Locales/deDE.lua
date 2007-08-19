@@ -83,9 +83,14 @@ function Return_deDE()
     ["ma_LearnGMButton"] = "Standard GM Spells",
     ["ma_LearnLangButton"] = "Alle Sprachen",
     ["ma_LearnClassButton"] = "Alle Class-Spells",
+    ["ma_LevelUpButton"] = "Levelup",
     ["ma_SearchButton"] = "Suchen...",
     ["ma_ResetButton"] = "Reset",
     ["ma_KickButton"] = "Kick",
+    ["ma_KillButton"] = "Kill",    
+    ["ma_DismountButton"] = "Dismount",
+    ["ma_ReviveButton"] = "Revive",
+    ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "Announce",
     ["ma_ShutdownButton"] = "Shutdown!"
   } 

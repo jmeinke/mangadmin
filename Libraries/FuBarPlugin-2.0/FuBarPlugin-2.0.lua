@@ -1,18 +1,20 @@
 --[[
 Name: FuBarPlugin-2.0
-Revision: $Rev: 40928 $
+Revision: $Rev: 44269 $
 Author: Cameron Kenneth Knight (ckknight@gmail.com)
 Website: http://wiki.wowace.com/index.php/FuBarPlugin-2.0
 Documentation: http://wiki.wowace.com/index.php/FuBarPlugin-2.0
-SVN: svn://svn.wowace.com/root/branches/FuBar/FuBarPlugin-2.0/FuBarPlugin-2.0/
+SVN: svn://svn.wowace.com/wowace/trunk/FuBarPlugin-2.0/FuBarPlugin-2.0/
 Description: Plugin for FuBar.
 Dependencies: AceLibrary, AceOO-2.0, AceEvent-2.0, (optional) Tablet-2.0, Dewdrop-2.0
 License: LGPL v2.1
+
+Notes: When embeding this library, FuBar should be set as an optional dependency.
 ]]
 
 local MAJOR_VERSION = "FuBarPlugin-2.0"
 local MINIMAPCONTAINER_MAJOR_VERSION = "FuBarPlugin-MinimapContainer-2.0"
-local MINOR_VERSION = "$Revision: 40928 $"
+local MINOR_VERSION = "$Revision: 44269 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end

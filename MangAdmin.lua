@@ -80,6 +80,7 @@ Locale:RegisterTranslations("csCZ", function() return Return_csCZ() end)
 Locale:RegisterTranslations("huHU", function() return Return_huHU() end)
 Locale:RegisterTranslations("esES", function() return Return_esES() end)
 Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
+Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -91,1314 +92,1364 @@ Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
 function MangAdmin:CreateFrames()
   -- [[ Main Elements ]]
   FrameLib:BuildFrame({
-  	name = "ma_bgframe",
-  	group = "bg",
-  	parent = UIParent,
-  	texture = {
-  		color = {0,0,0,0.5}
-  	},
-  	draggable = true,
-  	size = {
-  		width = 680,
-  		height = 440
-  	},
-  	setpoint = {
-  		pos = "CENTER"
-  	},
-  	inherits = nil
+    name = "ma_bgframe",
+    group = "bg",
+    parent = UIParent,
+    texture = {
+      color = {0,0,0,0.5}
+    },
+    draggable = true,
+    size = {
+      width = 680,
+      height = 440
+    },
+    setpoint = {
+      pos = "CENTER"
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_menubgframe",
-  	group = "bg",
-  	parent = ma_bgframe,
-  	texture = {
-  		color = {0,0,0,0.5}
-  	},
-  	size = {
-  		width = 670,
-  		height = 22
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offY = 22,
-  		offX = 4
-  	},
-  	inherits = nil
+    name = "ma_menubgframe",
+    group = "bg",
+    parent = ma_bgframe,
+    texture = {
+      color = {0,0,0,0.5}
+    },
+    size = {
+      width = 670,
+      height = 22
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offY = 22,
+      offX = 4
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_topframe",
-  	group = "bg",
-  	parent = ma_bgframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 675,
-  		height = 80
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offY = -2
-  	},
-  	inherits = nil
+    name = "ma_topframe",
+    group = "bg",
+    parent = ma_bgframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 675,
+      height = 80
+    },
+    setpoint = {
+      pos = "TOP",
+      offY = -2
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_midframe",
-  	group = "bg",
-  	parent = ma_bgframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 675,
-  		height = 254
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offY = -83
-  	},
-  	inherits = nil
+    name = "ma_midframe",
+    group = "bg",
+    parent = ma_bgframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 675,
+      height = 254
+    },
+    setpoint = {
+      pos = "TOP",
+      offY = -83
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_leftframe",
-  	group = "bg",
-  	parent = ma_bgframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 374,
-  		height = 100
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offX = -150.5,
-  		offY = -338
-  	},
-  	inherits = nil
+    name = "ma_leftframe",
+    group = "bg",
+    parent = ma_bgframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 374,
+      height = 100
+    },
+    setpoint = {
+      pos = "TOP",
+      offX = -150.5,
+      offY = -338
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_rightframe",
-  	group = "bg",
-  	parent = ma_bgframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 300,
-  		height = 100
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offX = 187.5,
-  		offY = -338
-  	},
-  	inherits = nil
+    name = "ma_rightframe",
+    group = "bg",
+    parent = ma_bgframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 300,
+      height = 100
+    },
+    setpoint = {
+      pos = "TOP",
+      offX = 187.5,
+      offY = -338
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_logoframe",
-  	group = "bg",
-  	parent = ma_topframe,
-  	texture = {
-  		file = ROOT_PATH.."Textures\\logo.tga"
-  	},
-  	size = {
-  		width = 512,
-  		height = 64
-  	},
-  	setpoint = {
-  		pos = "LEFT",
-  		offX = 10
-  	},
-  	inherits = nil
+    name = "ma_logoframe",
+    group = "bg",
+    parent = ma_topframe,
+    texture = {
+      file = ROOT_PATH.."Textures\\logo.tga"
+    },
+    size = {
+      width = 512,
+      height = 64
+    },
+    setpoint = {
+      pos = "LEFT",
+      offX = 10
+    },
+    inherits = nil
   })
 
   FrameLib:BuildFontString({
-  	name = "ma_loggedtext",
-  	group = "bg",
-  	parent = ma_topframe,
-  	text = Locale["logged"],
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -10,
-  		offY = 10
-  	}
+    name = "ma_loggedtext",
+    group = "bg",
+    parent = ma_topframe,
+    text = Locale["logged"],
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    }
   })
 
   FrameLib:BuildFontString({
-  	name = "ma_tooltiptext",
-  	group = "bg",
-  	parent = ma_rightframe,
-  	text = Locale["tt_Default"],
-  	color = {
-  		r = 0,
-  		g = 255,
-  		b = 0,
-  		a = 1.0
-  	}
+    name = "ma_tooltiptext",
+    group = "bg",
+    parent = ma_rightframe,
+    text = Locale["tt_Default"],
+    color = {
+      r = 0,
+      g = 255,
+      b = 0,
+      a = 1.0
+    }
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_languagedropdown",
-  	group = "bg",
-  	parent = ma_topframe,
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -130,
+    name = "ma_languagedropdown",
+    group = "bg",
+    parent = ma_topframe,
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -130,
       offY = -10
-  	},
-  	inherits = "UIDropDownMenuTemplate"
+    },
+    inherits = "UIDropDownMenuTemplate"
   })
 
   FrameLib:BuildButton({
-  	name = "ma_languagebutton",
-  	group = "bg",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_languagebutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -14
-  	},
-  	text = Locale["ma_LanguageButton"]
+    name = "ma_languagebutton",
+    group = "bg",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_languagebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -14
+    },
+    text = Locale["ma_LanguageButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_itembutton",
-  	group = "bg",
-  	parent = ma_leftframe,
-  	texture = {
-  		name = "ma_itembutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -4
-  	},
-  	text = Locale["ma_ItemButton"]
+    name = "ma_itembutton",
+    group = "bg",
+    parent = ma_leftframe,
+    texture = {
+      name = "ma_itembutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -4
+    },
+    text = Locale["ma_ItemButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_spellbutton",
-  	group = "bg",
-  	parent = ma_leftframe,
-  	texture = {
-  		name = "ma_spellbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 94,
-  		offY = -4
-  	},
-  	text = Locale["ma_SpellButton"]
+    name = "ma_spellbutton",
+    group = "bg",
+    parent = ma_leftframe,
+    texture = {
+      name = "ma_spellbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 94,
+      offY = -4
+    },
+    text = Locale["ma_SpellButton"]
   })
 
   -- [[Popup Frame]]
   FrameLib:BuildFrame({
-  	name = "ma_popupframe",
-  	group = "popup",
-  	parent = UIParent,
-  	texture = {
-  		color = {0,0,0,0.5}
-  	},
-  	draggable = true,
-  	size = {
-  		width = 440,
-  		height = 380
-  	},
-  	setpoint = {
-  		pos = "CENTER"
-  	},
+    name = "ma_popupframe",
+    group = "popup",
+    parent = UIParent,
+    texture = {
+      color = {0,0,0,0.5}
+    },
+    draggable = true,
+    size = {
+      width = 440,
+      height = 380
+    },
+    setpoint = {
+      pos = "CENTER"
+    },
     frameStrata = "HIGH",
-  	inherits = nil
-  })
-  
-  FrameLib:BuildFrame({
-  	name = "ma_popuptopframe",
-  	group = "popup",
-  	parent = ma_popupframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 435,
-  		height = 80
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offY = -2
-  	},
-  	inherits = nil
+    inherits = nil
   })
 
   FrameLib:BuildFrame({
-  	name = "ma_popupmidframe",
-  	group = "popup",
-  	parent = ma_popupframe,
-  	texture = {
-  		color = {102,102,102,0.7}
-  	},
-  	size = {
-  		width = 435,
-  		height = 294
-  	},
-  	setpoint = {
-  		pos = "TOP",
-  		offY = -83
-  	},
-  	inherits = nil
+    name = "ma_popuptopframe",
+    group = "popup",
+    parent = ma_popupframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 435,
+      height = 80
+    },
+    setpoint = {
+      pos = "TOP",
+      offY = -2
+    },
+    inherits = nil
   })
-  
+
+  FrameLib:BuildFrame({
+    name = "ma_popupmidframe",
+    group = "popup",
+    parent = ma_popupframe,
+    texture = {
+      color = {102,102,102,0.7}
+    },
+    size = {
+      width = 435,
+      height = 294
+    },
+    setpoint = {
+      pos = "TOP",
+      offY = -83
+    },
+    inherits = nil
+  })
+
   -- Popup Editbox and  Searchbutton
   FrameLib:BuildFontString({
-  	name = "ma_lookuptext",
-  	group = "popup",
-  	parent = ma_popuptopframe,
-  	text = "You should not see this text!",
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -10
-  	},
+    name = "ma_lookuptext",
+    group = "popup",
+    parent = ma_popuptopframe,
+    text = "You should not see this text!",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
     font = {
       size = 20,
       flags = "THICKOUTLINE"
     }
   })
-  
+
   FrameLib:BuildFontString({
-  	name = "ma_lookupresulttext",
-  	group = "popup",
-  	parent = ma_popuptopframe,
-  	text = "0 Results",
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -10
-  	}
+    name = "ma_lookupresulttext",
+    group = "popup",
+    parent = ma_popuptopframe,
+    text = Locale["searchResults"].."0",
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    }
   })
-  
+
   FrameLib:BuildFrame({
     type = "EditBox",
-  	name = "ma_searcheditbox",
-  	group = "popup",
-  	parent = ma_popuptopframe,
-  	size = {
-  		width = 80,
+    name = "ma_searcheditbox",
+    group = "popup",
+    parent = ma_popuptopframe,
+    size = {
+      width = 80,
       height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 10,
-  		offY = 4
-  	},
+    },
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 10,
+      offY = 4
+    },
     inherits = "InputBoxTemplate"
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_searchbutton",
-  	group = "popup",
-  	parent = ma_popuptopframe,
-  	texture = {
-  		name = "ma_searchbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 94,
-  		offY = 4
-  	},
-  	text = Locale["ma_SearchButton"]
+    name = "ma_searchbutton",
+    group = "popup",
+    parent = ma_popuptopframe,
+    texture = {
+      name = "ma_searchbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 94,
+      offY = 4
+    },
+    text = Locale["ma_SearchButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_resetsearchbutton",
-  	group = "popup",
-  	parent = ma_popuptopframe,
-  	texture = {
-  		name = "ma_resetsearchbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 178,
-  		offY = 4
-  	},
-  	text = Locale["ma_ResetButton"]
+    name = "ma_resetsearchbutton",
+    group = "popup",
+    parent = ma_popuptopframe,
+    texture = {
+      name = "ma_resetsearchbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 178,
+      offY = 4
+    },
+    text = Locale["ma_ResetButton"]
   })
-  
+
   -- Popup ScrollFrame
   FrameLib:BuildFrame({
     type = "ScrollFrame",
-  	name = "ma_PopupScrollBar",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    name = "ma_PopupScrollBar",
+    group = "popup",
+    parent = ma_popupmidframe,
     texture = {
-  		color = {0,0,0,0.7}
-  	},
-  	size = {
-  		width = 400,
-  		height = 274
-  	},
-  	setpoint = {
-  		pos = "CENTER",
+      color = {0,0,0,0.7}
+    },
+    size = {
+      width = 400,
+      height = 274
+    },
+    setpoint = {
+      pos = "CENTER",
       offX = -10
-  	},
-  	inherits = "FauxScrollFrameTemplate"
+    },
+    inherits = "FauxScrollFrameTemplate"
   })
   ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  
+
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry1",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBar",
       relPos = "TOPLEFT",
       offX = 10,
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry1_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry1_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })
 
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry2",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry1",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry2_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry2_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })  
 
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry3",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry2",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry3_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry3_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })
-  
+
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry4",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry3",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry4_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry4_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })  
-  
+
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry5",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry4",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry5_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry5_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })
-  
+
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry6",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry5",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry6_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry6_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })
-  
+
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry7",
-  	group = "popup",
-  	parent = ma_popupmidframe,
+    group = "popup",
+    parent = ma_popupmidframe,
     setpoint = {
-  		pos = "TOPLEFT",
+      pos = "TOPLEFT",
       relTo = "ma_PopupScrollBarEntry6",
       relPos = "BOTTOMLEFT",
       offY = -8
-  	},
+    },
     texture = {
-  		name = "ma_PopupScrollBarEntry7_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 380,
-  		height = 30
-  	}
+      name = "ma_PopupScrollBarEntry7_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 380,
+      height = 30
+    }
   })
-  
+
   -- [[ Tab Buttons ]]
   FrameLib:BuildButton({
-  	name = "ma_mainbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_mainbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,1},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_mainbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_mainbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,1},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_menubgframe",
       relPos = "TOPLEFT",
       offX = 4,
       offY = -4
-  	},
-  	text = Locale["tabmenu_Main"]
+    },
+    text = Locale["tabmenu_Main"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_charbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_charbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_charbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_charbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_mainbutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Char"]
+    },
+    text = Locale["tabmenu_Char"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_telebutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_telebutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 100,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_telebutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_telebutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_charbutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Tele"]
+    },
+    text = Locale["tabmenu_Tele"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_ticketbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_ticketbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 130,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_ticketbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_ticketbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 130,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_telebutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Ticket"]
+    },
+    text = Locale["tabmenu_Ticket"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_miscbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_miscbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 100,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_miscbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_miscbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_ticketbutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Misc"]
+    },
+    text = Locale["tabmenu_Misc"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_serverbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_serverbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_serverbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_serverbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_miscbutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Server"]
+    },
+    text = Locale["tabmenu_Server"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_logbutton",
-  	group = "tabbuttons",
-  	parent = ma_topframe,
-  	texture = {
-  		name = "ma_logbutton_texture",
-  		color = {102,102,102,0.7},
-  		gradient = {
-  			orientation = "vertical",
-  			min = {102,102,102,0},
-  			max = {102,102,102,0.7}
-  		}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
+    name = "ma_logbutton",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_logbutton_texture",
+      color = {102,102,102,0.7},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {102,102,102,0.7}
+      }
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
       relTo = "ma_serverbutton",
       relPos = "TOPRIGHT",
       offX = 2
-  	},
-  	text = Locale["tabmenu_Log"]
+    },
+    text = Locale["tabmenu_Log"]
   })
 
   -- [[ Group Elements ]]
   -- MAIN
   FrameLib:BuildButton({
-  	name = "ma_gmonbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_gmonbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -10
-  	},
-  	text = Locale["ma_GMOnButton"]
+    name = "ma_gmonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gmonbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
+    text = Locale["ma_GMOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_gmoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gmoffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -10
+    },
+    text = Locale["ma_OffButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_flyonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_flyonbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -34
+    },
+    text = Locale["ma_FlyOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_flyoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_flyoffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -34
+    },
+    text = Locale["ma_OffButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_hoveronbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_hoveronbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -58
+    },
+    text = Locale["ma_HoverOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_hoveroffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_hoveroffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -58
+    },
+    text = Locale["ma_OffButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_whisperonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_whisperonbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -82
+    },
+    text = Locale["ma_WhisperOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_whisperoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_whisperoffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -82
+    },
+    text = Locale["ma_OffButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_invisibleonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_invisibleonbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -106
+    },
+    text = Locale["ma_InvisOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_invisibleoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_invisibleoffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -106
+    },
+    text = Locale["ma_OffButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_taxicheatonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_taxicheatonbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -130
+    },
+    text = Locale["ma_TaxiOnButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_taxicheatoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_taxicheatoffbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -130
+    },
+    text = Locale["ma_OffButton"]
   })
   
   FrameLib:BuildButton({
-  	name = "ma_gmoffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_gmoffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -10
-  	},
-  	text = Locale["ma_OffButton"]
+    name = "ma_screenshotbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_screenshotbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },
+    text = Locale["ma_ScreenshotButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_flyonbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_flyonbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -34
-  	},
-  	text = Locale["ma_FlyOnButton"]
+    name = "ma_bankbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_bankbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -34
+    },
+    text = Locale["ma_BankButton"]
   })
-  
-  FrameLib:BuildButton({
-  	name = "ma_flyoffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_flyoffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -34
-  	},
-  	text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_hoveronbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_hoveronbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -58
-  	},
-  	text = Locale["ma_HoverOnButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_hoveroffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_hoveroffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -58
-  	},
-  	text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_whisperonbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_whisperonbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -82
-  	},
-  	text = Locale["ma_WhisperOnButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_whisperoffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_whisperoffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -82
-  	},
-  	text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_invisibleonbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_invisibleonbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -106
-  	},
-  	text = Locale["ma_InvisOnButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_invisibleoffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_invisibleoffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -106
-  	},
-  	text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_taxicheatonbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_taxicheatonbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -130
-  	},
-  	text = Locale["ma_TaxiOnButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_taxicheatoffbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_taxicheatoffbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 40,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -130
-  	},
-  	text = Locale["ma_OffButton"]
-  })
-    
-  FrameLib:BuildButton({
-  	name = "ma_screenshotbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_screenshotbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -10
-  	},
-  	text = Locale["ma_ScreenshotButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_bankbutton",
-  	group = "main",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_bankbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -34
-  	},
-  	text = Locale["ma_BankButton"]
-  })
-    
+      
   -- LOG
   FrameLib:BuildFrame({
-  	type = "ScrollingMessageFrame",
-  	name = "ma_logframe",
-  	group = "log",
-  	parent = ma_midframe,
-  	texture = {
-  		color = {10,10,10,0.7},
-  		gradient = {
-  			orientation = "horizontal",
-  			min = {10,10,10,0.7},
-  			max = {10,10,10,0}
-  		}
-  	},
-  	size = {
-  		width = 400,
-  		height = 234
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -10
-  	},
-  	justify = {
-  		h = "LEFT",
-  		v = "TOP"
-  	},
-  	fading = false,
-  	scrollMouseWheel = true
+    type = "ScrollingMessageFrame",
+    name = "ma_logframe",
+    group = "log",
+    parent = ma_midframe,
+    texture = {
+      color = {10,10,10,0.7},
+      gradient = {
+        orientation = "horizontal",
+        min = {10,10,10,0.7},
+        max = {10,10,10,0}
+      }
+    },
+    size = {
+      width = 400,
+      height = 234
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
+    justify = {
+      h = "LEFT",
+      v = "TOP"
+    },
+    fading = false,
+    scrollMouseWheel = true
   })
 
   FrameLib:BuildButton({
-  	name = "ma_logscrollupbutton",
-  	group = "log",
-  	parent = ma_midframe,
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -10
-  	},
-  	inherits = "UIPanelScrollUpButtonTemplate",
-  	script = function() ma_logframe:ScrollUp() end
+    name = "ma_logscrollupbutton",
+    group = "log",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },
+    inherits = "UIPanelScrollUpButtonTemplate",
+    script = function() ma_logframe:ScrollUp() end
   })
 
   FrameLib:BuildButton({
-  	name = "ma_logscrolldownbutton",
-  	group = "log",
-  	parent = ma_midframe,
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -10,
-  		offY = 10
-  	},
-  	inherits = "UIPanelScrollDownButtonTemplate",
-  	script = function() ma_logframe:ScrollDown() end
+    name = "ma_logscrolldownbutton",
+    group = "log",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    inherits = "UIPanelScrollDownButtonTemplate",
+    script = function() ma_logframe:ScrollDown() end
   })
 
   --CHARACTER
   FrameLib:BuildButton({
-  	name = "ma_learnallbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_learnallbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -4
-  	},
-  	text = Locale["ma_LearnAllButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_learncraftsbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_learncraftsbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 180,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 134,
-  		offY = -4
-  	},
-  	text = Locale["ma_LearnCraftsButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_learngmbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_learngmbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 140,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 318,
-  		offY = -4
-  	},
-  	text = Locale["ma_LearnGMButton"]
-  })
-  
-  FrameLib:BuildButton({
-  	name = "ma_learnclassbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_learnclassbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 200,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 462,
-  		offY = -4
-  	},
-  	text = Locale["ma_LearnClassButton"]
+    name = "ma_learnallbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learnallbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -4
+    },
+    text = Locale["ma_LearnAllButton"]
   })
 
   FrameLib:BuildButton({
-  	name = "ma_learnlangbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_learnlangbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 120,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -28
-  	},
-  	text = Locale["ma_LearnLangButton"]
+    name = "ma_learncraftsbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learncraftsbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 180,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -4
+    },
+    text = Locale["ma_LearnCraftsButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_learngmbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learngmbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 140,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 318,
+      offY = -4
+    },
+    text = Locale["ma_LearnGMButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_learnclassbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learnclassbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 200,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 462,
+      offY = -4
+    },
+    text = Locale["ma_LearnClassButton"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_learnlangbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learnlangbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -28
+    },
+    text = Locale["ma_LearnLangButton"]
   })
   
+  FrameLib:BuildFrame({
+    type = "EditBox",
+    name = "ma_levelupeditbox",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 15,
+      offY = -60
+    },
+    inherits = "InputBoxTemplate"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_levelupbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_levelupbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 50,
+      offY = -60
+    },
+    text = Locale["ma_LevelUpButton"]
+  })
+
   FrameLib:BuildFrame({
     type = "Slider",
     name = "ma_speedslider",
-  	group = "char",
-  	parent = ma_midframe,
+    group = "char",
+    parent = ma_midframe,
     size = {
       width = 80
     },
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 10,
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 10,
       offY = 60
-  	},
-  	inherits = "OptionsSliderTemplate"
+    },
+    inherits = "OptionsSliderTemplate"
   })
-  
+
   FrameLib:BuildFrame({
     type = "Slider",
     name = "ma_scaleslider",
-  	group = "char",
-  	parent = ma_midframe,
+    group = "char",
+    parent = ma_midframe,
     size = {
       width = 80
     },
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 10,
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 10,
       offY = 20
-  	},
-  	inherits = "OptionsSliderTemplate"
+    },
+    inherits = "OptionsSliderTemplate"
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_killbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_killbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -10,
-  		offY = 10
-  	},
-  	text = "Kill"
+    name = "ma_killbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_killbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    text = Locale["ma_KillButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_kickbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_kickbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -94,
-  		offY = 10
-  	},
-  	text = Locale["ma_KickButton"]
+    name = "ma_kickbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_kickbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -94,
+      offY = 10
+    },
+    text = Locale["ma_KickButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_dismountbutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_dismountbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -178,
-  		offY = 10
-  	},
-  	text = "Dismount"
+    name = "ma_dismountbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_dismountbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -178,
+      offY = 10
+    },
+    text = Locale["ma_DismountButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_revivebutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_revivebutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -262,
-  		offY = 10
-  	},
-  	text = "Revive"
+    name = "ma_revivebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_revivebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -262,
+      offY = 10
+    },
+    text = Locale["ma_ReviveButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_savebutton",
-  	group = "char",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_savebutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -346,
-  		offY = 10
-  	},
-  	text = "Save"
+    name = "ma_savebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_savebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -346,
+      offY = 10
+    },
+    text = Locale["ma_SaveButton"]
   })
-  
+
+  --TICKET  
+  FrameLib:BuildFontString({
+    name = "ma_tickettext",
+    group = "ticket",
+    parent = ma_midframe,
+    text = "Newest ticket is from: Unknown",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    }
+  })
+
   --SERVER
   FrameLib:BuildFrame({
-  	name = "ma_graphframe",
-  	group = "server",
-  	parent = ma_midframe,
-  	texture = {
-  		color = {0,0,0,0.7}
-  	},
-  	size = {
-  		width = 152,
-  		height = 152
-  	},
-  	setpoint = {
-  		pos = "TOPLEFT",
-  		offX = 10,
-  		offY = -10
-  	},
-  	inherits = nil
+    name = "ma_graphframe",
+    group = "server",
+    parent = ma_midframe,
+    texture = {
+      color = {0,0,0,0.7}
+    },
+    size = {
+      width = 152,
+      height = 152
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
+    inherits = nil
   })
 
   local down, up, lag = GetNetStats();
@@ -1406,104 +1457,105 @@ function MangAdmin:CreateFrames()
   f = CreateFrame("Frame",name,ma_netstatframe)
   f:SetScript("OnUpdate",function() g:AddTimeData(1) end)
   f:Show()
-  
+
   FrameLib:BuildFrame({
     type = "EditBox",
-  	name = "ma_announceeditbox",
-  	group = "server",
-  	parent = ma_midframe,
-  	size = {
-  		width = 480,
+    name = "ma_announceeditbox",
+    group = "server",
+    parent = ma_midframe,
+    size = {
+      width = 480,
       height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMLEFT",
-  		offX = 15,
-  		offY = 10
-  	},
+    },
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 15,
+      offY = 10
+    },
     inherits = "InputBoxTemplate"
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_announcebutton",
-  	group = "server",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_announcebutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -94,
-  		offY = 10
-  	},
-  	text = Locale["ma_AnnounceButton"]
+    name = "ma_announcebutton",
+    group = "server",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_announcebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -94,
+      offY = 10
+    },
+    text = Locale["ma_AnnounceButton"]
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_resetannouncebutton",
-  	group = "server",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_resetannouncebutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "BOTTOMRIGHT",
-  		offX = -10,
-  		offY = 10
-  	},
-  	text = Locale["ma_ResetButton"]
+    name = "ma_resetannouncebutton",
+    group = "server",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_resetannouncebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    text = Locale["ma_ResetButton"]
   })
-  
+
   FrameLib:BuildFrame({
     type = "EditBox",
-  	name = "ma_shutdowneditbox",
-  	group = "server",
-  	parent = ma_midframe,
-  	size = {
-  		width = 30,
+    name = "ma_shutdowneditbox",
+    group = "server",
+    parent = ma_midframe,
+    size = {
+      width = 30,
       height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -98,
-  		offY = -10
-  	},
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -98,
+      offY = -10
+    },
     inherits = "InputBoxTemplate"
   })
-  
+
   FrameLib:BuildButton({
-  	name = "ma_shutdownbutton",
-  	group = "server",
-  	parent = ma_midframe,
-  	texture = {
-  		name = "ma_shutdownbutton_texture",
-  		color = {33,164,210,1.0}
-  	},
-  	size = {
-  		width = 80,
-  		height = 20
-  	},
-  	setpoint = {
-  		pos = "TOPRIGHT",
-  		offX = -10,
-  		offY = -10
-  	},
-  	text = Locale["ma_ShutdownButton"]
+    name = "ma_shutdownbutton",
+    group = "server",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_shutdownbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },
+    text = Locale["ma_ShutdownButton"]
   })
 
   --FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
   --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
@@ -1522,20 +1574,20 @@ function MangAdmin:OnInitialize()
   self:SetLanguage()
   self:CreateFrames()
   self:RegisterChatCommand(Locale["slashcmds"], opts) -- this registers the chat commands
-	self:PrepareButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
+  self:PrepareButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
   -- FuBar plugin config
-	self.hasNoColor = true
-	self.hasNoText = false
-	self.clickableTooltip = true
-	self.hasIcon = true
-	self.hideWithoutStandby = true
-	self:SetIcon(ROOT_PATH.."Textures\\icon.tga")
+  self.hasNoColor = true
+  self.hasNoText = false
+  self.clickableTooltip = true
+  self.hasIcon = true
+  self.hideWithoutStandby = true
+  self:SetIcon(ROOT_PATH.."Textures\\icon.tga")
   -- make MangAdmin frames closable with escape key
   tinsert(UISpecialFrames,"ma_bgframe")
   tinsert(UISpecialFrames,"ma_popupframe")
-	-- those all hook the AddMessage method of the chat frames.
+  -- those all hook the AddMessage method of the chat frames.
   -- They will be redirected to MangAdmin:AddMessage(...)
-	for i=1,NUM_CHAT_WINDOWS do
+  for i=1,NUM_CHAT_WINDOWS do
     local cf = getglobal("ChatFrame"..i)
     self:Hook(cf, "AddMessage", true)
   end
@@ -1557,39 +1609,39 @@ end
 
 function MangAdmin:OnClick()
   -- this toggles the MangAdmin frame when clicking on the mini icon
-	if ma_bgframe:IsVisible() or ma_popupframe:IsVisible() then 
-		FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+  if ma_bgframe:IsVisible() or ma_popupframe:IsVisible() then 
+    FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
     FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
-	else
-		FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
-	end
+  else
+    FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
+  end
 end
 
 function MangAdmin:PrepareButtons()
   --here the functions of all buttons are defined
-	local function preScript(object, text, script)
+  local function preScript(object, text, script)
     --if object then
       if text then
-    		object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
-    		object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+        object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
+        object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
       end
-  		if type(script) == "function" then
-    		object:SetScript("OnClick", script)
-    	elseif type(script) == "table" then
-    		for k,v in pairs(script) do
-    			object:SetScript(unpack(v))
-    		end
+      if type(script) == "function" then
+        object:SetScript("OnClick", script)
+      elseif type(script) == "table" then
+        for k,v in pairs(script) do
+          object:SetScript(unpack(v))
+        end
       end
     --end
-	end
+  end
   
   -- start tab buttons
-	preScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
-	preScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
-	preScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele")]] MangAdmin:Print("Not available yet!") end)
-	preScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() --[[MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket")]] MangAdmin:Print("Not available yet!") end)
-	preScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
-	preScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
+  preScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
+  preScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
+  preScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele")]] MangAdmin:Print("Not available yet!") end)
+  preScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
+  preScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
+  preScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
   preScript(ma_logbutton           , Locale["tt_LogButton"]       , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
   --end tab buttons
   
@@ -1617,6 +1669,7 @@ function MangAdmin:PrepareButtons()
   preScript(ma_learngmbutton       , nil                          , function() MangAdmin:LearnSpell("all_gm") end)
   preScript(ma_learnlangbutton     , nil                          , function() MangAdmin:LearnSpell("all_lang") end)
   preScript(ma_learnclassbutton    , nil                          , function() MangAdmin:LearnSpell("all_myclass") end)
+  preScript(ma_levelupbutton       , nil                          , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
   preScript(ma_searchbutton        , nil                          , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
   preScript(ma_resetsearchbutton   , nil                          , function() MangAdmin:SearchReset() end)
   preScript(ma_revivebutton        , nil                          , function() MangAdmin:RevivePlayer() end)
@@ -1631,14 +1684,14 @@ end
 
 function MangAdmin:ToggleTabButton(btn)
   --this modifies the look of tab buttons when clocked on them 
-	FrameLib:HandleGroup("tabbuttons", 
-	function(button) 
-		if button:GetName() == btn then
-			getglobal(button:GetName().."_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
-		else
-			getglobal(button:GetName().."_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
-		end
-	end)
+  FrameLib:HandleGroup("tabbuttons", 
+  function(button) 
+    if button:GetName() == btn then
+      getglobal(button:GetName().."_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
+    else
+      getglobal(button:GetName().."_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
+    end
+  end)
 end
 
 function MangAdmin:ToggleContentGroup(group)
@@ -1649,12 +1702,12 @@ end
 
 function MangAdmin:ToggleSearchPopup(value)
   -- this toggles the MangAdmin Search Popup frame
-	if ma_popupframe:IsVisible() then 
-		FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end)
-	else
+  if ma_popupframe:IsVisible() then 
+    FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end)
+  else
     ma_searchbutton:SetScript("OnClick", function() self:SearchStart(value, ma_searcheditbox:GetText()) end)
-		FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
-	end
+    FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
+  end
   if value == "item" then
     ma_lookuptext:SetText(Locale["ma_ItemButton"])
   else
@@ -1665,59 +1718,79 @@ end
 
 function MangAdmin:HideAllGroups()
   FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
-	FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
-	--FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
-	--FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
-	FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
+  --FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
   --FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
-	FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
 end
 
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
-	-- frame is the object that was hooked (one of the ChatFrames)  
+  -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
-  
-  -- hooking all uint32 .getvalue requests
-  for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
-    catchedSth = true
-    output = self:GetValueCallHandler(guid, field, value)
-  end
-  
-  -- hooking all item lookups
-  for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
-    if self.db.char.itemrequest then
-      table.insert(self.db.account.buffer.items, {iId = id, iName = name})
-      -- for item info in cache
-      local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(id);						
-      if not itemName then
-        GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
-        GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
-        GameTooltip:Hide()
+
+  if id == 11 then --make sure that the message comes from the server, message id = 11
+    -- hook all uint32 .getvalue requests
+    for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
+      catchedSth = true
+      output = self:GetValueCallHandler(guid, field, value)
+    end
+    
+    -- hook all new tickets
+    for name in string.gmatch(text, "New ticket from (%w+)") do
+      catchedSth = true
+      output = true
+      -- now need function for: Got new ticket
+      self:LogAction("Newest ticket is from: "..name)
+    end
+    
+    for count, status in string.gmatch(text, "Tickets count: (%w+) show new tickets: (%w+)\n") do
+      self:LogAction("There are "..count.." tickets. Show new tickets is: "..status)
+    end
+    
+    for char, category, message in string.gmatch(text, "Ticket of (%w+) %(Category: (%d+)%):\n(%w+)\n") do
+      self:LogAction("Ticket from "..char..": "..message)
+    end
+    
+    -- hook all item lookups
+    for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
+      if self.db.char.itemrequest then
+        table.insert(self.db.account.buffer.items, {iId = id, iName = name})
+        -- for item info in cache
+        local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(id);						
+        if not itemName then
+          GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
+          GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
+          GameTooltip:Hide()
+        end
+        --self.db.account.buffer.counter = self.db.account.buffer.counter +1
+        --if self.db.account.buffer.counter == 10 then
+        --  self.db.account.buffer.counter = 0
+          PopupScrollUpdate()
+        --end
+        --self:LogAction("Debug: Found item "..name.." with id: "..id..".")
+        catchedSth = true
+        output = false  
       end
-      --self.db.account.buffer.counter = self.db.account.buffer.counter +1
-      --if self.db.account.buffer.counter == 10 then
-      --  self.db.account.buffer.counter = 0
-        PopupScrollUpdate()
-      --end
-      --self:LogAction("Debug: Found item "..name.." with id: "..id..".")
-      catchedSth = true
-      output = false  
     end
-  end
-  
-  -- hooking all spell lookups
-  for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
-    if self.db.char.spellrequest then
-      self:LogAction("Debug: Found spell "..name.." with id: "..id..".")
-      table.insert(self.db.account.buffer.spells, {spId = id, spName = name})
-      --self.db.account.buffer.counter = self.db.account.buffer.counter +1
-      --if self.db.account.buffer.counter == 1 then
-      --  self.db.account.buffer.counter = 0
-        PopupScrollUpdate()
-      --end
-      catchedSth = true
-      output = false      
+    
+    -- hook all spell lookups
+    for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
+      if self.db.char.spellrequest then
+        --self:LogAction("Debug: Found spell "..name.." with id: "..id..".")
+        table.insert(self.db.account.buffer.spells, {spId = id, spName = name})
+        --self.db.account.buffer.counter = self.db.account.buffer.counter +1
+        --if self.db.account.buffer.counter == 1 then
+        --  self.db.account.buffer.counter = 0
+          PopupScrollUpdate()
+        --end
+        catchedSth = true
+        output = false      
+      end
     end
+  else
+  -- message is not from server  
   end
   
   if not catchedSth then
@@ -1796,7 +1869,7 @@ function MangAdmin:ProcessFunctionOrder(fname)
 end
 
 function MangAdmin:LogAction(msg)
-	ma_logframe:AddMessage("|cFF00FF00["..date("%H:%M:%S").."]|r "..msg, 1.0, 1.0, 0.0)
+  ma_logframe:AddMessage("|cFF00FF00["..date("%H:%M:%S").."]|r "..msg, 1.0, 1.0, 0.0)
 end
 
 function MangAdmin:ChatMsg(msg)
@@ -1836,7 +1909,7 @@ function MangAdmin:Selection(selection)
 end
 
 function MangAdmin:AndBit(value, test) 
-	return mod(value, test*2) >= test 
+  return mod(value, test*2) >= test 
 end
 
 --[[USABILITY FUNCTIONS - MANGADMIN MAIN PART]]
@@ -1926,6 +1999,7 @@ function MangAdmin:SetSpeed()
     local player = UnitName("target") or UnitName("player")
     self:ChatMsg(".modify speed "..value)
     self:ChatMsg(".modify fly "..value)
+    self:ChatMsg(".modify swim "..value)
     self:LogAction("Set speed of "..player.." to "..value..".")
   else
     self:Print(Locale["selectionerror1"])
@@ -2124,7 +2198,8 @@ function MangAdmin:LangDropDownInit()
       {"Czech","csCZ"},
       {"Hungarian","huHU"},
       {"Spanish","esES"},
-      {"Chinese","zhCN"}
+      {"Chinese","zhCN"},
+      {"Portuguese","ptPT"}
     }
     for k,v in ipairs(buttons) do
       info.text = v[1]
@@ -2141,7 +2216,7 @@ function MangAdmin:LangDropDownInit()
     end
   end  
   UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
-	UIDropDownMenu_SetWidth(100, ma_languagedropdown)
+  UIDropDownMenu_SetWidth(100, ma_languagedropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
 end
 
@@ -2151,13 +2226,13 @@ function MangAdmin:InitSliders()
   ma_speedslider:SetMinMaxValues(1, 10)
   ma_speedslider:SetValueStep(0.1)
   ma_speedslider:SetValue(1)
-	ma_speedsliderText:SetText("1.0")
+  ma_speedsliderText:SetText("1.0")
   -- Scale Slider
   ma_scaleslider:SetOrientation("HORIZONTAL")
   ma_scaleslider:SetMinMaxValues(0.1, 3)
   ma_scaleslider:SetValueStep(0.1)
   ma_scaleslider:SetValue(1)
-	ma_scalesliderText:SetText("1.0")
+  ma_scalesliderText:SetText("1.0")
 end
 
 function MangAdmin:NoSearchOrResult()

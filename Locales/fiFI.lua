@@ -70,7 +70,7 @@ function Return_fiFI()
     ["ma_SpellButton"] = "Loitsut",
     ["ma_LanguageButton"] = "Vaihda kielt\195\177",
     ["ma_GMOnButton"] = "GM-mode on",
-    ["ma_FlyOnButton"] = "Fy-mode on",
+    ["ma_FlyOnButton"] = "Fly-mode on",
     ["ma_HoverOnButton"] = "Hover-mode on",
     ["ma_WhisperOnButton"] = "Whisper on",
     ["ma_InvisOnButton"] = "Invisibility on",
@@ -86,6 +86,10 @@ function Return_fiFI()
     ["ma_SearchButton"] = "Haku...",
     ["ma_ResetButton"] = "Resetoi",
     ["ma_KickButton"] = "Potkaise",
+    ["ma_KillButton"] = "Kill",
+    ["ma_DismountButton"] = "Dismount",
+    ["ma_ReviveButton"] = "Revive",
+    ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "Kuulutus",
     ["ma_ShutdownButton"] = "Sammuta!"
   }

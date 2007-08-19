@@ -1,6 +1,6 @@
 --[[
 Name: GraphLib-1.0
-Revision: $Rev: 41514 $
+Revision: $Rev: 45217 $
 Author(s): Cryect (cryect@gmail.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/wiki/GraphLib
@@ -10,7 +10,7 @@ Description: Allows for easy creation of graphs
 
 --Thanks to Nelson Minar for catching several errors where width was being used instead of height (damn copy and paste >_>)
 
-local major, minor = "Graph-1.0", "$Revision: 41514 $"
+local major, minor = "Graph-1.0", "$Revision: 45217 $"
 
 if not AceLibrary then error(major .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(major, minor) then return end
@@ -484,7 +484,7 @@ function GraphFunctions:RealtimeSetWidth(Width)
 	
 	self.BarWidth=(self.XMax-self.XMin)/self.BarNum
 	self.Decay=math.pow(self.DecaySet,self.BarWidth)
-	self.ExpNorm=1/(1-self.Decay) --Actually a finite geometric series
+	self.ExpNorm=1/(1-self.Decay)/0.95 --Actually a finite geometric series
 
 
 
@@ -540,7 +540,7 @@ end
 function GraphFunctions:SetDecay(decay) 
 	self.DecaySet=decay
 	self.Decay=math.pow(self.DecaySet,self.BarWidth)
-	self.ExpNorm=1/(1-self.Decay) --Actually a finite geometric series
+	self.ExpNorm=1/(1-self.Decay)/0.95 --Actually a finite geometric series (divide 0.96 instead of 1 since seems doesn't quite work right)
 end
 
 function GraphFunctions:AddBar(value) 

@@ -32,6 +32,7 @@
     - provided by killerdead
    
   - buttons:
+    - add X-close buttons
     - reset level/spells/stats/talents
     - levelup level*
     - create guild leader* name*
@@ -49,4 +50,7 @@
     - turn gameobject
     - move up/down/left/right gameobject
     - * these are input fields
+    
+  - finish the ticket system (about half completed, but not able to implement yet)    
+  - a lot more
     
