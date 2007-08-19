@@ -1,6 +1,6 @@
 --[[
 Name: AceDB-2.0
-Revision: $Rev: 43167 $
+Revision: $Rev: 44196 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceDB-2.0"
-local MINOR_VERSION = "$Revision: 43167 $"
+local MINOR_VERSION = "$Revision: 44196 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -111,6 +111,10 @@ elseif GetLocale() == "koKR" then
 	DEFAULT = "Default" -- fix
 	ALTERNATIVE = "Alternative" -- fix
 elseif GetLocale() == "zhTW" then
+	DELETE_PROFILE = "刪除"
+	DELETE_PROFILE_DESC = "刪除記錄檔。注意，有可能別的角色也使用這個記錄檔。"
+	DELETE_PROFILE_USAGE = "<記錄檔名稱>"
+
 	ACTIVE = "啟動"
 	ENABLED = "啟用"
 	STATE = "狀態"

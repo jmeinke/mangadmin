@@ -19,9 +19,19 @@
 
 =CHANGELOG=
 
+Rev. 17:
+  - updated the libraries
+  - changed speed slider to change swim speed also
+  - updated Chinese language, thanks to Elvis
+  - added Portuguese language, thanks to Nano-Dread
+  - fixed some typos in nearly all language files
+  - added on todo-list: 
+    - add X-close buttons
+    - finish the ticket system (about half completed, but not able to implement yet)
+
 Rev. 16:
   - added Spanish language, thanks to Riven
-  - added Chinese language, thanks to galaxyvis/Elvis --please test, on german wow I see no chinese chars
+  - added Chinese language, thanks to galaxyvis/Elvis
   - added Hungarian language, thanks to Kabraxis
   - added Misc tab with no buttons so far
   - many changes in the language files

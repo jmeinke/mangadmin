@@ -231,7 +231,8 @@ end
 --[[BUILD FONTSTRING]]
 function FrameLib:BuildFontString(def)
 	local fontstr = def.parent:CreateFontString(def.name, def.level or "ARTWORK", def.object or "GameFontNormal")
-	local t = def.color	
+	self:AddGroupFrame(def.group, fontstr)
+  local t = def.color	
   if t then 
     fontstr:SetTextColor(t.r or t[1], t.g or t[2], t.b or t[3], t.a or t[4] or 1) 
   end	

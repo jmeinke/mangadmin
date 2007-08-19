@@ -1,6 +1,6 @@
 --[[
 Name: AceConsole-2.0
-Revision: $Rev: 42928 $
+Revision: $Rev: 45434 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -14,12 +14,14 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceConsole-2.0"
-local MINOR_VERSION = "$Revision: 42928 $"
+local MINOR_VERSION = "$Revision: 45434 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
 if not AceLibrary:HasInstance("AceOO-2.0") then error(MAJOR_VERSION .. " requires AceOO-2.0.") end
+
+-- #AUTODOC_NAMESPACE AceConsole
 
 local MAP_ONOFF, USAGE, IS_CURRENTLY_SET_TO, IS_NOW_SET_TO, IS_NOT_A_VALID_OPTION_FOR, IS_NOT_A_VALID_VALUE_FOR, NO_OPTIONS_AVAILABLE, OPTION_HANDLER_NOT_FOUND, OPTION_HANDLER_NOT_VALID, OPTION_IS_DISABLED, KEYBINDING_USAGE, DEFAULT_CONFIRM_MESSAGE
 if GetLocale() == "deDE" then
@@ -584,7 +586,16 @@ local function findTableLevel(self, options, chat, text, index, passTable)
 						good = true
 					end
 					if good then
-						return findTableLevel(options.handler or self, v, chat, text, index + 1, options.pass and (passTable or options))
+						work[index] = k -- revert it back to its original form as supplied in args 
+						if options.pass then
+							passTable = passTable or options
+							if options.get and options.set then
+								passTable = options
+							end
+						else
+							passTable = nil
+						end
+						return findTableLevel(options.handler or self, v, chat, text, index + 1, passTable)
 					end
 				end
 			end
@@ -1332,6 +1343,10 @@ local function printUsage(self, handler, realOptions, options, path, args, passV
 				local v = options.args[k]
 				if v then
 					local v_p = passTable or v
+					if v.get and v.set then
+						v_p = v
+						passValue = nil
+					end
 					if v.passValue then
 						passValue = v.passValue
 					end
@@ -2261,11 +2276,7 @@ local function handlerFunc(self, chat, msg, options)
 	end
 	this = _G_this
 	if Dewdrop then
-		Dewdrop:Refresh(1)
-		Dewdrop:Refresh(2)
-		Dewdrop:Refresh(3)
-		Dewdrop:Refresh(4)
-		Dewdrop:Refresh(5)
+		Dewdrop:Refresh()
 	end
 end
 
@@ -2619,8 +2630,8 @@ local function activate(self, oldLib, oldDeactivate)
 		end
 	end
 	
-	self:RegisterChatCommand({ "/reload", "/rl", "/reloadui" }, function() ReloadUI() end, "RELOAD")
-	self:RegisterChatCommand({ "/gm" }, function() ToggleHelpFrame() end, "GM")
+	self:RegisterChatCommand("/reload", "/rl", "/reloadui", ReloadUI, "RELOAD")
+	self:RegisterChatCommand("/gm", ToggleHelpFrame, "GM")
 	local t = { "/print", "/echo" }
 	local _,_,_,enabled,loadable = GetAddOnInfo("DevTools")
 	if not enabled and not loadable then

@@ -70,7 +70,7 @@ function Return_itIT()
     ["ma_SpellButton"] = "Spells",
     ["ma_LanguageButton"] = "Cambia Lingua",
     ["ma_GMOnButton"] = "GM-mode on",
-    ["ma_FlyOnButton"] = "Fy-mode on",
+    ["ma_FlyOnButton"] = "Fly-mode on",
     ["ma_HoverOnButton"] = "Hover-mode on",
     ["ma_WhisperOnButton"] = "Whisper on",
     ["ma_InvisOnButton"] = "Invisibility on",
@@ -86,6 +86,10 @@ function Return_itIT()
     ["ma_SearchButton"] = "Cerca...",
     ["ma_ResetButton"] = "Reset",
     ["ma_KickButton"] = "Kick",
+    ["ma_KillButton"] = "Kill",
+    ["ma_DismountButton"] = "Dismount",
+    ["ma_ReviveButton"] = "Revive",
+    ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "Announce",
     ["ma_ShutdownButton"] = "Shutdown!"
   }

@@ -39,5 +39,6 @@ Locales\csCZ.lua
 Locales\huHU.lua
 Locales\esES.lua
 Locales\zhCN.lua
+Locales\ptPT.lua
 
 MangAdmin.lua

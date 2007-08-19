@@ -1,6 +1,6 @@
 --[[
 Name: Tablet-2.0
-Revision: $Rev: 41876 $
+Revision: $Rev: 44453 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://www.wowace.com/index.php/Tablet-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Tablet-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 41876 $"):sub(12, -3))
+local MINOR_VERSION = tonumber(("$Revision: 44453 $"):sub(12, -3))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -2346,7 +2346,7 @@ end
 Tablet.Close = wrap(Tablet.Close, "Tablet:Close")
 
 local function frame_children(self)
-	if not self.preventRefresh and self:GetParent():IsShown() then
+	if not self.preventRefresh and self:GetParent() and self:GetParent():IsShown() then
 		Tablet.currentFrame = self
 		Tablet.currentTabletData = TabletData:new(self)
 		Tablet.currentTabletData.minWidth = self.minWidth
