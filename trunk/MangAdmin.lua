@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -34,15 +34,17 @@ MangAdmin:RegisterDefaults("char",
   {
     getValueCallHandler = {
       functionOrder = {},
-      callingFunctions = {"ToggleGMMode", "Testfunction1", "Testfunction2"},
+      callingFunctions = {},
       calledGetGuid = false,
       realGuid = nil
     },
+    functionQueue = {},
     workaroundValues = {
       flymode = nil
     },
     itemrequest = true,
-    spellrequest = false
+    spellrequest = false,
+    nextGridWay = "ahead"
   }
 )
 MangAdmin:RegisterDefaults("account", 
@@ -320,7 +322,27 @@ function MangAdmin:CreateFrames()
     },
     text = Locale["ma_SpellButton"]
   })
-
+  
+  FrameLib:BuildButton({
+    name = "ma_closebutton",
+    group = "bg",
+    parent = ma_rightframe,
+    texture = {
+      name = "ma_languagebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 10,
+      height = 10
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    text = "X"
+  })
+  
   -- [[Popup Frame]]
   FrameLib:BuildFrame({
     name = "ma_popupframe",
@@ -376,7 +398,27 @@ function MangAdmin:CreateFrames()
     },
     inherits = nil
   })
-
+  
+  FrameLib:BuildButton({
+    name = "ma_popupclosebutton",
+    group = "popup",
+    parent = ma_popuptopframe,
+    texture = {
+      name = "ma_popupclosebutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 10,
+      height = 10
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    text = "X"
+  })
+  
   -- Popup Editbox and  Searchbutton
   FrameLib:BuildFontString({
     name = "ma_lookuptext",
@@ -503,7 +545,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
   FrameLib:BuildButton({
@@ -523,7 +566,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })  
 
   FrameLib:BuildButton({
@@ -543,7 +587,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
   FrameLib:BuildButton({
@@ -563,7 +608,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })  
 
   FrameLib:BuildButton({
@@ -583,7 +629,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
   FrameLib:BuildButton({
@@ -603,7 +650,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
   FrameLib:BuildButton({
@@ -623,7 +671,8 @@ function MangAdmin:CreateFrames()
     size = {
       width = 380,
       height = 30
-    }
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
   -- [[ Tab Buttons ]]
@@ -1091,7 +1140,99 @@ function MangAdmin:CreateFrames()
     },
     text = Locale["ma_BankButton"]
   })
-      
+  
+  FrameLib:BuildFontString({
+    name = "ma_gridnavigatortext",
+    group = "main",
+    parent = ma_midframe,
+    text = Locale["gridnavigator"],
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -2,
+      offY = 86
+    }
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_gridnaviaheadbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gridnaviaheadbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -34,
+      offY = 58
+    },
+    text = "^"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_gridnavibackbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gridnavibackbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -34,
+      offY = 10
+    },
+    text = "v"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_gridnavirightbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gridnavirightbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 34
+    },
+    text = ">"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_gridnavileftbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gridnavileftbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -58,
+      offY = 34
+    },
+    text = "<"
+  })
+  
   -- LOG
   FrameLib:BuildFrame({
     type = "ScrollingMessageFrame",
@@ -1609,9 +1750,13 @@ end
 
 function MangAdmin:OnClick()
   -- this toggles the MangAdmin frame when clicking on the mini icon
-  if ma_bgframe:IsVisible() or ma_popupframe:IsVisible() then 
+  if ma_bgframe:IsVisible() and not ma_popupframe:IsVisible() then
+    FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+  elseif ma_bgframe:IsVisible() and ma_popupframe:IsVisible() then
     FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
     FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
+  elseif not ma_bgframe:IsVisible() and ma_popupframe:IsVisible() then
+    FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
   else
     FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
   end
@@ -1677,9 +1822,16 @@ function MangAdmin:PrepareButtons()
   preScript(ma_savebutton          , nil                          , function() MangAdmin:SavePlayer() end)
   preScript(ma_dismountbutton      , nil                          , function() MangAdmin:DismountPlayer() end)
   preScript(ma_kickbutton          , Locale["tt_KickButton"]      , function() MangAdmin:KickPlayer() end)
+  preScript(ma_gridnaviaheadbutton , nil                          , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
+  preScript(ma_gridnavibackbutton  , nil                          , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
+  preScript(ma_gridnavirightbutton , nil                          , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
+  preScript(ma_gridnavileftbutton  , nil                          , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
   preScript(ma_announcebutton      , Locale["tt_AnnounceButton"]  , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
   preScript(ma_resetannouncebutton , nil                          , function() ma_announceeditbox:SetText("") end)
   preScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]  , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
+  preScript(ma_closebutton         , nil                          , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
+  preScript(ma_popupclosebutton    , nil                          , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
+  
 end
 
 function MangAdmin:ToggleTabButton(btn)
@@ -1753,12 +1905,24 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       self:LogAction("Ticket from "..char..": "..message)
     end
     
+    -- hoock .gps for gridnavigation
+    for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
+      for k,v in pairs(self.db.char.functionQueue) do
+        if v == "GridNavigate" then
+          catchedSth = true
+          output = false
+          self:GridNavigate(string.format("%.1f", x), string.format("%.1f", y), nil)
+          table.remove(self.db.char.functionQueue, k)
+        end
+      end
+    end
+    
     -- hook all item lookups
     for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
       if self.db.char.itemrequest then
         table.insert(self.db.account.buffer.items, {iId = id, iName = name})
         -- for item info in cache
-        local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(id);						
+        local itemName, itemLink, itemQuality, _, _, _,	_, _, _ = GetItemInfo(id);
         if not itemName then
           GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
           GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
@@ -1786,7 +1950,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
           PopupScrollUpdate()
         --end
         catchedSth = true
-        output = false      
+        output = false
       end
     end
   else
@@ -2019,38 +2183,45 @@ function MangAdmin:SetScale()
   end
 end
 
-function MangAdmin:LearnSpell(value)
+function MangAdmin:LearnSpell(value, state)
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
     local class = UnitClass("target") or UnitClass("player")
+    local command = ".learn"
+    local logcmd = "Learned"
+    self:LogAction(state)
+    if state == "RightButton" then
+      command = ".unlearn"
+      logcmd = "Unlearned"
+    end
     if type(value) == "string" then
       if value == "all" then
-        self:ChatMsg(".learn all")
-        self:LogAction("Learned all spells to "..player..".")
+        self:ChatMsg(command.." all")
+        self:LogAction(logcmd.." all spells to "..player..".")
       elseif value == "all_crafts" then
-        self:ChatMsg(".learn all_crafts")
-        self:LogAction("Learned all professions and recipes to "..player..".")
+        self:ChatMsg(command.." all_crafts")
+        self:LogAction(logcmd.." all professions and recipes to "..player..".")
       elseif value == "all_gm" then
-        self:ChatMsg(".learn all_gm")
-        self:LogAction("Learned all default spells for Game Masters to "..player..".")
+        self:ChatMsg(command.." all_gm")
+        self:LogAction(logcmd.." all default spells for Game Masters to "..player..".")
       elseif value == "all_lang" then
-        self:ChatMsg(".learn all_lang")
-        self:LogAction("Learned all languages to "..player..".")
+        self:ChatMsg(command.." all_lang")
+        self:LogAction(logcmd.." all languages to "..player..".")
       elseif value == "all_myclass" then
-        self:ChatMsg(".learn all_myclass")
-        self:LogAction("Learned all spells available to the "..class.."-class to "..player..".")
+        self:ChatMsg(command.." all_myclass")
+        self:LogAction(logcmd.." all spells available to the "..class.."-class to "..player..".")
       else
-        self:ChatMsg(".learn "..value)
-        self:LogAction("Learned spell "..value.." to "..player..".")
+        self:ChatMsg(command.." "..value)
+        self:LogAction(logcmd.." spell "..value.." to "..player..".")
       end
     elseif type(value) == "table" then
       for k,v in ipairs(value) do
-        self:ChatMsg(".learn "..v)
-        self:LogAction("Learned spell "..v.." to "..player..".")
+        self:ChatMsg(command.." "..v)
+        self:LogAction(logcmd.." spell "..v.." to "..player..".")
       end
     elseif type(value) == "number" then
-      self:ChatMsg(".learn "..value)
-      self:LogAction("Learned spell "..value.." to "..player..".")
+      self:ChatMsg(command.." "..value)
+      self:LogAction(logcmd.." spell "..value.." to "..player..".")
     end
   else
     self:Print(Locale["selectionerror1"])
@@ -2125,6 +2296,32 @@ function MangAdmin:LevelupPlayer(value)
     self:LogAction("Leveled up player "..player.." by "..value.." levels.")
   else
     self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:GridNavigate(x, y)
+  local way = self.db.char.nextGridWay
+  if not x and not y then
+    table.insert(self.db.char.functionQueue, "GridNavigate")    
+    self:ChatMsg(".gps")
+  else
+    local newy
+    local newx
+    if way == "back" then
+      newy = y - 50
+      newx = x
+    elseif way == "right" then
+      newy = y
+      newx = x + 50
+    elseif way == "left" then
+      newy = y
+      newx = x - 50
+    else
+      newy = y + 50
+      newx = x
+    end
+    self:ChatMsg(".goxy "..newx.." "..newy)
+    self:LogAction("Navigated to grid position: X: "..newx.." Y: "..newy)
   end
 end
 
@@ -2290,7 +2487,7 @@ function PopupScrollUpdate()
         if lineplusoffset <= spellCount then
           local spell = MangAdmin.db.account.buffer.spells[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..spell["spId"].."|r Name: |cffffffff"..spell["spName"].."|r")
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:LearnSpell(spell["spId"]) end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:LearnSpell(spell["spId"], arg1) end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)     
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
@@ -2306,4 +2503,3 @@ function PopupScrollUpdate()
     MangAdmin:NoSearchOrResult()
   end
 end
-

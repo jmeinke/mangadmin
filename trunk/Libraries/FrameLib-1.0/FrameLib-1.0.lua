@@ -153,6 +153,13 @@ function FrameLib:BuildFrame(def)
 		frame:SetMaxLines(def.maxLines or 1000000)
   end
   
+  if def.type == "EditBox" then
+    frame:SetAutoFocus(false)
+    frame:ClearFocus()
+    frame:SetScript("OnEnter", function() frame:SetFocus() end)
+    frame:SetScript("OnLeave", function() frame:ClearFocus() end)
+  end
+  
 	return frame
 end
 
@@ -177,13 +184,7 @@ function FrameLib:BuildButton(def)
 		button:SetPushedTextOffset(0,t)
 	end	
 	t = def.clicks
-	if type(t) == "string" then
-		button:RegisterForClicks(t)
-	elseif type(t) == "table" then
-		button:RegisterForClicks(unpack(t))
-	elseif type(t) ~= "nil" then
-		error("Unreachable Code")
-	end
+	if t then button:RegisterForClicks(t) end
 	t = def.text
 	if t then	button:SetText(t) end
 	t = def.texture
@@ -224,7 +225,7 @@ function FrameLib:BuildButton(def)
 		end
 	elseif type(t) ~= "nil" then
 		error("Unreachable Code")
-	end	
+	end
 	return button
 end
 

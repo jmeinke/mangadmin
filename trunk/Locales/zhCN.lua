@@ -26,6 +26,7 @@ function Return_zhCN()
     ["lang"] = "简体中文",
     ["logged"] = "|cFF00FF00国度:|r "..GetCVar("realmName").." |cFF00FF00人物:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00人物 GUID:|r ",
+    ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "请选择你自己、其他人物或不选择任何目标!",
     ["selectionerror2"] = "请选择你自己或不选择任何目标!",
     ["selectionerror3"] = "请选择一个人物（不是你自己）!",
