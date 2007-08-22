@@ -23,6 +23,7 @@ function Return_esES()
     ["lang"] = "Español",
     ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "!Por favor, selecciónate o a otro jugador o a nada!",
     ["selectionerror2"] = "Please select only yourself or nothing!",
     ["selectionerror3"] = "Please select only another player!",

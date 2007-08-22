@@ -19,6 +19,19 @@
 
 =CHANGELOG=
 
+Rev. 18:
+  - when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
+    on normal-click you/your target learn/s the spell (like before)
+  - fixed:
+    - add focus to the editbox when entering with the cursor
+    - remove focus from editboxes when leaving the box with the cursor, attention, 
+      this is a bit confusing, but it's a better way than before ;)
+    - removed autofocussing the editboxes
+  - added X(Close)-buttons in the right-bottom and removed the task from the TODO
+  - added a grid-navigator, now you can move between the grid 
+    by clicking up-, down-, right-, left- buttons, which are added to the main-section
+  - few optimizations for toggling MangAdmin by clicking the Mini-Icon
+    
 Rev. 17:
   - updated the libraries
   - changed speed slider to change swim speed also
@@ -26,7 +39,7 @@ Rev. 17:
   - added Portuguese language, thanks to Nano-Dread
   - fixed some typos in nearly all language files
   - added a levelup button plus editbox
-  - added on todo-list: 
+  - added on TODO: 
     - add X-close buttons
     - finish the ticket system (about half completed, but not able to implement yet)
 

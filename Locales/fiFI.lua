@@ -23,6 +23,7 @@ function Return_fiFI()
     ["lang"] = "Suomi",
     ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
     ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Valitse itsesi, toinen pelaaja tai ei mit\195\177\195\177n!",
     ["selectionerror2"] = "Please select only yourself or nothing!",
     ["selectionerror3"] = "Please select only another player!",
