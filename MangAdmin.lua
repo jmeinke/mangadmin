@@ -2102,7 +2102,7 @@ function MangAdmin:ToggleGMMode(value)
   else
     local status
     if MangAdmin:AndBit(value, 8) then status = "off" else status = "on" end]]
-    MangAdmin:ChatMsg(".gm"..value)
+    MangAdmin:ChatMsg(".gm "..value)
     MangAdmin:LogAction("Turned GM-mode to "..value..".")
   --  return false
   --end
