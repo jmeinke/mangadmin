@@ -11,13 +11,20 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 **
-**   Official Website    : http://mangadmin.all-mag.de
-** GoogleCode Website    : http://code.google.com/p/mangadmin/
+**      Official Website : http://mangadmin.all-mag.de
+**    GoogleCode Website : http://code.google.com/p/mangadmin/
 ** Subversion Repository : http://mangadmin.googlecode.com/svn/
+**
+**    Please report bugs :  http://code.google.com/p/mangadmin/issues/list
 **
 ************************************************************************************************************/
 
 =CHANGELOG=
+
+Rev. 19:
+  - quick-fixed gm-switching, thanks to 99.rogers
+  - message: I am taking a break :-/, but I'll definately continue in some time!
+  - please report any bugs here: http://code.google.com/p/mangadmin/issues/list
 
 Rev. 18:
   - when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
