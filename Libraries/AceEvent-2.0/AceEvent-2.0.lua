@@ -1,6 +1,6 @@
 --[[
 Name: AceEvent-2.0
-Revision: $Rev: 44693 $
+Revision: $Rev: 49307 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceEvent-2.0"
-local MINOR_VERSION = "$Revision: 44693 $"
+local MINOR_VERSION = "$Revision: 49307 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -210,14 +210,18 @@ function AceEvent:RegisterAllEvents(method)
 			AceEvent:error("Cannot register all events to method %q, it does not exist", method)
 		end
 	end
-
+	
 	local AceEvent_registry = AceEvent.registry
 	if not AceEvent_registry[ALL_EVENTS] then
 		AceEvent_registry[ALL_EVENTS] = new()
 		AceEvent.frame:RegisterAllEvents()
 	end
-
+	
+	local remember = not AceEvent_registry[ALL_EVENTS][self]
 	AceEvent_registry[ALL_EVENTS][self] = method
+	if remember then
+		AceEvent:TriggerEvent("AceEvent_EventRegistered", self, "all")
+	end
 end
 
 --[[----------------------------------------------------------------------------------
@@ -627,10 +631,13 @@ function AceEvent:IsEventRegistered(event)
 	AceEvent:argCheck(event, 2, "string")
 	local AceEvent_registry = AceEvent.registry
 	if self == AceEvent then
-		return AceEvent_registry[event] and next(AceEvent_registry[event]) and true or false
+		return AceEvent_registry[event] and next(AceEvent_registry[event]) or AceEvent_registry[ALL_EVENTS] and next(AceEvent_registry[ALL_EVENTS]) and true or false
 	end
 	if AceEvent_registry[event] and AceEvent_registry[event][self] then
 		return true, AceEvent_registry[event][self]
+	end
+	if AceEvent_registry[ALL_EVENTS] and AceEvent_registry[ALL_EVENTS][self] then
+		return true, AceEvent_registry[ALL_EVENTS][self]
 	end
 	return false, nil
 end
@@ -1058,8 +1065,12 @@ local function activate(self, oldLib, oldDeactivate)
 	registeringFromAceEvent = nil
 	
 	-- another hack to make sure that we clean up properly from rev 33121 - 36174
-	for event in pairs(self.registry) do
-		self.frame:RegisterEvent(event)
+	if self.registry[ALL_EVENTS] then
+		self.frame:RegisterAllEvents()
+	else
+		for event in pairs(self.registry) do
+			self.frame:RegisterEvent(event)
+		end
 	end
 	
 	self:activate(oldLib, oldDeactivate)

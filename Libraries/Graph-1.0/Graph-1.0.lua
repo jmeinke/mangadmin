@@ -1,6 +1,6 @@
 --[[
 Name: GraphLib-1.0
-Revision: $Rev: 45217 $
+Revision: $Rev: 46038 $
 Author(s): Cryect (cryect@gmail.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/wiki/GraphLib
@@ -10,7 +10,7 @@ Description: Allows for easy creation of graphs
 
 --Thanks to Nelson Minar for catching several errors where width was being used instead of height (damn copy and paste >_>)
 
-local major, minor = "Graph-1.0", "$Revision: 45217 $"
+local major, minor = "Graph-1.0", "$Revision: 46038 $"
 
 if not AceLibrary then error(major .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(major, minor) then return end
@@ -417,6 +417,15 @@ end
 
 --SetBarColors - 
 function GraphFunctions:SetBarColors(BotColor,TopColor)
+	local Temp
+	if BotColor.r then
+		Temp=BotColor
+		BotColor={Temp.r,Temp.g,Temp.b,Temp.a}
+	end
+	if TopColor.r then
+		Temp=TopColor
+		TopColor={Temp.r,Temp.g,Temp.b,Temp.a}
+	end
 	for i=1,self.BarNum do
 		local t=self.Bars[i]:GetStatusBarTexture()
 		t:SetGradientAlpha("VERTICAL",BotColor[1],BotColor[2],BotColor[3],BotColor[4],TopColor[1],TopColor[2],TopColor[3],TopColor[4])
@@ -432,6 +441,15 @@ function GraphFunctions:SetMode(mode)
 end
 
 function GraphFunctions:RealtimeSetColors(BotColor,TopColor)
+	local Temp
+	if BotColor.r then
+		Temp=BotColor
+		BotColor={Temp.r,Temp.g,Temp.b,Temp.a}
+	end
+	if TopColor.r then
+		Temp=TopColor
+		TopColor={Temp.r,Temp.g,Temp.b,Temp.a}
+	end
 	self.BarColorBot=BotColor
 	self.BarColorTop=TopColor
 	for _,v in pairs(self.Bars) do
@@ -592,7 +610,7 @@ end
 function GraphFunctions:AddFilledDataSeries(points,color,n2)
 	local data
 	--Make sure there is data points
-	if not points then
+	if not points or #points==0 then
 		return
 	end
 
@@ -600,13 +618,7 @@ function GraphFunctions:AddFilledDataSeries(points,color,n2)
 	if n2==nil then
 		n2=false
 	end
-	--[[if n2 or (table.getn(points)~=2 and table.getn(points[1])==2) then
-		data={{},{}}
-		for k,v in ipairs(points) do
-			table.insert(data[1],v[1])
-			table.insert(data[2],v[2])
-		end
-	end]]
+
 	if n2 or (table.getn(points)==2 and table.getn(points[1])~=2) then
 		data={}
 		for k,v in ipairs(points[1]) do

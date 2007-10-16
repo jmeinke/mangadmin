@@ -62,13 +62,21 @@ function Return_enUS()
     ["tt_SpeedSlider"] = "Slide to increase or decrease the speed for the selected character.",
     ["tt_ScaleSlider"] = "Slide to increase or decrease the scale for the selected character.",
     ["tt_ItemButton"] = "Click to toggle a popup with the function to search for items and manage your favorites.",
+    ["tt_ItemSetButton"] = "Click to toggle a popup with the function to search for itemsets and manage your favorites.",
     ["tt_SpellButton"] = "Click to toggle a popup with the function to search for spells and manage your favorites.",
+    ["tt_QuestButton"] = "Click to toggle a popup with the function to search for quests and manage your favorites.",
+    ["tt_CreatureButton"] = "Click to toggle a popup with the function to search for creatures and manage your favorites.",
+    ["tt_ObjectButton"] = "Click to toggle a popup with the function to search for objects and manage your favorites.",
     ["tt_SearchDefault"] = "Now you can enter a keyword and start the search.",
     ["tt_AnnounceButton"] = "Click to announce a system message.",
     ["tt_KickButton"] = "Click to kick the selected player from the server.",
     ["tt_ShutdownButton"] = "Click to shut down the server in the amount of seconds from the field, if omitted shut down immediately!",
     ["ma_ItemButton"] = "Item-Search",
+    ["ma_ItemSetButton"] = "ItemSet-Search",
     ["ma_SpellButton"] = "Spell-Search",
+    ["ma_QuestButton"] = "Quest-Search",
+    ["ma_CreatureButton"] = "Creature-Search",
+    ["ma_ObjectButton"] = "Object-Search",
     ["ma_LanguageButton"] = "Change language",
     ["ma_GMOnButton"] = "GM-mode on",
     ["ma_FlyOnButton"] = "Fly-mode on",
@@ -93,6 +101,9 @@ function Return_enUS()
     ["ma_ReviveButton"] = "Revive",
     ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "Announce",
-    ["ma_ShutdownButton"] = "Shutdown!"
+    ["ma_ShutdownButton"] = "Shutdown!",
+    ["ma_ItemVar1Button"] = "Amount",
+    ["ma_ObjectVar1Button"] = "Loot Template",
+    ["ma_ObjectVar2Button"] = "Spawn Time"
   }
 end

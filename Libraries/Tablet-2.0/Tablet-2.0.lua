@@ -1,6 +1,6 @@
 --[[
 Name: Tablet-2.0
-Revision: $Rev: 44453 $
+Revision: $Rev: 49630 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://www.wowace.com/index.php/Tablet-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Tablet-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 44453 $"):sub(12, -3))
+local MINOR_VERSION = tonumber(("$Revision: 49630 $"):sub(12, -3))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -1998,7 +1998,7 @@ function AcquireDetachedFrame(self, registration, data, detachedData)
 	detached.r = 0
 	detached.g = 0
 	detached.b = 0
-	detached:SetFrameStrata(registration.strata or "BACKGROUND")
+	detached:SetFrameStrata(registration and registration.strata or "BACKGROUND")
 	detached:SetBackdrop(tmp.a(
 		'bgFile', "Interface\\Buttons\\WHITE8X8",
 		'edgeFile', "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -2017,7 +2017,7 @@ function AcquireDetachedFrame(self, registration, data, detachedData)
 
 	local width = GetScreenWidth()
 	local height = GetScreenHeight()
-	if registration.movable == false then
+	if registration and registration.movable == false then
 		detached:RegisterForDrag()
 	else
 		detached:RegisterForDrag("LeftButton")
@@ -2791,7 +2791,7 @@ function Tablet:Detach(parent)
 	if not info.detachedData then
 		self:error("You cannot detach tablet without a data field.")
 	end
-	if info.tooltip and info.tooltip == tooltip then
+	if info.tooltip and info.tooltip == tooltip and tooltip.registration then
 		tooltip:Detach()
 	else
 		info.detachedData.detached = true
