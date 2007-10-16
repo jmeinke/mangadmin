@@ -1,6 +1,6 @@
 --[[
 Name: FuBarPlugin-2.0
-Revision: $Rev: 44269 $
+Revision: $Rev: 48629 $
 Author: Cameron Kenneth Knight (ckknight@gmail.com)
 Website: http://wiki.wowace.com/index.php/FuBarPlugin-2.0
 Documentation: http://wiki.wowace.com/index.php/FuBarPlugin-2.0
@@ -14,7 +14,7 @@ Notes: When embeding this library, FuBar should be set as an optional dependency
 
 local MAJOR_VERSION = "FuBarPlugin-2.0"
 local MINIMAPCONTAINER_MAJOR_VERSION = "FuBarPlugin-MinimapContainer-2.0"
-local MINOR_VERSION = "$Revision: 44269 $"
+local MINOR_VERSION = "$Revision: 48629 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
@@ -156,7 +156,7 @@ elseif GetLocale() == "zhTW" then
 	DETACH_TOOLTIP = "獨立提示訊息"
 	DETACH_TOOLTIP_DESC = "從面板上獨立提示訊息。"
 	LOCK_TOOLTIP = "鎖定提示訊息"
-	LOCK_TOOLTIP_DESC = "鎖定提示訊息位置。當提示訊息鎖定時，需要用 Alt 鍵使用提示訊息的功能。"
+	LOCK_TOOLTIP_DESC = "鎖定提示訊息位置。當提示訊息鎖定時，需要用Alt鍵使用提示訊息的功能。"
 	POSITION = "位置"
 	POSITION_DESC = "插件在面板上的位置。"
 	POSITION_LEFT = "靠左"
@@ -166,7 +166,7 @@ elseif GetLocale() == "zhTW" then
 	ATTACH_TO_MINIMAP_DESC = "插件圖標依附在小地圖而不顯示在面板上。"
 	HIDE_FUBAR_PLUGIN = "隱藏插件"
 	HIDE_FUBAR_PLUGIN_CMD = "隱藏"
-	HIDE_FUBAR_PLUGIN_DESC = "在面板上隱藏該插件。"
+	HIDE_FUBAR_PLUGIN_DESC = "在面板上隱藏該插件，但保持運行狀態。"
 	OTHER = "其他"
 	CLOSE = "關閉"
 	CLOSE_DESC = "關閉選單。"
@@ -888,10 +888,17 @@ function FuBarPlugin:OnInstanceInit(target)
 	end
 	self.registry[target] = true
 
-	local folderName = select(3, debugstack(6, 1, 0):find("\\AddOns\\(.*)\\"))
+	local folderName
+	for i = 6, 3, -1 do
+		folderName = debugstack(i, 1, 0):match("\\AddOns\\(.*)\\")
+		if folderName then
+			break
+		end
+	end
 	target.folderName = folderName
 	self.folderNames[target] = folderName
 end
+FuBarPlugin.OnManualEmbed = FuBarPlugin.OnInstanceInit
 
 local frame_OnClick, frame_OnDoubleClick, frame_OnMouseDown, frame_OnMouseUp, frame_OnReceiveDrag, frame_OnEnter, frame_OnLeave
 function FuBarPlugin:CreateBasicPluginFrame(name)

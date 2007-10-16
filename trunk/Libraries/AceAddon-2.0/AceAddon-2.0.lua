@@ -1,6 +1,6 @@
---[[
+﻿--[[
 Name: AceAddon-2.0
-Revision: $Rev: 44196 $
+Revision: $Rev: 46764 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -12,7 +12,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceAddon-2.0"
-local MINOR_VERSION = "$Revision: 44196 $"
+local MINOR_VERSION = "$Revision: 46764 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
@@ -85,7 +85,7 @@ if GetLocale() == "deDE" then
 	}
 elseif GetLocale() == "frFR" then
 	STANDBY = "|cffff5050(attente)|r"
-	
+
 	TITLE = "Titre"
 	NOTES = "Notes"
 	VERSION = "Version"
@@ -96,14 +96,14 @@ elseif GetLocale() == "frFR" then
 	WEBSITE = "Site web"
 	CREDITS = "Credits" -- fix
 	LICENSE = "License" -- fix
-	
+
 	ABOUT = "A propos"
 	PRINT_ADDON_INFO = "Afficher les informations sur l'addon"
 	DONATE = "Donate" -- fix
 	DONATE_DESC = "Give a much-needed donation to the author of this addon." -- fix
 	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
 	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	
+
 	CATEGORIES = {
 		["Action Bars"] = "Barres d'action",
 		["Auction"] = "Hôtel des ventes",
@@ -142,25 +142,25 @@ elseif GetLocale() == "frFR" then
 	}
 elseif GetLocale() == "koKR" then
 	STANDBY = "|cffff5050(사용가능)|r"
-	
+
 	TITLE = "제목"
 	NOTES = "노트"
 	VERSION = "버전"
 	AUTHOR = "저작자"
 	DATE = "날짜"
 	CATEGORY = "분류"
-	EMAIL = "E-mail"
-	WEBSITE = "웹사이트"
-	CREDITS = "Credits" -- fix
-	LICENSE = "License" -- fix
-	
+	EMAIL = "전자 우편"
+	WEBSITE = "웹 사이트"
+	CREDITS = "공로자"
+	LICENSE = "라이센스"
+
 	ABOUT = "정보"
-	PRINT_ADDON_INFO = "애드온 정보 출력"
-	DONATE = "Donate" -- fix
-	DONATE_DESC = "Give a much-needed donation to the author of this addon." -- fix
-	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	
+	PRINT_ADDON_INFO = "애드온에 대한 정보를 출력합니다."
+	DONATE = "기부"
+	DONATE_DESC = "이 애드온의 저작자에게 기부를 합니다."
+	HOWTO_DONATE_WINDOWS = "Ctrl-A를 눌려 링크를 선택후, Ctrl-C로 복사합니다. Alt-Tab 눌려 게임으로 부터 나간후 웹 브라우저를 엽니다. 복사된 링크를 주소 창에 붙여넣기 합니다."
+	HOWTO_DONATE_MAC = "Cmd-A를 눌려 링크를 선택후, Cmd-C로 복사합니다. Cmd-Tab 눌려 게임으로 부터 나간후 웹 브라우저를 엽니다. 복사된 링크를 주소 창에 붙여넣기 합니다."
+
 	CATEGORIES = {
 		["Action Bars"] = "액션바",
 		["Auction"] = "경매",
@@ -199,7 +199,7 @@ elseif GetLocale() == "koKR" then
 	}
 elseif GetLocale() == "zhTW" then
 	STANDBY = "|cffff5050(待命)|r"
-	
+
 	TITLE = "標題"
 	NOTES = "註記"
 	VERSION = "版本"
@@ -210,14 +210,14 @@ elseif GetLocale() == "zhTW" then
 	WEBSITE = "網站"
 	CREDITS = "特別感謝"
 	LICENSE = "版權"
-	
+
 	ABOUT = "關於"
 	PRINT_ADDON_INFO = "顯示插件資訊。"
 	DONATE = "捐贈"
 	DONATE_DESC = "捐贈金錢給插件作者。"
 	HOWTO_DONATE_WINDOWS = "請按Ctrl-A選擇網站連結，Ctrl-C複製網址，Alt-Tab切換到電腦桌面，打開瀏覽器，在網址列貼上網址。"
 	HOWTO_DONATE_MAC = "請按Cmd-A選擇網站連結，Cmd-C複製網址，Cmd-Tab切換到電腦桌面，打開瀏覽器，在網址列貼上網址。"
-	
+
 	CATEGORIES = {
 		["Action Bars"] = "動作條",
 		["Auction"] = "拍賣",
@@ -256,7 +256,7 @@ elseif GetLocale() == "zhTW" then
 	}
 elseif GetLocale() == "zhCN" then
 	STANDBY = "|cffff5050(暂挂)|r"
-	
+
 	TITLE = "标题"
 	NOTES = "附注"
 	VERSION = "版本"
@@ -267,14 +267,14 @@ elseif GetLocale() == "zhCN" then
 	WEBSITE = "网站"
 	CREDITS = "Credits" -- fix
 	LICENSE = "License" -- fix
-	
+
 	ABOUT = "关于"
 	PRINT_ADDON_INFO = "印列出插件信息"
 	DONATE = "Donate" -- fix
 	DONATE_DESC = "Give a much-needed donation to the author of this addon." -- fix
 	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
 	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	
+
 	CATEGORIES = {
 		["Action Bars"] = "动作条",
 		["Auction"] = "拍卖",
@@ -313,7 +313,7 @@ elseif GetLocale() == "zhCN" then
 	}
 elseif GetLocale() == "esES" then
 	STANDBY = "|cffff5050(espera)|r"
-	
+
 	TITLE = "Título"
 	NOTES = "Notas"
 	VERSION = "Versión"
@@ -324,14 +324,14 @@ elseif GetLocale() == "esES" then
 	WEBSITE = "Web"
 	CREDITS = "Créditos"
 	LICENSE = "License" -- fix
-	
+
 	ABOUT = "Acerca de"
 	PRINT_ADDON_INFO = "Muestra información acerca del accesorio."
 	DONATE = "Donate" -- fix
 	DONATE_DESC = "Give a much-needed donation to the author of this addon." -- fix
 	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
 	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar." -- fix
-	
+
 	CATEGORIES = {
 		["Action Bars"] = "Barras de Acción",
 		["Auction"] = "Subasta",
@@ -370,7 +370,7 @@ elseif GetLocale() == "esES" then
 	}
 else -- enUS
 	STANDBY = "|cffff5050(standby)|r"
-	
+
 	TITLE = "Title"
 	NOTES = "Notes"
 	VERSION = "Version"
@@ -381,14 +381,14 @@ else -- enUS
 	WEBSITE = "Website"
 	CREDITS = "Credits"
 	LICENSE = "License"
-	
+
 	ABOUT = "About"
 	PRINT_ADDON_INFO = "Show information about the addon."
 	DONATE = "Donate"
 	DONATE_DESC = "Give a much-needed donation to the author of this addon."
 	HOWTO_DONATE_WINDOWS = "Press Ctrl-A to select the link, then Ctrl-C to copy, then Alt-Tab out of the game, open your favorite web browser, and paste the link into the address bar."
 	HOWTO_DONATE_MAC = "Press Cmd-A to select the link, then Cmd-C to copy, then Cmd-Tab out of the game, open your favorite web browser, and paste the link into the address bar."
-	
+
 	CATEGORIES = {
 		["Action Bars"] = "Action Bars",
 		["Auction"] = "Auction",
@@ -525,7 +525,7 @@ function AceAddon:InitializeAddon(addon, name)
 		end
 		if addon.version == nil then
 			addon.version = GetAddOnMetadata(name, "Version")
-		end	
+		end
 		if type(addon.version) == "string" then
 			if addon.version:find("%$Revision: (%d+) %$") then
 				addon.version = addon.version:gsub("%$Revision: (%d+) %$", "%1")
@@ -606,7 +606,7 @@ function AceAddon:InitializeAddon(addon, name)
 		current = current.super
 	end
 	local n = AceAddon.addonsToOnEnable and #AceAddon.addonsToOnEnable or 0
-	
+
 	if type(addon.OnInitialize) == "function" then
 		safecall(addon.OnInitialize, addon, name)
 	end
@@ -628,13 +628,13 @@ local function createAboutFrame()
 	aboutFrame:SetHeight(400)
 	aboutFrame:SetPoint("CENTER")
 	aboutFrame:SetBackdrop({
-		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]], 
-	    edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]], 
-	    tile = true, tileSize = 16, edgeSize = 16, 
+		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+	    edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
+	    tile = true, tileSize = 16, edgeSize = 16,
 	    insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	})
 	aboutFrame:SetBackdropColor(0,0,0,1)
-	
+
 	local donateButton = CreateFrame("Button", "AceAddon20AboutFrameDonateButton", aboutFrame, "UIPanelButtonTemplate2")
 	aboutFrame.donateButton = donateButton
 	donateButton:SetPoint("BOTTOMRIGHT", -20, 20)
@@ -647,9 +647,9 @@ local function createAboutFrame()
 	local text = aboutFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	aboutFrame.title = text
 	text:SetPoint("TOP", 0, -5)
-	
+
 	aboutFrame:Hide()
-	
+
 	aboutFrame.lefts = {}
 	aboutFrame.rights = {}
 	aboutFrame.textLefts = {}
@@ -661,12 +661,12 @@ local function createAboutFrame()
 			self.rights[i] = nil
 		end
 	end
-	
+
 	function aboutFrame:AddLine(left, right)
 		aboutFrame.lefts[#aboutFrame.lefts+1] = left
 		aboutFrame.rights[#aboutFrame.rights+1] = right
 	end
-	
+
 	local aboutFrame_Show = aboutFrame.Show
 	function aboutFrame:Show(...)
 		local maxLeftWidth = 0
@@ -703,11 +703,11 @@ local function createAboutFrame()
 		end
 		aboutFrame:SetWidth(75 + maxRightWidth + 20)
 		aboutFrame:SetHeight(#self.lefts * (textHeight + 5) + 100)
-		
+
 		aboutFrame_Show(self, ...)
 	end
 	aboutFrame:Hide()
-	
+
 	createAboutFrame = nil
 end
 local donateFrame
@@ -738,7 +738,7 @@ function AceAddon.prototype:PrintAddonInfo()
 		end
 	end
 	aboutFrame.title:SetText(x)
-	
+
 	if isGoodVariable(self.version) then
 		aboutFrame:AddLine(VERSION, tostring(self.version))
 	end
@@ -769,15 +769,15 @@ function AceAddon.prototype:PrintAddonInfo()
 	if isGoodVariable(self.license) then
 		aboutFrame:AddLine(LICENSE, tostring(self.license))
 	end
-	
+
 	if donateFrame and donateFrame:IsShown() then
 		donateFrame:Hide()
 	end
-	
+
 	aboutFrame.currentAddon = self
-	
+
 	aboutFrame:Show()
-	
+
 	if self.donate then
 		aboutFrame.donateButton:Show()
 	else
@@ -792,17 +792,17 @@ local function createDonateFrame()
 	donateFrame:SetHeight(200)
 	donateFrame:SetPoint("CENTER")
 	donateFrame:SetBackdrop({
-		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]], 
-	    edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]], 
-	    tile = true, tileSize = 16, edgeSize = 16, 
-	    insets = { left = 5, right = 5, top = 5, bottom = 5 }
+		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+		edgeFile = [[Interface\Tooltips\UI-Tooltip-Border]],
+		tile = true, tileSize = 16, edgeSize = 16,
+		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	})
 	donateFrame:SetBackdropColor(0,0,0,1)
 
 	local text = donateFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	text:SetPoint("TOP", 0, -5)
 	text:SetText(DONATE)
-	
+
 	local howto = donateFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	howto:SetPoint("TOP", text, "BOTTOM", 0, -5)
 	howto:SetPoint("LEFT", 16, 0)
@@ -813,14 +813,14 @@ local function createDonateFrame()
 	else
 		howto:SetText(HOWTO_DONATE_MAC)
 	end
-	
+
 	local scrollFrame = CreateFrame("ScrollFrame", "AceAddon20FrameScrollFrame", donateFrame, "UIPanelScrollFrameTemplate")
 	scrollFrame:SetToplevel(true)
 	scrollFrame:SetPoint("TOP", -10, -76)
 	scrollFrame:SetWidth(455)
 	scrollFrame:SetHeight(70)
 	howto:SetPoint("BOTTOM", scrollFrame, "TOP")
-	
+
 	local editBox = CreateFrame("EditBox", nil, scrollFrame)
 	donateFrame.editBox = editBox
 	scrollFrame:SetScrollChild(editBox)
@@ -884,13 +884,13 @@ function AceAddon.prototype:OpenDonationFrame()
 		donateFrame.editBox.text = text
 	end
 	donateFrame.editBox:SetText(donateFrame.editBox.text)
-	
+
 	if aboutFrame and aboutFrame:IsShown() then
 		aboutFrame:Hide()
 	end
-	
+
 	donateFrame:Show()
-	
+
 	donateFrame.editBox:SetFocus()
 end
 
@@ -1027,13 +1027,13 @@ end
 local function external(self, major, instance)
 	if major == "AceEvent-2.0" then
 		AceEvent = instance
-		
+
 		AceEvent:embed(self)
-		
+
 		self:RegisterEvent("PLAYER_LOGIN", "PLAYER_LOGIN", true)
 	elseif major == "AceConsole-2.0" then
 		AceConsole = instance
-		
+
 		local slashCommands = { "/ace2" }
 		local _,_,_,enabled,loadable = GetAddOnInfo("Ace")
 		if not enabled or not loadable then
@@ -1043,7 +1043,7 @@ local function external(self, major, instance)
 			if not depth then
 				depth = 0
 			end
-			
+
 			local s = ("  "):rep(depth) .. " - " .. tostring(addon)
 			if rawget(addon, 'version') then
 				s = s .. " - |cffffff7f" .. tostring(addon.version) .. "|r"
@@ -1377,7 +1377,7 @@ end
 
 local function activate(self, oldLib, oldDeactivate)
 	AceAddon = self
-	
+
 	self.playerLoginFired = oldLib and oldLib.playerLoginFired or DEFAULT_CHAT_FRAME and DEFAULT_CHAT_FRAME.defaultLanguage
 	self.addonsToOnEnable = oldLib and oldLib.addonsToOnEnable
 	self.addons = oldLib and oldLib.addons or {}
@@ -1385,7 +1385,7 @@ local function activate(self, oldLib, oldDeactivate)
 	self.skipAddon = oldLib and oldLib.skipAddon or {}
 	self.addonsStarted = oldLib and oldLib.addonsStarted or {}
 	self.addonsEnabled = oldLib and oldLib.addonsEnabled or {}
-	
+
 	if oldDeactivate then
 		oldDeactivate(oldLib)
 	end

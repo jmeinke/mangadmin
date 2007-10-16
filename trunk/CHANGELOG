@@ -21,9 +21,17 @@
 
 =CHANGELOG=
 
+Rev. 20:
+  - updated the libraries
+  - applied patch by Infamousblob (great! you did a very good work)
+  - removed the "by Josh" from the logo, because also other people contribute to MangAdmin
+  - moved the grid-navigator to the teleport section
+  - did some code optimization and clean-up
+  - notice: I have only very little time :-/
+  
 Rev. 19:
   - quick-fixed gm-switching, thanks to 99.rogers
-  - message: I am taking a break :-/, but I'll definately continue in some time!
+  - notice: I am taking a break :-/, but I'll definately continue in some time!
   - please report any bugs here: http://code.google.com/p/mangadmin/issues/list
 
 Rev. 18:

@@ -17,9 +17,6 @@
 --
 -------------------------------------------------------------------------------------------------------------
 
--- 简体中文翻译：埃尔维斯
--- znCN Translator: Elvis
-
 function Return_zhCN()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
@@ -65,13 +62,21 @@ function Return_zhCN()
     ["tt_SpeedSlider"] = "移动滑块来增加或减少选定人物的速度.",
     ["tt_ScaleSlider"] = "移动滑块来增加或减少选定人物的大小.",
     ["tt_ItemButton"] = "单击切换搜索物品的窗口.",
+    ["tt_ItemSetButton"] = "Click to toggle a popup with the function to search for itemsets and manage your favorites.",
     ["tt_SpellButton"] = "单击切换搜索法术的窗口.",
+    ["tt_QuestButton"] = "Click to toggle a popup with the function to search for quests and manage your favorites.",
+    ["tt_CreatureButton"] = "Click to toggle a popup with the function to search for creatures and manage your favorites.",
+    ["tt_ObjectButton"] = "Click to toggle a popup with the function to search for objects and manage your favorites.",
     ["tt_SearchDefault"] = "请输入关键字来进行搜索.",
     ["tt_AnnounceButton"] = "单击发送一个系统消息.",
     ["tt_KickButton"] = "单击将选定的人物强制离线.",
     ["tt_ShutdownButton"] = "单击将关闭服务器. 如不输入倒计时时间, 将立刻关闭服务器!",
     ["ma_ItemButton"] = "物品搜索",
+    ["ma_ItemSetButton"] = "ItemSet-Search",
     ["ma_SpellButton"] = "法术搜索",
+    ["ma_QuestButton"] = "Quest-Search",
+    ["ma_CreatureButton"] = "Creature-Search",
+    ["ma_ObjectButton"] = "Object-Search",
     ["ma_LanguageButton"] = "更改语言",
     ["ma_GMOnButton"] = "GM 模式开启",
     ["ma_FlyOnButton"] = "飞行模式开启",
@@ -87,6 +92,7 @@ function Return_zhCN()
     ["ma_LearnGMButton"] = "默认的 GM 法术",
     ["ma_LearnLangButton"] = "所有语言",
     ["ma_LearnClassButton"] = "所有本职业法术",
+    ["ma_LevelUpButton"] = "Levelup",
     ["ma_SearchButton"] = "搜索...",
     ["ma_ResetButton"] = "重置",
     ["ma_KickButton"] = "踢出",
@@ -95,6 +101,9 @@ function Return_zhCN()
     ["ma_ReviveButton"] = "Revive",
     ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "公告",
-    ["ma_ShutdownButton"] = "关闭服务器"
+    ["ma_ShutdownButton"] = "关闭服务器",
+    ["ma_ItemVar1Button"] = "Amount",
+    ["ma_ObjectVar1Button"] = "Loot Template",
+    ["ma_ObjectVar2Button"] = "Spawn Time"
   }
 end

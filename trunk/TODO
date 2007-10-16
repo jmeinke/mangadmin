@@ -29,7 +29,7 @@
     - example:
       By clicking move up with +4 the command, the result is: 
       .move 0 0 4 0 (with a gameobject coordinate at 0 0 0 0)
-    - provided by killerdead
+    - idea provided by killerdead
    
   - buttons:
     - reset level/spells/stats/talents
@@ -49,6 +49,10 @@
     - * these are input fields
     - more
     
-  - finish the ticket system (about half completed, but not able to implement yet)    
-  - a lot more
+  - finish the ticket system (about half completed, but not able to implement yet)
+  
+  - what i want to say in the changelog __next time__:
+    - finally implemented a working ticket-system, improvements will follow
+    - implemented private message handler/messenger, actually based on WIM http://www.wimaddon.com/
+    - windows are now always on top, so there are less graphic errors
     

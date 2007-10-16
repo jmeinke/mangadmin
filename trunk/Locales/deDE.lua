@@ -62,13 +62,21 @@ function Return_deDE()
     ["tt_SpeedSlider"] = "Verschiebe den Regler auf die gew\195\188nschte Position um die Schnelligkeit des ausgew\195\164hlten Charakters zu ver\195\164ndern.",
     ["tt_ScaleSlider"] = "Verschiebe den Regler auf die gew\195\188nschte Position um die Gr\195\182\195\159e des ausgew\195\164hlten Charakters zu ver\195\164ndern.",
     ["tt_ItemButton"] = "Klicke um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Items suchen und sie als Favoriten verwalten kann.",
+    ["tt_ItemSetButton"] = "Klicke um ein Popup zu oeffnen in dem du Itemsets suchen kannst und deine Favoriten verwalten kannst.",
     ["tt_SpellButton"] = "Klicke um eine Popup zu \195\182ffnen bzw. zu schlie\195\159en, in welchem man Spells suchen und sie als Favoriten verwalten kann.",
+    ["tt_QuestButton"] = "Klicke um ein Popup zu oeffnen in dem du Quests suchen kannst und deine Favoriten verwalten kannst.",
+    ["tt_CreatureButton"] = "Klicke um ein Popup zu oeffnen in dem du Creatures suchen kannst und deine Favoriten verwalten kannst.",
+    ["tt_ObjectButton"] = "Klicke um ein Popup zu oeffnen in dem du Objekte suchen kannst und deine Favoriten verwalten kannst.",
     ["tt_SearchDefault"] = "Jetzt kannst du ein Suchwort eingeben und die Suche starten.",
     ["tt_AnnounceButton"] = "Klicke um eine System-Nachricht anzuzeigen, die von allen Spielern gesehen wird.",
     ["tt_KickButton"] = "Klicke um den selektierten Spieler zu kicken.",
     ["tt_ShutdownButton"] = "Klicke um den Server nach einem Countdown herunterzufahren. Wenn im Feld keine Zahl eingegeben wurde wird der Server sofort heruntergefahren!",
     ["ma_ItemButton"] = "Item-Suche",
+    ["ma_ItemSetButton"] = "ItemSet-Suche",
     ["ma_SpellButton"] = "Spell-Suche",
+    ["ma_QuestButton"] = "Quest-Suche",
+    ["ma_CreatureButton"] = "Creature-Suche",
+    ["ma_ObjectButton"] = "Objekt-Suche",
     ["ma_LanguageButton"] = "Sprache \195\164ndern",
     ["ma_GMOnButton"] = "GM-Modus An",
     ["ma_FlyOnButton"] = "Flug-Modus An",
@@ -93,6 +101,9 @@ function Return_deDE()
     ["ma_ReviveButton"] = "Revive",
     ["ma_SaveButton"] = "Save",
     ["ma_AnnounceButton"] = "Announce",
-    ["ma_ShutdownButton"] = "Shutdown!"
+    ["ma_ShutdownButton"] = "Shutdown!",
+    ["ma_ItemVar1Button"] = "Menge",
+    ["ma_ObjectVar1Button"] = "Loot Template",
+    ["ma_ObjectVar2Button"] = "Spawn Zeit"
   } 
 end
