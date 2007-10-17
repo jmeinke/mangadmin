@@ -40,7 +40,8 @@ MangAdmin:RegisterDefaults("char",
     workaroundValues = {
       flymode = nil
     },
-    searchrequests = {
+    requests = {
+      ticket = false,
       item = false,
       itemset = false,
       spell = false,
@@ -66,6 +67,7 @@ MangAdmin:RegisterDefaults("account",
       }
     },
     buffer = {
+      tickets = {},
       items = {},
       itemsets = {},
       spells = {},
@@ -1887,6 +1889,7 @@ function MangAdmin:OnInitialize()
   self:CreateFrames()
   self:RegisterChatCommand(Locale["slashcmds"], opts) -- this registers the chat commands
   self:PrepareButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
+  self:SearchReset()
   -- FuBar plugin config
   self.hasNoColor = true
   self.hasNoText = false
@@ -1912,11 +1915,12 @@ function MangAdmin:OnEnable()
   self:SetDebugging(true) -- to have debugging through the whole app.    
   -- init guid for callhandler, not implemented yet, comes in next revision
   self.GetGuid()
+  self:SearchReset()
 end
 
 function MangAdmin:OnDisable()
   -- called when the addon is disabled
-  -- so far nothing to do here
+  self:SearchReset()
 end
 
 function MangAdmin:OnClick()
@@ -2091,7 +2095,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
 
-  if id == 11 then --make sure that the message comes from the server, message id = 11
+  if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
     -- hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
@@ -2110,10 +2114,6 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       self:LogAction("There are "..count.." tickets. Show new tickets is: "..status)
     end
     
-    for char, category, message in string.gmatch(text, "Ticket of (%w+) %(Category: (%d+)%):\n(%w+)\n") do
-      self:LogAction("Ticket from "..char..": "..message)
-    end
-    
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
       for k,v in pairs(self.db.char.functionQueue) do
@@ -2129,8 +2129,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all item lookups
     for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
-      self:LogAction("DEBUG "..id)
-      if self.db.char.searchrequests.item then
+      if self.db.char.requests.item then
         table.insert(self.db.account.buffer.items, {itId = id, itName = name})
         -- for item info in cache
         local itemName, itemLink, itemQuality, _, _, _, _, _, _ = GetItemInfo(id);
@@ -2147,7 +2146,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all itemset lookups
     for id, name in string.gmatch(text, "|cffffffff|Hitemset:(%d+)|h%[(.-)%]|h|r") do
-      if self.db.char.searchrequests.itemset then
+      if self.db.char.requests.itemset then
         table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name})
         PopupScrollUpdate()
         catchedSth = true
@@ -2157,7 +2156,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all spell lookups
     for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
-      if self.db.char.searchrequests.spell then
+      if self.db.char.requests.spell then
         table.insert(self.db.account.buffer.spells, {spId = id, spName = name})
         PopupScrollUpdate()
         catchedSth = true
@@ -2167,7 +2166,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all creature lookups
     for id, name in string.gmatch(text, "|cffffffff|Hcreature_entry:(%d+)|h%[(.-)%]|h|r") do
-      if self.db.char.searchrequests.creature then
+      if self.db.char.requests.creature then
         table.insert(self.db.account.buffer.creatures, {crId = id, crName = name})
         PopupScrollUpdate()
         catchedSth = true
@@ -2177,7 +2176,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all object lookups
     for id, name in string.gmatch(text, "|cffffffff|Hgameobject_entry:(%d+)|h%[(.-)%]|h|r") do
-      if self.db.char.searchrequests.object then
+      if self.db.char.requests.object then
         table.insert(self.db.account.buffer.objects, {objId = id, objName = name})
         PopupScrollUpdate()
         catchedSth = true
@@ -2187,7 +2186,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     
     -- hook all quest lookups
     for id, name in string.gmatch(text, "|cffffffff|Hquest:(%d+)|h%[(.-)%]|h|r") do
-      if self.db.char.searchrequests.quest then
+      if self.db.char.requests.quest then
         table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name})
         PopupScrollUpdate()
         catchedSth = true
@@ -2195,8 +2194,15 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
     end
     
+    -- get tickets
+    for char, category, message in string.gmatch(text, "Ticket of (%w+) %(Category: (%d+)%):\n(.*)\n") do
+      --local message = string.gsub(message, "\n", " ")
+      self:LogAction("Fetching ticket from "..char.." (Category: "..category..")!")
+      self:LogAction(message)
+      table.insert(self.db.account.buffer.tickets, {tChar = char, tCat = category, tMsg = message})
+    end
   else
-  -- message is not from server, don't react
+    -- message is not from server
   end
   
   if not catchedSth then
@@ -2636,27 +2642,27 @@ end
 
 function MangAdmin:SearchStart(var, value)
   if var == "item" then
-    self.db.char.searchrequests.item = true
+    self.db.char.requests.item = true
     self.db.account.buffer.items = {}
     self:ChatMsg(".lookupitem "..value)
   elseif var == "itemset" then
-    self.db.char.searchrequests.itemset = true
+    self.db.char.requests.itemset = true
     self.db.account.buffer.itemsets = {}
     self:ChatMsg(".lookupitemset "..value)
   elseif var == "spell" then
-    self.db.char.searchrequests.spell = true
+    self.db.char.requests.spell = true
     self.db.account.buffer.spells = {}
     self:ChatMsg(".lookupspell "..value)
   elseif var == "quest" then
-    self.db.char.searchrequests.quest = true
+    self.db.char.requests.quest = true
     self.db.account.buffer.quests = {}
     self:ChatMsg(".lookupquest "..value)
   elseif var == "creature" then
-    self.db.char.searchrequests.creature = true
+    self.db.char.requests.creature = true
     self.db.account.buffer.creatures = {}
     self:ChatMsg(".lookupcreature "..value)
   elseif var == "object" then
-    self.db.char.searchrequests.object = true
+    self.db.char.requests.object = true
     self.db.account.buffer.objects = {}
     self:ChatMsg(".lookupobject "..value)
   end
@@ -2669,12 +2675,12 @@ function MangAdmin:SearchReset()
   ma_var1editbox:SetText("")
   ma_var2editbox:SetText("")
   ma_lookupresulttext:SetText(Locale["searchResults"].."0")
-  self.db.char.searchrequests.item = false
-  self.db.char.searchrequests.itemset = false
-  self.db.char.searchrequests.spell = false
-  self.db.char.searchrequests.quest = false
-  self.db.char.searchrequests.creature = false
-  self.db.char.searchrequests.object = false
+  self.db.char.requests.item = false
+  self.db.char.requests.itemset = false
+  self.db.char.requests.spell = false
+  self.db.char.requests.quest = false
+  self.db.char.requests.creature = false
+  self.db.char.requests.object = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
@@ -2769,7 +2775,7 @@ function PopupScrollUpdate()
   table.foreachi(MangAdmin.db.account.buffer.creatures, function() creatureCount = creatureCount + 1 end)
   table.foreachi(MangAdmin.db.account.buffer.objects, function() objectCount = objectCount + 1 end)
   
-  if MangAdmin.db.char.searchrequests.item then --get items
+  if MangAdmin.db.char.requests.item then --get items
     if itemCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..itemCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,40)
@@ -2791,7 +2797,7 @@ function PopupScrollUpdate()
       MangAdmin:NoSearchOrResult()
     end
     
-  elseif MangAdmin.db.char.searchrequests.itemset then --get itemsets
+  elseif MangAdmin.db.char.requests.itemset then --get itemsets
     if itemsetCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..itemsetCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,itemsetCount,7,40)
@@ -2801,8 +2807,8 @@ function PopupScrollUpdate()
           local itemset = MangAdmin.db.account.buffer.itemsets[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..itemset["isId"].."|r Name: |cffffffff"..itemset["isName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddItemSet(itemset["isId"]) end)
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
         else
@@ -2813,7 +2819,7 @@ function PopupScrollUpdate()
       MangAdmin:NoSearchOrResult()
     end
     
-  elseif MangAdmin.db.char.searchrequests.quest then --get quests
+  elseif MangAdmin.db.char.requests.quest then --get quests
     if questCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..questCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,questCount,7,40)
@@ -2823,6 +2829,8 @@ function PopupScrollUpdate()
           local quest = MangAdmin.db.account.buffer.quests[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..quest["qsId"].."|r Name: |cffffffff"..quest["qsName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:Quest(quest["qsId"], arg1) end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
         else
@@ -2833,7 +2841,7 @@ function PopupScrollUpdate()
       MangAdmin:NoSearchOrResult()
     end
     
-  elseif MangAdmin.db.char.searchrequests.creature then --get creatures
+  elseif MangAdmin.db.char.requests.creature then --get creatures
     if creatureCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..creatureCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,creatureCount,7,40)
@@ -2843,6 +2851,8 @@ function PopupScrollUpdate()
           local creature = MangAdmin.db.account.buffer.creatures[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..creature["crId"].."|r Name: |cffffffff"..creature["crName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:Creature(creature["crId"], arg1) end) 
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
         else
@@ -2853,7 +2863,7 @@ function PopupScrollUpdate()
       MangAdmin:NoSearchOrResult()
     end
     
-  elseif MangAdmin.db.char.searchrequests.spell then --get spells
+  elseif MangAdmin.db.char.requests.spell then --get spells
     if spellCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..spellCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,40)
@@ -2862,6 +2872,8 @@ function PopupScrollUpdate()
         if lineplusoffset <= spellCount then
           local spell = MangAdmin.db.account.buffer.spells[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..spell["spId"].."|r Name: |cffffffff"..spell["spName"].."|r")
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:LearnSpell(spell["spId"], arg1) end)  
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
@@ -2873,7 +2885,7 @@ function PopupScrollUpdate()
       MangAdmin:NoSearchOrResult()
     end
     
-  elseif MangAdmin.db.char.searchrequests.object then --get objects
+  elseif MangAdmin.db.char.requests.object then --get objects
     if objectCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..objectCount)
       FauxScrollFrame_Update(ma_PopupScrollBar,objectCount,7,40)
@@ -2883,6 +2895,8 @@ function PopupScrollUpdate()
           local object = MangAdmin.db.account.buffer.objects[lineplusoffset]
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..object["objId"].."|r Name: |cffffffff"..object["objName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddObject(object["objId"], arg1) end)    
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
         else

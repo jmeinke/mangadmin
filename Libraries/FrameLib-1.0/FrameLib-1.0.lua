@@ -274,7 +274,7 @@ function FrameLib:BuildTexture(def)
   local t = def.size
   if t then
     texture:SetWidth(t.width or 100)
-    texture:SetHeight(t.height or 100)	
+    texture:SetHeight(t.height or 100)
   end
   t = def.gradient
   if t then
@@ -305,7 +305,7 @@ function FrameLib:BuildEditBox(def)
   local t = def.size
   if t then
     editbox:SetWidth(t.width or 100)
-    editbox:SetHeight(t.height or 100)	
+    editbox:SetHeight(t.height or 100)
   end
   editbox:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or editbox:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)
   editbox:CreateFontString(nil, "ARTWORK", def.fontString or "GameFontNormal")

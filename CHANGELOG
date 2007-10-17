@@ -25,7 +25,7 @@ Rev. 20:
   - updated the libraries
   - applied patch by Infamousblob (great! you did a very good work)
   - removed the "by Josh" from the logo, because also other people contribute to MangAdmin
-  - moved the grid-navigator to the teleport section
+  - moved the grid-navigator to the teleport section and added an editbox for the distance
   - did some code optimization and clean-up
   - notice: I have only very little time :-/
   
