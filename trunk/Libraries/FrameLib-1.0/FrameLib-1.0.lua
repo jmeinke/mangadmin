@@ -103,12 +103,17 @@ function FrameLib:BuildFrame(def)
       local min = t.gradient.min
       local max = t.gradient.max
       texture:SetGradientAlpha(t.gradient.orientation, min.r or min[1], min.g or min[2], min.b or min[3], min.a or min[4] or 1, max.r or max[2], max.g or max[2], max.b or max[3], max.a or max[4] or 1)
-    end		
+    end
   end
   
   if def.clear then frame:ClearAllPoints() end
   
-  frame:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or frame:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)	
+  if def.setpoint then
+    frame:SetPoint(def.setpoint.pos or "CENTER", def.setpoint.relTo or frame:GetParent() or UIParent, def.setpoint.relPos or def.setpoint.pos or "CENTER", def.setpoint.offX or 0, def.setpoint.offY or 0)
+  end
+  if def.setpoint2 then
+    frame:SetPoint(def.setpoint2.pos or "CENTER", def.setpoint2.relTo or frame:GetParent() or UIParent, def.setpoint2.relPos or def.setpoint2.pos or "CENTER", def.setpoint2.offX or 0, def.setpoint2.offY or 0)
+  end
   
   if def.draggable then
     frame:EnableMouse(true)
@@ -158,6 +163,10 @@ function FrameLib:BuildFrame(def)
     frame:ClearFocus()
     frame:SetScript("OnEnter", function() frame:SetFocus() end)
     frame:SetScript("OnLeave", function() frame:ClearFocus() end)
+    frame:SetFontObject(def.fontObj or "GameFontNormal")
+    frame:SetMultiLine(def.multiline)
+    frame:SetMaxLetters(def.maxletters)
+    --frame:SetTextColor(0, 0, 0, 1.0)
   end
   
   return frame

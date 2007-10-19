@@ -49,10 +49,4 @@
     - * these are input fields
     - more
     
-  - finish the ticket system (about half completed, but not able to implement yet)
-  
-  - what i want to say in the changelog __next time__:
-    - finally implemented a working ticket-system, improvements will follow
-    - implemented private message handler/messenger, actually based on WIM http://www.wimaddon.com/
-    - windows are now always on top, so there are less graphic errors
-    
+    - fixed the log view (also added the ability to scroll with the mouse middle button)

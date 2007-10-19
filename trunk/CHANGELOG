@@ -21,6 +21,13 @@
 
 =CHANGELOG=
 
+Rev. 21:
+  - corrected the scrollbar when showing the search results
+  - implemented the ticket-system (answering is not yet working, comes next time when I have more),
+    improvements will follow, the ticket-system needs lots of testing!
+    - please report bugs here!: http://code.google.com/p/mangadmin/issues/list
+  - fixed some bugs all around
+
 Rev. 20:
   - updated the libraries
   - applied patch by Infamousblob (great! you did a very good work)
