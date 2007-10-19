@@ -104,6 +104,10 @@ function Return_enUS()
     ["ma_ShutdownButton"] = "Shutdown!",
     ["ma_ItemVar1Button"] = "Amount",
     ["ma_ObjectVar1Button"] = "Loot Template",
-    ["ma_ObjectVar2Button"] = "Spawn Time"
+    ["ma_ObjectVar2Button"] = "Spawn Time",
+    ["ma_LoadTicketsButton"] = "(Re-)Load Tickets",
+    ["ma_AnswerButton"] = "Answer",
+    ["ma_DeleteButton"] = "Delete",
+    ["ma_SendMail"] = "Send"
   }
 end

@@ -67,6 +67,8 @@ MangAdmin:RegisterDefaults("account",
       }
     },
     buffer = {
+      ticketselected = 0,
+      ticketa = 0,
       tickets = {},
       items = {},
       itemsets = {},
@@ -1732,18 +1734,471 @@ function MangAdmin:CreateFrames()
   })
 
   --TICKET  
-  FrameLib:BuildFontString({
-    name = "ma_tickettext",
+  FrameLib:BuildButton({
+    name = "ma_loadticketsbutton",
     group = "ticket",
     parent = ma_midframe,
-    text = "Newest ticket is from: Unknown",
+    texture = {
+      name = "ma_loadticketsbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 20
+    },
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
       offY = -10
-    }
+    },
+    text = Locale["ma_LoadTicketsButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_answerticketbutton",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_answerticketbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -100,
+      offY = 10
+    },
+    text = Locale["ma_AnswerButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_deleteticketbutton",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_deleteticketbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 10
+    },
+    text = Locale["ma_DeleteButton"]
+  })
+  
+  FrameLib:BuildFrame({
+    type = "ScrollFrame",
+    name = "ma_TicketScrollBar",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      color = {0,0,0,0.7}
+    },
+    size = {
+      width = 200,
+      height = 274
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -34
+    },
+    inherits = "FauxScrollFrameTemplate"
+  })
+  ma_TicketScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, TicketScrollUpdate) end)
+  ma_TicketScrollBar:SetScript("OnShow", function() TicketScrollUpdate() end)
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry1",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBar",
+      relPos = "TOPLEFT",
+      offX = 0,
+      offY = 0
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry1_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
 
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry2",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry1",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry2_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })  
+
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry3",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry2",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry3_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry4",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry3",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry4_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })  
+
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry5",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry4",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry5_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry6",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry5",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry6_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry7",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry6",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry7_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry8",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry7",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry8_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry9",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry8",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry9_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry10",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry9",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry10_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry11",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry10",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry11_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry12",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry11",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry12_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry13",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry12",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry13_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry14",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry13",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry14_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry15",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry14",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry15_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_TicketScrollBarEntry16",
+    group = "ticket",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_TicketScrollBarEntry15",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_TicketScrollBarEntry16_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 150,
+      height = 10
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildFrame({
+    type = "ScrollFrame",
+    name = "ma_ticketscrollframe",
+    group = "ticket",
+    parent = ma_midframe,
+    size = {
+      width = 450,
+      --height = 200
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -30,
+      offY = -10
+    },
+    setpoint2 = {
+      pos = "BOTTOMRIGHT",
+      offX = -30,
+      offY = 34
+    },
+    inherits = "UIPanelScrollFrameTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "EditBox",
+    name = "ma_ticketeditbox",
+    group = "ticket",
+    parent = ma_ticketscrollframe,
+    texture = {
+      name = "ma_ticketeditbox_texture",
+      color = {0,0,0,1.0}
+    },
+    size = {
+      width = 450,
+      height = 200
+    },
+    --[[setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },]]
+    fontObj = "ChatFontNormal",
+    maxletters = 10000,
+    multiline = true
+  })
+  
+  
   --SERVER
   FrameLib:BuildFrame({
     name = "ma_graphframe",
@@ -1888,7 +2343,7 @@ function MangAdmin:OnInitialize()
   self:SetLanguage()
   self:CreateFrames()
   self:RegisterChatCommand(Locale["slashcmds"], opts) -- this registers the chat commands
-  self:PrepareButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
+  self:InitButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
   self:SearchReset()
   -- FuBar plugin config
   self.hasNoColor = true
@@ -1907,8 +2362,9 @@ function MangAdmin:OnInitialize()
     self:Hook(cf, "AddMessage", true)
   end
   -- initializing Frames, like DropDowns, Sliders, aso
-  self:LangDropDownInit()
+  self:InitLangDropDown()
   self:InitSliders()
+  self:InitScrollFrames()
 end
 
 function MangAdmin:OnEnable()
@@ -1935,81 +2391,6 @@ function MangAdmin:OnClick()
   else
     FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
   end
-end
-
-function MangAdmin:PrepareButtons()
-  --here the functions of all buttons are defined
-  local function preScript(object, text, script)
-    --if object then
-      if text then
-        object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
-        object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
-      end
-      if type(script) == "function" then
-        object:SetScript("OnClick", script)
-      elseif type(script) == "table" then
-        for k,v in pairs(script) do
-          object:SetScript(unpack(v))
-        end
-      end
-    --end
-  end
-  
-  -- start tab buttons
-  preScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
-  preScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
-  preScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
-  preScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
-  preScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
-  preScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
-  preScript(ma_logbutton           , Locale["tt_LogButton"]       , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
-  --end tab buttons
-  
-  preScript(ma_languagebutton      , Locale["tt_LanguageButton"]  , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  preScript(ma_speedslider         , Locale["tt_SpeedSlider"]     , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
-  preScript(ma_scaleslider         , Locale["tt_ScaleSlider"]     , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
-  preScript(ma_itembutton          , Locale["tt_ItemButton"]      , function() MangAdmin:ToggleSearchPopup("item") end)
-  preScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]   , function() MangAdmin:ToggleSearchPopup("itemset") end)
-  preScript(ma_spellbutton         , Locale["tt_SpellButton"]     , function() MangAdmin:ToggleSearchPopup("spell") end)
-  preScript(ma_questbutton         , Locale["tt_QuestButton"]     , function() MangAdmin:ToggleSearchPopup("quest") end)
-  preScript(ma_creaturebutton      , Locale["tt_CreatureButton"]  , function() MangAdmin:ToggleSearchPopup("creature") end)
-  preScript(ma_objectbutton        , Locale["tt_ObjectButton"]    , function() MangAdmin:ToggleSearchPopup("object") end)
-  preScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]    , function() MangAdmin:Screenshot() end)
-  preScript(ma_gmonbutton          , Locale["tt_GMOnButton"]      , function() MangAdmin:ToggleGMMode("on") end)
-  preScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]     , function() MangAdmin:ToggleGMMode("off") end)
-  preScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]     , function() MangAdmin:ToggleFlyMode("on") end)
-  preScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]    , function() MangAdmin:ToggleFlyMode("off") end)
-  preScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]   , function() MangAdmin:ToggleHoverMode(1) end)
-  preScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]  , function() MangAdmin:ToggleHoverMode(0) end)
-  preScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]   , function() MangAdmin:ToggleWhisper("on") end)
-  preScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]  , function() MangAdmin:ToggleWhisper("off") end)
-  preScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]   , function() MangAdmin:ToggleVisible("off") end)
-  preScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]  , function() MangAdmin:ToggleVisible("on") end)
-  preScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]    , function() MangAdmin:ToggleTaxicheat("on") end)
-  preScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]   , function() MangAdmin:ToggleTaxicheat("off") end)
-  preScript(ma_bankbutton          , Locale["tt_BankButton"]      , function() MangAdmin:ChatMsg(".bank") end)
-  preScript(ma_learnallbutton      , "Tooltip not created yet."   , function() MangAdmin:LearnSpell("all") end)
-  preScript(ma_learncraftsbutton   , "Tooltip not created yet."   , function() MangAdmin:LearnSpell("all_crafts") end)
-  preScript(ma_learngmbutton       , "Tooltip not created yet."   , function() MangAdmin:LearnSpell("all_gm") end)
-  preScript(ma_learnlangbutton     , "Tooltip not created yet."   , function() MangAdmin:LearnSpell("all_lang") end)
-  preScript(ma_learnclassbutton    , "Tooltip not created yet."   , function() MangAdmin:LearnSpell("all_myclass") end)
-  preScript(ma_levelupbutton       , "Tooltip not created yet."   , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
-  preScript(ma_searchbutton        , "Tooltip not created yet."   , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
-  preScript(ma_resetsearchbutton   , "Tooltip not created yet."   , function() MangAdmin:SearchReset() end)
-  preScript(ma_revivebutton        , "Tooltip not created yet."   , function() MangAdmin:RevivePlayer() end)
-  preScript(ma_killbutton          , "Tooltip not created yet."   , function() MangAdmin:KillSomething() end)
-  preScript(ma_savebutton          , "Tooltip not created yet."   , function() MangAdmin:SavePlayer() end)
-  preScript(ma_dismountbutton      , "Tooltip not created yet."   , function() MangAdmin:DismountPlayer() end)
-  preScript(ma_kickbutton          , Locale["tt_KickButton"]      , function() MangAdmin:KickPlayer() end)
-  preScript(ma_gridnaviaheadbutton , "Tooltip not created yet."   , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
-  preScript(ma_gridnavibackbutton  , "Tooltip not created yet."   , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
-  preScript(ma_gridnavirightbutton , "Tooltip not created yet."   , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
-  preScript(ma_gridnavileftbutton  , "Tooltip not created yet."   , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
-  preScript(ma_announcebutton      , Locale["tt_AnnounceButton"]  , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
-  preScript(ma_resetannouncebutton , "Tooltip not created yet."   , function() ma_announceeditbox:SetText("") end)
-  preScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]  , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
-  preScript(ma_closebutton         , "Tooltip not created yet."   , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
-  preScript(ma_popupclosebutton    , "Tooltip not created yet."   , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
 end
 
 function MangAdmin:ToggleTabButton(btn)
@@ -2102,18 +2483,6 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       output = self:GetValueCallHandler(guid, field, value)
     end
     
-    -- hook all new tickets
-    for name in string.gmatch(text, "New ticket from (%w+)") do
-      catchedSth = true
-      output = true
-      -- now need function for: Got new ticket
-      self:LogAction("Newest ticket is from: "..name)
-    end
-    
-    for count, status in string.gmatch(text, "Tickets count: (%w+) show new tickets: (%w+)\n") do
-      self:LogAction("There are "..count.." tickets. Show new tickets is: "..status)
-    end
-    
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
       for k,v in pairs(self.db.char.functionQueue) do
@@ -2194,12 +2563,36 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
     end
     
+    -- hook all new tickets
+    for name in string.gmatch(text, "New ticket from (%w+)") do
+      catchedSth = true
+      output = true
+      -- now need function for: Got new ticket
+      self:LogAction("Got new ticket from: "..name)
+    end
+    
+    for count, status in string.gmatch(text, "Tickets count: (%d+) show new tickets: (%w+)\n") do
+      if self.db.char.requests.ticket then
+        catchedSth = true
+        output = false
+        self:ReLoadTickets(count)
+      end
+    end
+    
     -- get tickets
     for char, category, message in string.gmatch(text, "Ticket of (%w+) %(Category: (%d+)%):\n(.*)\n") do
-      --local message = string.gsub(message, "\n", " ")
-      self:LogAction("Fetching ticket from "..char.." (Category: "..category..")!")
-      self:LogAction(message)
-      table.insert(self.db.account.buffer.tickets, {tChar = char, tCat = category, tMsg = message})
+      if self.db.char.requests.ticket then
+        --local message = string.gsub(message, "\n", " ")
+        --self:LogAction("Fetching ticket from "..char.." (Category: "..category..")!")
+        local ticketCount = 0
+        table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+        local number = self.db.account.buffer.ticketa - ticketCount
+        table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tCat = category, tMsg = message})
+        TicketScrollUpdate()
+        self:RequestTickets()
+        catchedSth = true
+        output = false
+      end
     end
   else
     -- message is not from server
@@ -2332,7 +2725,7 @@ end
 
 function MangAdmin:ToggleVisible(value)
   MangAdmin:ChatMsg(".visible "..value)
-  if value == 1 then
+  if value == "on" then
     MangAdmin:LogAction("Turned you visible.")
   else
     MangAdmin:LogAction("Turned you invisible.")
@@ -2640,6 +3033,62 @@ function MangAdmin:Shutdown(value)
   end
 end
 
+function MangAdmin:Ticket(value)
+  if value == "delete" then
+    local number = self.db.account.buffer.ticketselected
+    self:ChatMsg(".delticket "..number)
+    self:LogAction("Deleted ticket with number: "..number)
+  end
+end
+
+function MangAdmin:ReLoadTickets(number)
+  self.db.account.buffer.tickets = {}
+  if number then
+    if tonumber(number) > 0 then
+      self.db.account.buffer.ticketa = tonumber(number)
+      if self.db.char.requests.ticket then
+        self:LogAction("(Re-)Load of tickets requested. Found "..number.." tickets!")
+        self:RequestTickets()
+      end
+    else
+      self:NoTickets()
+    end
+  else
+    self.db.char.requests.ticket = true
+    self.db.account.buffer.tickets = 0
+    self:ChatMsg(".ticket")
+  end
+end
+
+function MangAdmin:RequestTickets()
+  self.db.char.requests.ticket = true
+  local ticketCount = 0
+  table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+  local tnumber = self.db.account.buffer.ticketa - ticketCount
+  if tnumber == 0 then
+    self.db.char.requests.ticket = false
+  else
+    self:ChatMsg(".ticket "..tnumber)
+  end
+end
+
+function MangAdmin:NoTickets()
+  -- Reset list and make an entry "No Tickets"
+  self:LogAction("(Re-)Load of tickets requested. No tickets were found!")
+  ma_ticketeditbox:SetText("There are no tickets available!")
+  --ma_lookupresulttext:SetText(Locale["searchResults"].."0")
+  FauxScrollFrame_Update(ma_TicketScrollBar,16,16,10)
+  for line = 1,16 do
+    getglobal("ma_TicketScrollBarEntry"..line):Disable()
+    if line == 1 then
+      getglobal("ma_TicketScrollBarEntry"..line):SetText("No Tickets!")
+      getglobal("ma_TicketScrollBarEntry"..line):Show()
+    else
+      getglobal("ma_TicketScrollBarEntry"..line):Hide()
+    end
+  end
+end
+
 function MangAdmin:SearchStart(var, value)
   if var == "item" then
     self.db.char.requests.item = true
@@ -2691,8 +3140,84 @@ function MangAdmin:SearchReset()
   PopupScrollUpdate()
 end
 
---[[FRAME FUNCTIONS]]
-function MangAdmin:LangDropDownInit()
+function MangAdmin:PrepareScript(object, text, script)
+  --if object then
+    if text then
+      object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
+      object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+    end
+    if type(script) == "function" then
+      object:SetScript("OnClick", script)
+    elseif type(script) == "table" then
+      for k,v in pairs(script) do
+        object:SetScript(unpack(v))
+      end
+    end
+  --end
+end
+
+--[[INITIALIZION FUNCTIONS]]
+function MangAdmin:InitButtons()
+  -- start tab buttons
+  self:PrepareScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
+  self:PrepareScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
+  self:PrepareScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
+  self:PrepareScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
+  self:PrepareScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
+  self:PrepareScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
+  self:PrepareScript(ma_logbutton           , Locale["tt_LogButton"]       , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
+  --end tab buttons
+  self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]  , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
+  self:PrepareScript(ma_speedslider         , Locale["tt_SpeedSlider"]     , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  self:PrepareScript(ma_scaleslider         , Locale["tt_ScaleSlider"]     , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
+  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]      , function() MangAdmin:ToggleSearchPopup("item") end)
+  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]   , function() MangAdmin:ToggleSearchPopup("itemset") end)
+  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]     , function() MangAdmin:ToggleSearchPopup("spell") end)
+  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]     , function() MangAdmin:ToggleSearchPopup("quest") end)
+  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]  , function() MangAdmin:ToggleSearchPopup("creature") end)
+  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]    , function() MangAdmin:ToggleSearchPopup("object") end)
+  self:PrepareScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]    , function() MangAdmin:Screenshot() end)
+  self:PrepareScript(ma_gmonbutton          , Locale["tt_GMOnButton"]      , function() MangAdmin:ToggleGMMode("on") end)
+  self:PrepareScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]     , function() MangAdmin:ToggleGMMode("off") end)
+  self:PrepareScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]     , function() MangAdmin:ToggleFlyMode("on") end)
+  self:PrepareScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]    , function() MangAdmin:ToggleFlyMode("off") end)
+  self:PrepareScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]   , function() MangAdmin:ToggleHoverMode(1) end)
+  self:PrepareScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]  , function() MangAdmin:ToggleHoverMode(0) end)
+  self:PrepareScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]   , function() MangAdmin:ToggleWhisper("on") end)
+  self:PrepareScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]  , function() MangAdmin:ToggleWhisper("off") end)
+  self:PrepareScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]   , function() MangAdmin:ToggleVisible("off") end)
+  self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]  , function() MangAdmin:ToggleVisible("on") end)
+  self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]    , function() MangAdmin:ToggleTaxicheat("on") end)
+  self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]   , function() MangAdmin:ToggleTaxicheat("off") end)
+  self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]      , function() MangAdmin:ChatMsg(".bank") end)
+  self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all") end)
+  self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_crafts") end)
+  self:PrepareScript(ma_learngmbutton       , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_gm") end)
+  self:PrepareScript(ma_learnlangbutton     , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_lang") end)
+  self:PrepareScript(ma_learnclassbutton    , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_myclass") end)
+  self:PrepareScript(ma_levelupbutton       , "Tooltip not available yet." , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
+  self:PrepareScript(ma_searchbutton        , "Tooltip not available yet." , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  self:PrepareScript(ma_resetsearchbutton   , "Tooltip not available yet." , function() MangAdmin:SearchReset() end)
+  self:PrepareScript(ma_revivebutton        , "Tooltip not available yet." , function() MangAdmin:RevivePlayer() end)
+  self:PrepareScript(ma_killbutton          , "Tooltip not available yet." , function() MangAdmin:KillSomething() end)
+  self:PrepareScript(ma_savebutton          , "Tooltip not available yet." , function() MangAdmin:SavePlayer() end)
+  self:PrepareScript(ma_dismountbutton      , "Tooltip not available yet." , function() MangAdmin:DismountPlayer() end)
+  self:PrepareScript(ma_kickbutton          , Locale["tt_KickButton"]      , function() MangAdmin:KickPlayer() end)
+  self:PrepareScript(ma_gridnaviaheadbutton , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
+  self:PrepareScript(ma_gridnavibackbutton  , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
+  self:PrepareScript(ma_gridnavirightbutton , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
+  self:PrepareScript(ma_gridnavileftbutton  , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
+  self:PrepareScript(ma_announcebutton      , Locale["tt_AnnounceButton"]  , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
+  self:PrepareScript(ma_resetannouncebutton , "Tooltip not available yet." , function() ma_announceeditbox:SetText("") end)
+  self:PrepareScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]  , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
+  self:PrepareScript(ma_closebutton         , "Tooltip not available yet." , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
+  self:PrepareScript(ma_popupclosebutton    , "Tooltip not available yet." , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
+  self:PrepareScript(ma_loadticketsbutton   , "Tooltip not available yet." , function() MangAdmin:ReLoadTickets() end)
+  self:PrepareScript(ma_deleteticketbutton  , "Tooltip not available yet." , function() MangAdmin:Ticket("delete") end)
+  self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet." , function() MangAdmin:Print("Sorry, this function is in work (comes in next revision)!") end)
+end
+
+function MangAdmin:InitLangDropDown()
   local function LangDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
@@ -2746,13 +3271,21 @@ function MangAdmin:InitSliders()
   ma_scalesliderText:SetText("1.0")
 end
 
+function MangAdmin:InitScrollFrames()
+  ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
+  self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
+      {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
+      {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
+end
+
 function MangAdmin:NoSearchOrResult()
   ma_lookupresulttext:SetText(Locale["searchResults"].."0")
-  FauxScrollFrame_Update(ma_PopupScrollBar,7,7,40)
+  FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
   for line = 1,7 do
     getglobal("ma_PopupScrollBarEntry"..line):Disable()
     if line == 1 then
       getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["tt_SearchDefault"])
+      getglobal("ma_PopupScrollBarEntry"..line):Show()
     else
       getglobal("ma_PopupScrollBarEntry"..line):Hide()
     end
@@ -2760,25 +3293,15 @@ function MangAdmin:NoSearchOrResult()
 end
 
 function PopupScrollUpdate()
-  local line -- 1 through 5 of our window to scroll
+  local line -- 1 through 7 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
-  local itemCount = 0
-  local itemsetCount = 0
-  local spellCount = 0
-  local questCount = 0
-  local creatureCount = 0
-  local objectCount = 0
-  table.foreachi(MangAdmin.db.account.buffer.items, function() itemCount = itemCount + 1 end)
-  table.foreachi(MangAdmin.db.account.buffer.itemsets, function() itemsetCount = itemsetCount + 1 end)
-  table.foreachi(MangAdmin.db.account.buffer.spells, function() spellCount = spellCount + 1 end)
-  table.foreachi(MangAdmin.db.account.buffer.quests, function() questCount = questCount + 1 end)
-  table.foreachi(MangAdmin.db.account.buffer.creatures, function() creatureCount = creatureCount + 1 end)
-  table.foreachi(MangAdmin.db.account.buffer.objects, function() objectCount = objectCount + 1 end)
   
   if MangAdmin.db.char.requests.item then --get items
+    local itemCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.items, function() itemCount = itemCount + 1 end)
     if itemCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..itemCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= itemCount then
@@ -2798,9 +3321,11 @@ function PopupScrollUpdate()
     end
     
   elseif MangAdmin.db.char.requests.itemset then --get itemsets
+    local itemsetCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.itemsets, function() itemsetCount = itemsetCount + 1 end)
     if itemsetCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..itemsetCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,itemsetCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,itemsetCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= itemsetCount then
@@ -2820,9 +3345,11 @@ function PopupScrollUpdate()
     end
     
   elseif MangAdmin.db.char.requests.quest then --get quests
+    local questCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.quests, function() questCount = questCount + 1 end)
     if questCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..questCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,questCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,questCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= questCount then
@@ -2842,9 +3369,11 @@ function PopupScrollUpdate()
     end
     
   elseif MangAdmin.db.char.requests.creature then --get creatures
+    local creatureCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.creatures, function() creatureCount = creatureCount + 1 end)
     if creatureCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..creatureCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,creatureCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,creatureCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= creatureCount then
@@ -2864,9 +3393,11 @@ function PopupScrollUpdate()
     end
     
   elseif MangAdmin.db.char.requests.spell then --get spells
+    local spellCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.spells, function() spellCount = spellCount + 1 end)
     if spellCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..spellCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= spellCount then
@@ -2886,9 +3417,11 @@ function PopupScrollUpdate()
     end
     
   elseif MangAdmin.db.char.requests.object then --get objects
+    local objectCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.objects, function() objectCount = objectCount + 1 end)
     if objectCount > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..objectCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,objectCount,7,40)
+      FauxScrollFrame_Update(ma_PopupScrollBar,objectCount,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= objectCount then
@@ -2909,4 +3442,36 @@ function PopupScrollUpdate()
   else
     MangAdmin:NoSearchOrResult()
   end
+end
+
+function TicketScrollUpdate()
+  local line -- 1 through 16 of our window to scroll
+  local lineplusoffset -- an index into our data calculated from the scroll offset
+
+  --if MangAdmin.db.char.requests.object then --get tickets
+    local ticketCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+    if ticketCount > 0 then
+      --ma_ticketnumbertext:SetText("Number of Tickets: "..ticketCount)
+      FauxScrollFrame_Update(ma_TicketScrollBar,ticketCount,16,10)
+      for line = 1,16 do
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_TicketScrollBar)
+        if lineplusoffset <= ticketCount then
+          local object = MangAdmin.db.account.buffer.tickets[lineplusoffset]
+          getglobal("ma_TicketScrollBarEntry"..line):SetText("Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
+          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnClick", function() ma_ticketeditbox:SetText(object["tMsg"]); MangAdmin.db.account.buffer.ticketselected = object["tNumber"] end)    
+          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_TicketScrollBarEntry"..line):Enable()
+          getglobal("ma_TicketScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_TicketScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      MangAdmin:NoTickets()
+    end
+  --[[else
+    MangAdmin:NoTickets()
+  end]]
 end
