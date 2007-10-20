@@ -77,6 +77,7 @@ function Return_enUS()
     ["ma_QuestButton"] = "Quest-Search",
     ["ma_CreatureButton"] = "Creature-Search",
     ["ma_ObjectButton"] = "Object-Search",
+    ["ma_TeleSearchButton"] = "Teleport-Search",
     ["ma_LanguageButton"] = "Change language",
     ["ma_GMOnButton"] = "GM-mode on",
     ["ma_FlyOnButton"] = "Fly-mode on",
@@ -106,6 +107,8 @@ function Return_enUS()
     ["ma_ObjectVar1Button"] = "Loot Template",
     ["ma_ObjectVar2Button"] = "Spawn Time",
     ["ma_LoadTicketsButton"] = "(Re-)Load Tickets",
+    ["ma_GetCharTicketButton"] = "Get Player",
+    ["ma_GoCharTicketButton"] = "Go to Player",
     ["ma_AnswerButton"] = "Answer",
     ["ma_DeleteButton"] = "Delete",
     ["ma_SendMail"] = "Send"

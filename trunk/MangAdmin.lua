@@ -374,7 +374,7 @@ function MangAdmin:CreateFrames()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -34
+      offY = -28
     },
     text = Locale["ma_QuestButton"]
   })
@@ -394,7 +394,7 @@ function MangAdmin:CreateFrames()
     setpoint = {
       pos = "TOPLEFT",
       offX = 114,
-      offY = -34
+      offY = -28
     },
     text = Locale["ma_ObjectButton"]
   })
@@ -414,9 +414,29 @@ function MangAdmin:CreateFrames()
     setpoint = {
       pos = "TOPLEFT",
       offX = 218,
-      offY = -34
+      offY = -28
     },
     text = Locale["ma_CreatureButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_telesearchbutton",
+    group = "bg",
+    parent = ma_leftframe,
+    texture = {
+      name = "ma_telesearchbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -52
+    },
+    text = Locale["ma_TeleSearchButton"]
   })
   
   FrameLib:BuildButton({
@@ -678,8 +698,6 @@ function MangAdmin:CreateFrames()
     },
     inherits = "FauxScrollFrameTemplate"
   })
-  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
-  ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
   
   FrameLib:BuildButton({
     name = "ma_PopupScrollBarEntry1",
@@ -1755,6 +1773,46 @@ function MangAdmin:CreateFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_getcharticketbutton",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_getcharticketbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -262,
+      offY = 10
+    },
+    text = Locale["ma_GetCharTicketButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_gocharticketbutton",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gocharticketbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -178,
+      offY = 10
+    },
+    text = Locale["ma_GoCharTicketButton"]
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_answerticketbutton",
     group = "ticket",
     parent = ma_midframe,
@@ -1768,7 +1826,7 @@ function MangAdmin:CreateFrames()
     },
     setpoint = {
       pos = "BOTTOMRIGHT",
-      offX = -100,
+      offX = -94,
       offY = 10
     },
     text = Locale["ma_AnswerButton"]
@@ -1803,8 +1861,8 @@ function MangAdmin:CreateFrames()
       color = {0,0,0,0.7}
     },
     size = {
-      width = 200,
-      height = 274
+      width = 150,
+      height = 200
     },
     setpoint = {
       pos = "TOPLEFT",
@@ -1813,8 +1871,6 @@ function MangAdmin:CreateFrames()
     },
     inherits = "FauxScrollFrameTemplate"
   })
-  ma_TicketScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, TicketScrollUpdate) end)
-  ma_TicketScrollBar:SetScript("OnShow", function() TicketScrollUpdate() end)
   
   FrameLib:BuildButton({
     name = "ma_TicketScrollBarEntry1",
@@ -2182,20 +2238,26 @@ function MangAdmin:CreateFrames()
     parent = ma_ticketscrollframe,
     texture = {
       name = "ma_ticketeditbox_texture",
-      color = {0,0,0,1.0}
+      color = {33,164,210,1.0}
     },
     size = {
       width = 450,
       height = 200
     },
-    --[[setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    },]]
-    fontObj = "ChatFontNormal",
-    maxletters = 10000,
-    multiline = true
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 0,
+      offY = 0
+    },
+    setpoint2 = {
+      pos = "BOTTOMRIGHT",
+      offX = 0,
+      offY = 0
+    },
+    maxletters = 100000,
+    multiline = true,
+    keyboard = false,
+    textcolor = {0, 0, 0, 1.0}
   })
   
   
@@ -3034,10 +3096,14 @@ function MangAdmin:Shutdown(value)
 end
 
 function MangAdmin:Ticket(value)
+  local ticket = self.db.account.buffer.ticketselected
   if value == "delete" then
-    local number = self.db.account.buffer.ticketselected
-    self:ChatMsg(".delticket "..number)
-    self:LogAction("Deleted ticket with number: "..number)
+    self:ChatMsg(".delticket "..ticket["tNumber"])
+    self:LogAction("Deleted ticket with number: "..ticket["tNumber"])
+  elseif value == "gochar" then
+    self:ChatMsg(".goname "..ticket["tChar"])
+  elseif value == "getchar" then
+    self:ChatMsg(".namego "..ticket["tChar"])
   end
 end
 
@@ -3058,6 +3124,11 @@ function MangAdmin:ReLoadTickets(number)
     self.db.account.buffer.tickets = 0
     self:ChatMsg(".ticket")
   end
+  ma_ticketeditbox:SetText("")
+  ma_deleteticketbutton:Disable()
+  ma_answerticketbutton:Disable()
+  ma_getcharticketbutton:Disable()
+  ma_gocharticketbutton:Disable()
 end
 
 function MangAdmin:RequestTickets()
@@ -3215,6 +3286,9 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_loadticketsbutton   , "Tooltip not available yet." , function() MangAdmin:ReLoadTickets() end)
   self:PrepareScript(ma_deleteticketbutton  , "Tooltip not available yet." , function() MangAdmin:Ticket("delete") end)
   self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet." , function() MangAdmin:Print("Sorry, this function is in work (comes in next revision)!") end)
+  self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet." , function() MangAdmin:Ticket("getchar") end)
+  self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet." , function() MangAdmin:Ticket("gochar") end)
+  
 end
 
 function MangAdmin:InitLangDropDown()
@@ -3272,6 +3346,10 @@ function MangAdmin:InitSliders()
 end
 
 function MangAdmin:InitScrollFrames()
+  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
+  ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
+  ma_TicketScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(10, TicketScrollUpdate) end)
+  ma_TicketScrollBar:SetScript("OnShow", function() MangAdmin:ReLoadTickets() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
       {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
@@ -3448,30 +3526,33 @@ function TicketScrollUpdate()
   local line -- 1 through 16 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
 
-  --if MangAdmin.db.char.requests.object then --get tickets
-    local ticketCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
-    if ticketCount > 0 then
-      --ma_ticketnumbertext:SetText("Number of Tickets: "..ticketCount)
-      FauxScrollFrame_Update(ma_TicketScrollBar,ticketCount,16,10)
-      for line = 1,16 do
-        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_TicketScrollBar)
-        if lineplusoffset <= ticketCount then
-          local object = MangAdmin.db.account.buffer.tickets[lineplusoffset]
-          getglobal("ma_TicketScrollBarEntry"..line):SetText("Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
-          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnClick", function() ma_ticketeditbox:SetText(object["tMsg"]); MangAdmin.db.account.buffer.ticketselected = object["tNumber"] end)    
-          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-          getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
-          getglobal("ma_TicketScrollBarEntry"..line):Enable()
-          getglobal("ma_TicketScrollBarEntry"..line):Show()
-        else
-          getglobal("ma_TicketScrollBarEntry"..line):Hide()
-        end
+  local ticketCount = 0
+  table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+  if ticketCount > 0 then
+    --ma_ticketnumbertext:SetText("Number of Tickets: "..ticketCount)
+    FauxScrollFrame_Update(ma_TicketScrollBar,ticketCount,16,10)
+    for line = 1,16 do
+      lineplusoffset = line + FauxScrollFrame_GetOffset(ma_TicketScrollBar)
+      if lineplusoffset <= ticketCount then
+        local object = MangAdmin.db.account.buffer.tickets[lineplusoffset]
+        getglobal("ma_TicketScrollBarEntry"..line):SetText("Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
+        getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnClick", function() 
+          ma_ticketeditbox:SetText(object["tMsg"])
+          MangAdmin.db.account.buffer.ticketselected = object
+          ma_deleteticketbutton:Enable()
+          ma_answerticketbutton:Enable()
+          ma_getcharticketbutton:Enable()
+          ma_gocharticketbutton:Enable()
+        end)
+        getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+        getglobal("ma_TicketScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+        getglobal("ma_TicketScrollBarEntry"..line):Enable()
+        getglobal("ma_TicketScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_TicketScrollBarEntry"..line):Hide()
       end
-    else
-      MangAdmin:NoTickets()
     end
-  --[[else
+  else
     MangAdmin:NoTickets()
-  end]]
+  end
 end
