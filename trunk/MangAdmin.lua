@@ -3121,7 +3121,7 @@ function MangAdmin:Ticket(value)
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
-    self:ChatMsg(".sendmail "..ticket["tChar"].." RE:Ticket(Category:"..ticket["tCat"])..") "..ma_ticketeditbox:GetText())
+    self:ChatMsg(".sendmail "..ticket["tChar"].." RE:Ticket(Category:"..ticket["tCat"]..") "..ma_ticketeditbox:GetText())
   end
 end
 
