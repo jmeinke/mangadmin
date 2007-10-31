@@ -47,7 +47,8 @@ MangAdmin:RegisterDefaults("char",
       spell = false,
       quest = false,
       creature = false,
-      object = false
+      object = false,
+      tele = false
     },
     nextGridWay = "ahead"
   }
@@ -61,10 +62,8 @@ MangAdmin:RegisterDefaults("account",
       spells = {},
       quests = {},
       creatures = {},
-      objects={
-        id = {},
-        name = {},
-      }
+      objects = {},
+      teles = {}
     },
     buffer = {
       ticketselected = 0,
@@ -76,6 +75,7 @@ MangAdmin:RegisterDefaults("account",
       quests = {},
       creatures = {},
       objects = {},
+      teles = {},
       counter = 0
     },
   }
@@ -2520,6 +2520,12 @@ function MangAdmin:ToggleSearchPopup(value)
     ma_var2text:Show()
     ma_var1text:SetText(Locale["ma_ObjectVar1Button"])
     ma_var2text:SetText(Locale["ma_ObjectVar2Button"])
+  elseif value == "tele" then
+    ma_lookuptext:SetText(Locale["ma_TeleSearchButton"])
+    ma_var1editbox:Hide()
+    ma_var2editbox:Hide()
+    ma_var1text:Hide()
+    ma_var2text:Hide()
   end
   self:SearchReset()
 end
@@ -2624,7 +2630,17 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
         output = false
       end
     end
-    
+ 
+    -- hook all tele lookups
+    for name in string.gmatch(text, "h%[(.-)%]") do
+      if self.db.char.requests.tele then
+        table.insert(self.db.account.buffer.teles, {tName = name})
+        PopupScrollUpdate()
+        catchedSth = true
+        output = false
+      end
+    end
+   
     -- hook all new tickets
     for name in string.gmatch(text, "New ticket from (%w+)") do
       catchedSth = true
@@ -3104,6 +3120,8 @@ function MangAdmin:Ticket(value)
     self:ChatMsg(".goname "..ticket["tChar"])
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
+  elseif value == "answer" then
+    self:ChatMsg(".sendmail "..ticket["tChar"].." RE:Ticket(Category:"..ticket["tCat"])..") "..ma_ticketeditbox:GetText())
   end
 end
 
@@ -3185,6 +3203,10 @@ function MangAdmin:SearchStart(var, value)
     self.db.char.requests.object = true
     self.db.account.buffer.objects = {}
     self:ChatMsg(".lookupobject "..value)
+  elseif var == "tele" then
+    self.db.char.requests.tele = true
+    self.db.account.buffer.teles = {}
+    self:ChatMsg(".lookuptele "..value)
   end
   self.db.account.buffer.counter = 0
   self:LogAction("Started search for "..var.."s with the keyword '"..value.."'.")
@@ -3201,12 +3223,14 @@ function MangAdmin:SearchReset()
   self.db.char.requests.quest = false
   self.db.char.requests.creature = false
   self.db.char.requests.object = false
+  self.db.char.requests.tele = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
   self.db.account.buffer.quests = {}
   self.db.account.buffer.creatures = {}
-  self.db.account.buffer.object = {}
+  self.db.account.buffer.objects = {}
+  self.db.account.buffer.teles = {}
   self.db.account.buffer.counter = 0
   PopupScrollUpdate()
 end
@@ -3230,64 +3254,65 @@ end
 --[[INITIALIZION FUNCTIONS]]
 function MangAdmin:InitButtons()
   -- start tab buttons
-  self:PrepareScript(ma_mainbutton          , Locale["tt_MainButton"]      , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
-  self:PrepareScript(ma_charbutton          , Locale["tt_CharButton"]      , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
-  self:PrepareScript(ma_telebutton          , Locale["tt_TeleButton"]      , function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
-  self:PrepareScript(ma_ticketbutton        , Locale["tt_TicketButton"]    , function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
-  self:PrepareScript(ma_serverbutton        , Locale["tt_ServerButton"]    , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
-  self:PrepareScript(ma_miscbutton          , Locale["tt_MiscButton"]      , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
-  self:PrepareScript(ma_logbutton           , Locale["tt_LogButton"]       , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
+  self:PrepareScript(ma_mainbutton          , Locale["tt_MainButton"]       , function() MangAdmin:ToggleTabButton("ma_mainbutton"); MangAdmin:ToggleContentGroup("main") end)
+  self:PrepareScript(ma_charbutton          , Locale["tt_CharButton"]       , function() MangAdmin:ToggleTabButton("ma_charbutton"); MangAdmin:ToggleContentGroup("char") end)
+  self:PrepareScript(ma_telebutton          , Locale["tt_TeleButton"]       , function() MangAdmin:ToggleTabButton("ma_telebutton"); MangAdmin:ToggleContentGroup("tele") end)
+  self:PrepareScript(ma_ticketbutton        , Locale["tt_TicketButton"]     , function() MangAdmin:ToggleTabButton("ma_ticketbutton"); MangAdmin:ToggleContentGroup("ticket") end)
+  self:PrepareScript(ma_serverbutton        , Locale["tt_ServerButton"]     , function() MangAdmin:ToggleTabButton("ma_serverbutton"); MangAdmin:ToggleContentGroup("server") end)
+  self:PrepareScript(ma_miscbutton          , Locale["tt_MiscButton"]       , function() --[[MangAdmin:ToggleTabButton("ma_miscbutton"); MangAdmin:ToggleContentGroup("misc") ]] MangAdmin:Print("Not available yet!") end)
+  self:PrepareScript(ma_logbutton           , Locale["tt_LogButton"]        , function() MangAdmin:ToggleTabButton("ma_logbutton"); MangAdmin:ToggleContentGroup("log") end)
   --end tab buttons
-  self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]  , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  self:PrepareScript(ma_speedslider         , Locale["tt_SpeedSlider"]     , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
-  self:PrepareScript(ma_scaleslider         , Locale["tt_ScaleSlider"]     , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
-  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]      , function() MangAdmin:ToggleSearchPopup("item") end)
-  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]   , function() MangAdmin:ToggleSearchPopup("itemset") end)
-  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]     , function() MangAdmin:ToggleSearchPopup("spell") end)
-  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]     , function() MangAdmin:ToggleSearchPopup("quest") end)
-  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]  , function() MangAdmin:ToggleSearchPopup("creature") end)
-  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]    , function() MangAdmin:ToggleSearchPopup("object") end)
-  self:PrepareScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]    , function() MangAdmin:Screenshot() end)
-  self:PrepareScript(ma_gmonbutton          , Locale["tt_GMOnButton"]      , function() MangAdmin:ToggleGMMode("on") end)
-  self:PrepareScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]     , function() MangAdmin:ToggleGMMode("off") end)
-  self:PrepareScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]     , function() MangAdmin:ToggleFlyMode("on") end)
-  self:PrepareScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]    , function() MangAdmin:ToggleFlyMode("off") end)
-  self:PrepareScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]   , function() MangAdmin:ToggleHoverMode(1) end)
-  self:PrepareScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]  , function() MangAdmin:ToggleHoverMode(0) end)
-  self:PrepareScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]   , function() MangAdmin:ToggleWhisper("on") end)
-  self:PrepareScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]  , function() MangAdmin:ToggleWhisper("off") end)
-  self:PrepareScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]   , function() MangAdmin:ToggleVisible("off") end)
-  self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]  , function() MangAdmin:ToggleVisible("on") end)
-  self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]    , function() MangAdmin:ToggleTaxicheat("on") end)
-  self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]   , function() MangAdmin:ToggleTaxicheat("off") end)
-  self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]      , function() MangAdmin:ChatMsg(".bank") end)
-  self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all") end)
-  self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_crafts") end)
-  self:PrepareScript(ma_learngmbutton       , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_gm") end)
-  self:PrepareScript(ma_learnlangbutton     , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_lang") end)
-  self:PrepareScript(ma_learnclassbutton    , "Tooltip not available yet." , function() MangAdmin:LearnSpell("all_myclass") end)
-  self:PrepareScript(ma_levelupbutton       , "Tooltip not available yet." , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
-  self:PrepareScript(ma_searchbutton        , "Tooltip not available yet." , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
-  self:PrepareScript(ma_resetsearchbutton   , "Tooltip not available yet." , function() MangAdmin:SearchReset() end)
-  self:PrepareScript(ma_revivebutton        , "Tooltip not available yet." , function() MangAdmin:RevivePlayer() end)
-  self:PrepareScript(ma_killbutton          , "Tooltip not available yet." , function() MangAdmin:KillSomething() end)
-  self:PrepareScript(ma_savebutton          , "Tooltip not available yet." , function() MangAdmin:SavePlayer() end)
-  self:PrepareScript(ma_dismountbutton      , "Tooltip not available yet." , function() MangAdmin:DismountPlayer() end)
-  self:PrepareScript(ma_kickbutton          , Locale["tt_KickButton"]      , function() MangAdmin:KickPlayer() end)
-  self:PrepareScript(ma_gridnaviaheadbutton , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
-  self:PrepareScript(ma_gridnavibackbutton  , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
-  self:PrepareScript(ma_gridnavirightbutton , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
-  self:PrepareScript(ma_gridnavileftbutton  , "Tooltip not available yet." , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
-  self:PrepareScript(ma_announcebutton      , Locale["tt_AnnounceButton"]  , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
-  self:PrepareScript(ma_resetannouncebutton , "Tooltip not available yet." , function() ma_announceeditbox:SetText("") end)
-  self:PrepareScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]  , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
-  self:PrepareScript(ma_closebutton         , "Tooltip not available yet." , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
-  self:PrepareScript(ma_popupclosebutton    , "Tooltip not available yet." , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
-  self:PrepareScript(ma_loadticketsbutton   , "Tooltip not available yet." , function() MangAdmin:ReLoadTickets() end)
-  self:PrepareScript(ma_deleteticketbutton  , "Tooltip not available yet." , function() MangAdmin:Ticket("delete") end)
-  self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet." , function() MangAdmin:Print("Sorry, this function is in work (comes in next revision)!") end)
-  self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet." , function() MangAdmin:Ticket("getchar") end)
-  self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet." , function() MangAdmin:Ticket("gochar") end)
+  self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]   , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
+  self:PrepareScript(ma_speedslider         , Locale["tt_SpeedSlider"]      , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  self:PrepareScript(ma_scaleslider         , Locale["tt_ScaleSlider"]      , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
+  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]       , function() MangAdmin:ToggleSearchPopup("item") end)
+  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]    , function() MangAdmin:ToggleSearchPopup("itemset") end)
+  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]      , function() MangAdmin:ToggleSearchPopup("spell") end)
+  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]      , function() MangAdmin:ToggleSearchPopup("quest") end)
+  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]   , function() MangAdmin:ToggleSearchPopup("creature") end)
+  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]     , function() MangAdmin:ToggleSearchPopup("object") end)
+  self:PrepareScript(ma_telesearchbutton    , Locale["ma_TeleSearchButton"] , function() MangAdmin:ToggleSearchPopup("tele") end)
+  self:PrepareScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]     , function() MangAdmin:Screenshot() end)
+  self:PrepareScript(ma_gmonbutton          , Locale["tt_GMOnButton"]       , function() MangAdmin:ToggleGMMode("on") end)
+  self:PrepareScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]      , function() MangAdmin:ToggleGMMode("off") end)
+  self:PrepareScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]      , function() MangAdmin:ToggleFlyMode("on") end)
+  self:PrepareScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]     , function() MangAdmin:ToggleFlyMode("off") end)
+  self:PrepareScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]    , function() MangAdmin:ToggleHoverMode(1) end)
+  self:PrepareScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]   , function() MangAdmin:ToggleHoverMode(0) end)
+  self:PrepareScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]    , function() MangAdmin:ToggleWhisper("on") end)
+  self:PrepareScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]   , function() MangAdmin:ToggleWhisper("off") end)
+  self:PrepareScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]    ,  function() MangAdmin:ToggleVisible("off") end)
+  self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]   , function() MangAdmin:ToggleVisible("on") end)
+  self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTaxicheat("on") end)
+  self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTaxicheat("off") end)
+  self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]       , function() MangAdmin:ChatMsg(".bank") end)
+  self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all") end)
+  self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_crafts") end)
+  self:PrepareScript(ma_learngmbutton       , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_gm") end)
+  self:PrepareScript(ma_learnlangbutton     , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_lang") end)
+  self:PrepareScript(ma_learnclassbutton    , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_myclass") end)
+  self:PrepareScript(ma_levelupbutton       , "Tooltip not available yet."  , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
+  self:PrepareScript(ma_searchbutton        , "Tooltip not available yet."  , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  self:PrepareScript(ma_resetsearchbutton   , "Tooltip not available yet."  , function() MangAdmin:SearchReset() end)
+  self:PrepareScript(ma_revivebutton        , "Tooltip not available yet."  , function() MangAdmin:RevivePlayer() end)
+  self:PrepareScript(ma_killbutton          , "Tooltip not available yet."  , function() MangAdmin:KillSomething() end)
+  self:PrepareScript(ma_savebutton          , "Tooltip not available yet."  , function() MangAdmin:SavePlayer() end)
+  self:PrepareScript(ma_dismountbutton      , "Tooltip not available yet."  , function() MangAdmin:DismountPlayer() end)
+  self:PrepareScript(ma_kickbutton          , Locale["tt_KickButton"]       , function() MangAdmin:KickPlayer() end)
+  self:PrepareScript(ma_gridnaviaheadbutton , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
+  self:PrepareScript(ma_gridnavibackbutton  , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
+  self:PrepareScript(ma_gridnavirightbutton , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
+  self:PrepareScript(ma_gridnavileftbutton  , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
+  self:PrepareScript(ma_announcebutton      , Locale["tt_AnnounceButton"]   , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
+  self:PrepareScript(ma_resetannouncebutton , "Tooltip not available yet."  , function() ma_announceeditbox:SetText("") end)
+  self:PrepareScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]   , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
+  self:PrepareScript(ma_closebutton         , "Tooltip not available yet."  , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
+  self:PrepareScript(ma_popupclosebutton    , "Tooltip not available yet."  , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
+  self:PrepareScript(ma_loadticketsbutton   , "Tooltip not available yet."  , function() MangAdmin:ReLoadTickets() end)
+  self:PrepareScript(ma_deleteticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("delete") end)
+  self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("answer") end)
+  self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("getchar") end)
+  self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("gochar") end)
   
 end
 
@@ -3517,6 +3542,31 @@ function PopupScrollUpdate()
     else
       MangAdmin:NoSearchOrResult()
     end
+
+  elseif MangAdmin.db.char.requests.tele then --get teles
+    local teleCount = 0
+    table.foreachi(MangAdmin.db.account.buffer.teles, function() teleCount = teleCount + 1 end)
+    if teleCount > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..teleCount)
+      FauxScrollFrame_Update(ma_PopupScrollBar,teleCount,7,30)
+      for line = 1,7 do
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+        if lineplusoffset <= teleCount then
+          local tele = MangAdmin.db.account.buffer.teles[lineplusoffset]
+          getglobal("ma_PopupScrollBarEntry"..line):SetText("Name: |cffffffff"..tele["tName"].."|r")
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:ChatMsg(".tele "..tele["tName"]) end)    
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_PopupScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      MangAdmin:NoSearchOrResult()
+    end
+
   else
     MangAdmin:NoSearchOrResult()
   end

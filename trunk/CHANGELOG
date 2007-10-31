@@ -21,6 +21,13 @@
 
 =CHANGELOG=
 
+Rev. 22:
+  - added teleport-search (patch by Marcus R.)
+  - added a provisory (mail-/answer-) functionality to the ticket system:
+    - when clicking the answer button the content of the tickets textfield 
+    is taken for the message body
+  - needs testing
+
 Rev. 21:
   - corrected the scrollbar when showing the search results
   - implemented the ticket-system (answering is not yet working, comes next time when I have more),
