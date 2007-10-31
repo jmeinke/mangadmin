@@ -26,7 +26,7 @@ Rev. 22:
   - added a provisory (mail-/answer-) functionality to the ticket system:
     - when clicking the answer button the content of the tickets textfield 
     is taken for the message body
-  - needs testing
+  - Happy Halloween 2007
 
 Rev. 21:
   - corrected the scrollbar when showing the search results
