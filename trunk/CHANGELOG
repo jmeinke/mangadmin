@@ -21,184 +21,195 @@
 
 =CHANGELOG=
 
+Rev. 23:
+  * added a send mail function to MangAdmin, 
+    please remember not to use spaces in recipient and subject names
+  * next time I'll updates the language files, atm it's a bit messy
+  * now if you click on the answer-button of the ticket-system,
+    a popup opens ans you'll be able to write cool answers
+  * replaced the ToggleSearchPopup() function with an easier and more simple function TogglePopup(). 
+    This function will handle _all_ popup calls and not just the search popups
+  * please test the now tools and report bugs and wishes here: http://code.google.com/p/mangadmin/issues/list
+  * I just decided to write more details to the changelog in the future...
+
 Rev. 22:
-  - added teleport-search (patch by Marcus R.)
-  - added a provisory (mail-/answer-) functionality to the ticket system:
-    - when clicking the answer button the content of the tickets textfield 
+  * added teleport-search (patch by Marcus R.)
+  * added a provisory (mail-/answer-) functionality to the ticket system:
+    * when clicking the answer button the content of the tickets textfield 
     is taken for the message body
-  - Happy Halloween 2007
+  * Happy Halloween 2007
 
 Rev. 21:
-  - corrected the scrollbar when showing the search results
-  - implemented the ticket-system (answering is not yet working, comes next time when I have more),
+  * corrected the scrollbar when showing the search results
+  * implemented the ticket-system (answering is not yet working, comes next time when I have more),
     improvements will follow, the ticket-system needs lots of testing!
-    - please report bugs here!: http://code.google.com/p/mangadmin/issues/list
-  - fixed some bugs all around
+    * please report bugs here!: http://code.google.com/p/mangadmin/issues/list
+  * fixed some bugs all around
 
 Rev. 20:
-  - updated the libraries
-  - applied patch by Infamousblob (great! you did a very good work)
-  - removed the "by Josh" from the logo, because also other people contribute to MangAdmin
-  - moved the grid-navigator to the teleport section and added an editbox for the distance
-  - did some code optimization and clean-up
-  - notice: I have only very little time :-/
+  * updated the libraries
+  * applied patch by Infamousblob (great! you did a very good work)
+  * removed the "by Josh" from the logo, because also other people contribute to MangAdmin
+  * moved the grid-navigator to the teleport section and added an editbox for the distance
+  * did some code optimization and clean-up
+  * notice: I have only very little time :-/
   
 Rev. 19:
-  - quick-fixed gm-switching, thanks to 99.rogers
-  - notice: I am taking a break :-/, but I'll definately continue in some time!
-  - please report any bugs here: http://code.google.com/p/mangadmin/issues/list
+  * quick-fixed gm-switching, thanks to 99.rogers
+  * notice: I am taking a break :-/, but I'll definately continue in some time!
+  * please report any bugs here: http://code.google.com/p/mangadmin/issues/list
 
 Rev. 18:
-  - when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
+  * when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
     on normal-click you/your target learn/s the spell (like before)
-  - fixed:
-    - add focus to the editbox when entering with the cursor
-    - remove focus from editboxes when leaving the box with the cursor, attention, 
+  * fixed:
+    * add focus to the editbox when entering with the cursor
+    * remove focus from editboxes when leaving the box with the cursor, attention, 
       this is a bit confusing, but it's a better way than before ;)
-    - removed autofocussing the editboxes
-  - added X(Close)-buttons in the right-bottom and removed the task from the TODO
-  - added a grid-navigator, now you can move between the grid 
+    * removed autofocussing the editboxes
+  * added X(Close)-buttons in the right-bottom and removed the task from the TODO
+  * added a grid-navigator, now you can move between the grid 
     by clicking up-, down-, right-, left- buttons, which are added to the main-section
-  - few optimizations for toggling MangAdmin by clicking the Mini-Icon
+  * few optimizations for toggling MangAdmin by clicking the Mini-Icon
     
 Rev. 17:
-  - updated the libraries
-  - changed speed slider to change swim speed also
-  - updated Chinese language, thanks to Elvis
-  - added Portuguese language, thanks to Nano-Dread
-  - fixed some typos in nearly all language files
-  - added a levelup button plus editbox
-  - added on TODO: 
-    - add X-close buttons
-    - finish the ticket system (about half completed, but not able to implement yet)
+  * updated the libraries
+  * changed speed slider to change swim speed also
+  * updated Chinese language, thanks to Elvis
+  * added Portuguese language, thanks to Nano-Dread
+  * fixed some typos in nearly all language files
+  * added a levelup button plus editbox
+  * added on TODO: 
+    * add X-close buttons
+    * finish the ticket system (about half completed, but not able to implement yet)
 
 Rev. 16:
-  - added Spanish language, thanks to Riven
-  - added Chinese language, thanks to galaxyvis/Elvis
-  - added Hungarian language, thanks to Kabraxis
-  - added Misc tab with no buttons so far
-  - many changes in the language files
-  - changed buttons:
-    - toggle gm ->> GM on / GM off
-    - toggle flymode ->> Flymode on / Flymode off
-  - new buttons:
-    - hover on/off
-    - whispers on/off
-    - invisibility on/off
-    - taxi cheat on/off
-    - revive
-    - dismount
-    - save player
-    - show bank
-    - make screenshot
-  - stopped spamming of log with navigation-messages
+  * added Spanish language, thanks to Riven
+  * added Chinese language, thanks to galaxyvis/Elvis
+  * added Hungarian language, thanks to Kabraxis
+  * added Misc tab with no buttons so far
+  * many changes in the language files
+  * changed buttons:
+    * toggle gm ->> GM on / GM off
+    * toggle flymode ->> Flymode on / Flymode off
+  * new buttons:
+    * hover on/off
+    * whispers on/off
+    * invisibility on/off
+    * taxi cheat on/off
+    * revive
+    * dismount
+    * save player
+    * show bank
+    * make screenshot
+  * stopped spamming of log with navigation-messages
 
 Rev. 15:
-  - corrected a few typos
-  - made the learn buttons greater, to support more languages and don't mess up the design
-  - added the TODO file with the idea for a GameObject onglet provided by killerdead
-  - updated Italian language, thanks to hybrid1907
-  - updated Finnish language, thanks to Lone
-  - updated Czech language, thanks to Virnik
+  * corrected a few typos
+  * made the learn buttons greater, to support more languages and don't mess up the design
+  * added the TODO file with the idea for a GameObject onglet provided by killerdead
+  * updated Italian language, thanks to hybrid1907
+  * updated Finnish language, thanks to Lone
+  * updated Czech language, thanks to Virnik
 
 Rev. 14:
-  - applied UTF-8 encoding to the language files
-  - updated Czech language, thanks to Virnik
+  * applied UTF-8 encoding to the language files
+  * updated Czech language, thanks to Virnik
 
 Rev. 13:
-  - finally implemented item-lookup and spell-lookup
-  - reactivated Character Tab and implemented new buttons: 
-    - learn all spells
-    - learn all professions and recipes
-    - learn all languages
-    - learn default spells for Game Masters    
-    - learn spells available for the characters class
-    - kick player
-  - implemented these functions into server tab:
-    - announce
-    - shutdown in * seconds
-  - tempotary fixed "Toggle Flymode" button, flymode satus will not be queried from server, but from
+  * finally implemented item-lookup and spell-lookup
+  * reactivated Character Tab and implemented new buttons: 
+    * learn all spells
+    * learn all professions and recipes
+    * learn all languages
+    * learn default spells for Game Masters    
+    * learn spells available for the characters class
+    * kick player
+  * implemented these functions into server tab:
+    * announce
+    * shutdown in * seconds
+  * tempotary fixed "Toggle Flymode" button, flymode satus will not be queried from server, but from
     ingame variable. If you only click the flymode button and not type the command manually, it is fine
-  - added Czech language, thanks to Virnik
+  * added Czech language, thanks to Virnik
 
 Rev. 12:
-  - added support for 2.1.3 client version, due to new compability with MaNGOS
-  - uploaded all included libraries to the newest revisions
-  - implemented scale slider
-  - todo for next revs: finish implementing item-lookup and favourites
+  * added support for 2.1.3 client version, due to new compability with MaNGOS
+  * uploaded all included libraries to the newest revisions
+  * implemented scale slider
+  * todo for next revs: finish implementing item-lookup and favourites
 
 Rev. 11:
-  - added Romania translation, thanks to x_ray
-  - updated Finnish translation, by Lone
+  * added Romania translation, thanks to x_ray
+  * updated Finnish translation, by Lone
 
 Rev. 10:
-  - added Lithuania translation, thanks to visagalis
+  * added Lithuania translation, thanks to visagalis
 
 Rev. 9:
-  - upgraded MangAdmin's License to GPL v.3
-  - applied GPL v.3 headers to nearly all MangAdmin files
-  - added a more clearly format to this changelog now each lines maximum is 110 columns
-  - updated Finnish translation, thanks to Lone
+  * upgraded MangAdmin's License to GPL v.3
+  * applied GPL v.3 headers to nearly all MangAdmin files
+  * added a more clearly format to this changelog now each lines maximum is 110 columns
+  * updated Finnish translation, thanks to Lone
 
 Rev. 8:
-  - added a speed-slider
-  - several changes to FrameLib
-  - fixes: 
-    - added DewDrop-2.0
-    - downgraded all Ace2 libraries to fit the interface version 20003 (2.0.12),
-    - there shouldn't popup any ace errors anymore (!)otherwise tell me
+  * added a speed-slider
+  * several changes to FrameLib
+  * fixes: 
+    * added DewDrop-2.0
+    * downgraded all Ace2 libraries to fit the interface version 20003 (2.0.12),
+    * there shouldn't popup any ace errors anymore (!)otherwise tell me
   
 Rev. 7:
-  - few bugs fixed
-  - moved MangFrames.lua code into MangAdmin.lua to make the code more handy
-  - flymode button defect, need to know getvalue of PLAYER_MOVEMENT_FLAGS, if exists
-  - finally implemented language switcher, now translators can test their translations!
+  * few bugs fixed
+  * moved MangFrames.lua code into MangAdmin.lua to make the code more handy
+  * flymode button defect, need to know getvalue of PLAYER_MOVEMENT_FLAGS, if exists
+  * finally implemented language switcher, now translators can test their translations!
   
 Rev. 6:
-  - few changes to translations
-  - removed MaNGOS .togglegm patch from Rev. 4 because it was rejected and won't be applied to 
+  * few changes to translations
+  * removed MaNGOS .togglegm patch from Rev. 4 because it was rejected and won't be applied to 
     MaNGOS svn, for details look here: http://www.mangosproject.org/forum/index.php?showtopic=13397
-  - fixed few typos
-  - partly implemented language switcher, not yet usable
-  - restructuring, optimizing and commenting of nearly all code in MangAdmin.lua
-  - added hooking function: GetValueCallHandler
-  - added function ordering list, to garantee that functions added in the future, 
+  * fixed few typos
+  * partly implemented language switcher, not yet usable
+  * restructuring, optimizing and commenting of nearly all code in MangAdmin.lua
+  * added hooking function: GetValueCallHandler
+  * added function ordering list, to garantee that functions added in the future, 
     using the same .getvalue request are handled in the right order
-  - sorry the fly mode button does only deactivate fly mode if you are flying, this will be fixed later
-  - there are several optimization changes todo before I can start implementing real usable ingame functions,
+  * sorry the fly mode button does only deactivate fly mode if you are flying, this will be fixed later
+  * there are several optimization changes todo before I can start implementing real usable ingame functions,
     so please be patient! ty
   
 Rev. 5:
-  - added Italian language, thanks to hybrid1907
+  * added Italian language, thanks to hybrid1907
 
 Rev. 4:
-  - updated Finnish translation, thanks to Lone
-  - updated Polish translation, thanks to sahib
-  - converted language files to be display characters without errors
-  - added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
-  - added a toggle gm button
-  - fixed much errors
-  - cleaned up code a bit
-  - sorry forgot language switcher today, comes later
+  * updated Finnish translation, thanks to Lone
+  * updated Polish translation, thanks to sahib
+  * converted language files to be display characters without errors
+  * added MaNGOS core patch to replace .gmon and .gmoff with .togglegm
+  * added a toggle gm button
+  * fixed much errors
+  * cleaned up code a bit
+  * sorry forgot language switcher today, comes later
   
 Rev. 3:
-  - fixed a few bugs
-  - added languages:
-    - Finnish, thanks to Seizer
-    - Swedish, thanks to dxers
-    - Polish, thanks to gerard
-  - a language switcher comes with the next revision, no time now
-  - updated the libraries
+  * fixed a few bugs
+  * added languages:
+    * Finnish, thanks to Seizer
+    * Swedish, thanks to dxers
+    * Polish, thanks to gerard
+  * a language switcher comes with the next revision, no time now
+  * updated the libraries
 
 Rev. 2:
-  - french translation added, thanks to luciolis
+  * french translation added, thanks to luciolis
 
 Rev. 1:
-  - initial import
-  - logo/header made
-  - new design and layout
-  - menu handling and log functions
-  - FrameLib initial import
-  - added Libraries:
-    - AceLibrary, AceOO-2.0, AceDB-2.0, AceHook-2.1, DewDrop-2.0, AceAddon-2.0,
-    - AceLocale-2.2, AceConsole-2.0, FrameLib-1.0, Tablet-2.0, Graph-1.0, FuBarPlugin-2.0
+  * initial import
+  * logo/header made
+  * new design and layout
+  * menu handling and log functions
+  * FrameLib initial import
+  * added Libraries:
+    * AceLibrary, AceOO-2.0, AceDB-2.0, AceHook-2.1, DewDrop-2.0, AceAddon-2.0,
+    * AceLocale-2.2, AceConsole-2.0, FrameLib-1.0, Tablet-2.0, Graph-1.0, FuBarPlugin-2.0

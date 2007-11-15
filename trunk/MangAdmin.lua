@@ -78,6 +78,7 @@ MangAdmin:RegisterDefaults("account",
       teles = {},
       counter = 0
     },
+    hardcodetele = function() return Return_TelePositions() end;
   }
 )
 
@@ -103,7 +104,7 @@ Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
 --Locale:SetLocale("enUS")
 
 --===============================================================================================================--
---== Initializing Frames (with LUA) MUCH EASIER THAN WRITING F***ING XML
+--== Initializing Frames (with LUA) MUCH EASIER THAN WRITING F***ING HUGE XML-code
 --== This lua script is like the xml files to create the frames
 --===============================================================================================================--
 
@@ -440,6 +441,26 @@ function MangAdmin:CreateFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_sendmailbutton",
+    group = "bg",
+    parent = ma_leftframe,
+    texture = {
+      name = "ma_sendmailbutton_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 114,
+      offY = -52
+    },
+    text = "Send Mail"
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_closebutton",
     group = "bg",
     parent = ma_rightframe,
@@ -679,7 +700,7 @@ function MangAdmin:CreateFrames()
     inherits = "InputBoxTemplate"
   })
   
-  -- Popup ScrollFrame
+  -- Popup Search ScrollFrame
   FrameLib:BuildFrame({
     type = "ScrollFrame",
     name = "ma_PopupScrollBar",
@@ -846,7 +867,52 @@ function MangAdmin:CreateFrames()
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
-
+  
+  -- [[Mail Popup]]
+  FrameLib:BuildFrame({
+    type = "ScrollFrame",
+    name = "ma_mailscrollframe",
+    group = "popup",
+    parent = ma_popupmidframe,
+    size = {
+      width = 400,
+      height = 274
+    },
+    setpoint = {
+      pos = "CENTER",
+      offX = -10
+    },
+    inherits = "UIPanelScrollFrameTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "EditBox",
+    name = "ma_maileditbox",
+    group = "popup",
+    parent = ma_mailscrollframe,
+    texture = {
+      name = "ma_maileditbox_texture",
+      color = {33,164,210,1.0}
+    },
+    size = {
+      width = 400,
+      --height = 200
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 0,
+      offY = 0
+    },
+    setpoint2 = {
+      pos = "BOTTOMRIGHT",
+      offX = 0,
+      offY = 0
+    },
+    maxletters = 100000,
+    multiline = true,
+    textcolor = {0, 0, 0, 1.0}
+  })
+  
   -- [[ Tab Buttons ]]
   FrameLib:BuildButton({
     name = "ma_mainbutton",
@@ -2256,7 +2322,6 @@ function MangAdmin:CreateFrames()
     },
     maxletters = 100000,
     multiline = true,
-    keyboard = false,
     textcolor = {0, 0, 0, 1.0}
   })
   
@@ -2473,61 +2538,77 @@ function MangAdmin:ToggleContentGroup(group)
   FrameLib:HandleGroup(group, function(frame) frame:Show() end)
 end
 
-function MangAdmin:ToggleSearchPopup(value)
-  -- this toggles the MangAdmin Search Popup frame
-  if ma_popupframe:IsVisible() then 
+function MangAdmin:TogglePopup(value, param)
+  -- this toggles the MangAdmin Search Popup frame, toggling deactivated, popup will be overwritten
+  --[[if ma_popupframe:IsVisible() then 
     FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end)
-  else
-    ma_searchbutton:SetScript("OnClick", function() self:SearchStart(value, ma_searcheditbox:GetText()) end)
+  else]]
+  if value == "search" then
     FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
-  end
-  if value == "item" then
-    ma_lookuptext:SetText(Locale["ma_ItemButton"])
+    ma_mailscrollframe:Hide()
+    ma_maileditbox:Hide()
+    ma_var1editbox:Hide()
+    ma_var2editbox:Hide()
+    ma_var1text:Hide()
+    ma_var2text:Hide()
+    ma_searchbutton:SetScript("OnClick", function() self:SearchStart(param.type, ma_searcheditbox:GetText()) end)
+    if param.type == "item" then
+      ma_lookuptext:SetText(Locale["ma_ItemButton"])
+      ma_var1editbox:Show()
+      ma_var1text:Show()
+      ma_var1text:SetText(Locale["ma_ItemVar1Button"])
+    elseif param.type == "itemset" then
+      ma_lookuptext:SetText(Locale["ma_ItemSetButton"])
+    elseif param.type == "spell" then
+      ma_lookuptext:SetText(Locale["ma_SpellButton"])
+    elseif param.type == "quest" then
+      ma_lookuptext:SetText(Locale["ma_QuestButton"])
+    elseif param.type == "creature" then
+      ma_lookuptext:SetText(Locale["ma_CreatureButton"])
+    elseif param.type == "object" then
+      ma_lookuptext:SetText(Locale["ma_ObjectButton"])
+      ma_var1editbox:Show()
+      ma_var2editbox:Show()
+      ma_var1text:Show()
+      ma_var2text:Show()
+      ma_var1text:SetText(Locale["ma_ObjectVar1Button"])
+      ma_var2text:SetText(Locale["ma_ObjectVar2Button"])
+    elseif param.type == "tele" then
+      ma_lookuptext:SetText(Locale["ma_TeleSearchButton"])
+    end
+    self:SearchReset()
+  elseif value == "mail" then
+    FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
+    for n = 1,7 do
+      getglobal("ma_PopupScrollBarEntry"..n):Hide()
+    end
+    ma_lookupresulttext:Hide()
+    ma_resetsearchbutton:Hide()
+    ma_PopupScrollBar:Hide()
+    if param.recipient then
+      ma_searcheditbox:SetText(param.recipient)
+    else
+      ma_searcheditbox:SetText("Recipient")
+    end
+    ma_lookuptext:SetText("Send a Mail")
+    ma_searchbutton:SetText("Send")
+    ma_searchbutton:SetScript("OnClick", function() self:SendMail(ma_searcheditbox:GetText(), ma_var1editbox:GetText(), ma_maileditbox:GetText()) end)
+    ma_var2editbox:Hide()
+    ma_var2text:Hide()
+    if param.subject then
+      ma_var1editbox:SetText(param.subject)
+    else
+      ma_var1editbox:SetText("Subject")
+    end
     ma_var1editbox:Show()
-    ma_var2editbox:Hide()
+    ma_var1text:SetText("Subject")
     ma_var1text:Show()
-    ma_var2text:Hide()
-    ma_var1text:SetText(Locale["ma_ItemVar1Button"])
-  elseif value == "itemset" then
-    ma_lookuptext:SetText(Locale["ma_ItemSetButton"])
-    ma_var1editbox:Hide()
-    ma_var2editbox:Hide()
-    ma_var1text:Hide()
-    ma_var2text:Hide()
-  elseif value == "spell" then
-    ma_lookuptext:SetText(Locale["ma_SpellButton"])
-    ma_var1editbox:Hide()
-    ma_var2editbox:Hide()
-    ma_var1text:Hide()
-    ma_var2text:Hide()
-  elseif value == "quest" then
-    ma_lookuptext:SetText(Locale["ma_QuestButton"])
-    ma_var1editbox:Hide()
-    ma_var2editbox:Hide()
-    ma_var1text:Hide()
-    ma_var2text:Hide()
-  elseif value == "creature" then
-    ma_lookuptext:SetText(Locale["ma_CreatureButton"])
-    ma_var1editbox:Hide()
-    ma_var2editbox:Hide()
-    ma_var1text:Hide()
-    ma_var2text:Hide()
-  elseif value == "object" then
-    ma_lookuptext:SetText(Locale["ma_ObjectButton"])
-    ma_var1editbox:Show()
-    ma_var2editbox:Show()
-    ma_var1text:Show()
-    ma_var2text:Show()
-    ma_var1text:SetText(Locale["ma_ObjectVar1Button"])
-    ma_var2text:SetText(Locale["ma_ObjectVar2Button"])
-  elseif value == "tele" then
-    ma_lookuptext:SetText(Locale["ma_TeleSearchButton"])
-    ma_var1editbox:Hide()
-    ma_var2editbox:Hide()
-    ma_var1text:Hide()
-    ma_var2text:Hide()
+    if param.body then
+      ma_maileditbox:SetText(param.body)
+    else
+      ma_maileditbox:SetText("Here your message!")
+    end
   end
-  self:SearchReset()
 end
 
 function MangAdmin:HideAllGroups()
@@ -3111,17 +3192,23 @@ function MangAdmin:Shutdown(value)
   end
 end
 
+function MangAdmin:SendMail(recipient, subject, body)
+  self:ChatMsg(".sendmail "..recipient.." "..subject.." "..body)
+  self:LogAction("Sent a mail to "..recipient..". Subject was: "..subject)
+end
+
 function MangAdmin:Ticket(value)
   local ticket = self.db.account.buffer.ticketselected
   if value == "delete" then
     self:ChatMsg(".delticket "..ticket["tNumber"])
     self:LogAction("Deleted ticket with number: "..ticket["tNumber"])
+    --self:ReLoadTickets(nil) -- doesn't work, server delay?
   elseif value == "gochar" then
     self:ChatMsg(".goname "..ticket["tChar"])
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
-    self:ChatMsg(".sendmail "..ticket["tChar"].." RE:Ticket(Category:"..ticket["tCat"]..") "..ma_ticketeditbox:GetText())
+    self:TogglePopup("mail", {recipient = ticket["tChar"], subject = "RE:Ticket(Category:"..ticket["tCat"]..")", body = "------------------------------\n"..ticket["tMsg"]})
   end
 end
 
@@ -3265,13 +3352,14 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]   , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
   self:PrepareScript(ma_speedslider         , Locale["tt_SpeedSlider"]      , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
   self:PrepareScript(ma_scaleslider         , Locale["tt_ScaleSlider"]      , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
-  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]       , function() MangAdmin:ToggleSearchPopup("item") end)
-  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]    , function() MangAdmin:ToggleSearchPopup("itemset") end)
-  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]      , function() MangAdmin:ToggleSearchPopup("spell") end)
-  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]      , function() MangAdmin:ToggleSearchPopup("quest") end)
-  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]   , function() MangAdmin:ToggleSearchPopup("creature") end)
-  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]     , function() MangAdmin:ToggleSearchPopup("object") end)
-  self:PrepareScript(ma_telesearchbutton    , Locale["ma_TeleSearchButton"] , function() MangAdmin:ToggleSearchPopup("tele") end)
+  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]       , function() MangAdmin:TogglePopup("search", {type = "item"}) end)
+  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]    , function() MangAdmin:TogglePopup("search", {type = "itemset"}) end)
+  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]      , function() MangAdmin:TogglePopup("search", {type = "spell"}) end)
+  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]      , function() MangAdmin:TogglePopup("search", {type = "quest"}) end)
+  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]   , function() MangAdmin:TogglePopup("search", {type = "creature"}) end)
+  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]     , function() MangAdmin:TogglePopup("search", {type = "object"}) end)
+  self:PrepareScript(ma_telesearchbutton    , Locale["ma_TeleSearchButton"] , function() MangAdmin:TogglePopup("search", {type = "tele"}) end)
+  self:PrepareScript(ma_sendmailbutton      , "Tooltip not available yet."  , function() MangAdmin:TogglePopup("mail", {}) end)
   self:PrepareScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]     , function() MangAdmin:Screenshot() end)
   self:PrepareScript(ma_gmonbutton          , Locale["tt_GMOnButton"]       , function() MangAdmin:ToggleGMMode("on") end)
   self:PrepareScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]      , function() MangAdmin:ToggleGMMode("off") end)
@@ -3377,8 +3465,12 @@ function MangAdmin:InitScrollFrames()
   ma_TicketScrollBar:SetScript("OnShow", function() MangAdmin:ReLoadTickets() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
-      {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
-      {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
+    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
+    {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
+  ma_mailscrollframe:SetScrollChild(ma_maileditbox)
+  self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
+    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
+    {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
 end
 
 function MangAdmin:NoSearchOrResult()
