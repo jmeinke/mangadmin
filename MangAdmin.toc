@@ -41,4 +41,5 @@ Locales\esES.lua
 Locales\zhCN.lua
 Locales\ptPT.lua
 
+TelePositions.lua
 MangAdmin.lua
