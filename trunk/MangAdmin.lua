@@ -3269,31 +3269,31 @@ function MangAdmin:SearchStart(var, value)
   if var == "item" then
     self.db.char.requests.item = true
     self.db.account.buffer.items = {}
-    self:ChatMsg(".lookupitem "..value)
+    self:ChatMsg(".lookup item "..value)
   elseif var == "itemset" then
     self.db.char.requests.itemset = true
     self.db.account.buffer.itemsets = {}
-    self:ChatMsg(".lookupitemset "..value)
+    self:ChatMsg(".lookup itemset "..value)
   elseif var == "spell" then
     self.db.char.requests.spell = true
     self.db.account.buffer.spells = {}
-    self:ChatMsg(".lookupspell "..value)
+    self:ChatMsg(".lookup spell "..value)
   elseif var == "quest" then
     self.db.char.requests.quest = true
     self.db.account.buffer.quests = {}
-    self:ChatMsg(".lookupquest "..value)
+    self:ChatMsg(".lookup quest "..value)
   elseif var == "creature" then
     self.db.char.requests.creature = true
     self.db.account.buffer.creatures = {}
-    self:ChatMsg(".lookupcreature "..value)
+    self:ChatMsg(".lookup creature "..value)
   elseif var == "object" then
     self.db.char.requests.object = true
     self.db.account.buffer.objects = {}
-    self:ChatMsg(".lookupobject "..value)
+    self:ChatMsg(".lookup object "..value)
   elseif var == "tele" then
     self.db.char.requests.tele = true
     self.db.account.buffer.teles = {}
-    self:ChatMsg(".lookuptele "..value)
+    self:ChatMsg(".lookup tele "..value)
   end
   self.db.account.buffer.counter = 0
   self:LogAction("Started search for "..var.."s with the keyword '"..value.."'.")
