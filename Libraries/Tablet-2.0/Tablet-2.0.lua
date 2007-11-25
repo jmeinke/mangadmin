@@ -1,6 +1,6 @@
 --[[
 Name: Tablet-2.0
-Revision: $Rev: 49630 $
+Revision: $Rev: 55567 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://www.wowace.com/index.php/Tablet-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Tablet-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 49630 $"):sub(12, -3))
+local MINOR_VERSION = tonumber(("$Revision: 55567 $"):sub(12, -3))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -251,12 +251,12 @@ end})
 
 local headerSize, normalSize
 if GameTooltipHeaderText then
-	_,headerSize = GameTooltipHeaderText:GetFont()
+	headerSize = select(2,GameTooltipHeaderText:GetFont())
 else
 	headerSize = 14
 end
 if GameTooltipText then
-	_,normalSize = GameTooltipText:GetFont()
+	normalSize = select(2,GameTooltipText:GetFont())
 else
 	normalSize = 12
 end
@@ -726,11 +726,11 @@ do
 			end
 		end
 		if not self.size then
-			_,self.size = self.font:GetFont()
+			self.size = select(2,self.font:GetFont())
 		end
 		for i = 2, columns do
 			if not self['size' .. i] then
-				_,self['size' .. i] = self['font' .. i]:GetFont()
+				self['size' .. i] = select(2,self['font' .. i]:GetFont())
 			end
 		end
 		if self.checkIcon and string.find(self.checkIcon, "^Interface\\Icons\\") then
@@ -1055,7 +1055,7 @@ local function NewLine(self)
 		check.shown = false
 		check:SetPoint("TOPLEFT", button, "TOPLEFT")
 		col1:SetPoint("TOPLEFT", check, "TOPLEFT")
-		local _,size = GameTooltipText:GetFont()
+		local size = select(2,GameTooltipText:GetFont())
 		check:SetHeight(size * 1.5)
 		check:SetWidth(size * 1.5)
 		check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
@@ -1088,7 +1088,7 @@ local function RecalculateTabletHeight(detached)
 					elseif c:find("^BOTTOM") then
 						top = b:GetBottom()
 					else
-						_,top = b:GetCenter()
+						top = select(2,b:GetCenter())
 					end
 					if top then
 						top = top + e
@@ -1099,7 +1099,7 @@ local function RecalculateTabletHeight(detached)
 					elseif c:find("^BOTTOM") then
 						bottom = b:GetBottom()
 					else
-						_,bottom = b:GetCenter()
+						bottom = select(2,b:GetCenter())
 					end
 					if bottom then
 						bottom = bottom + e
@@ -1400,7 +1400,7 @@ local function AcquireFrame(self, registration, data, detachedData)
 				info.font = GameTooltipText
 			end
 			if not info.size then
-				_,info.size = info.font:GetFont()
+				info.size = select(2,info.font:GetFont())
 			end
 			local catStart = false
 			local columns = category and category.columns or 1
@@ -1885,7 +1885,7 @@ do
 		if not frame then
 			frame = CreateFrame("Frame")
 			frame:SetScript("OnEvent", function(this, _, modifier)
-				if modifier == "ALT" then
+				if modifier == "LALT" or modifier == "RALT" then
 					this.func()
 				end
 			end)

@@ -21,6 +21,22 @@
 
 =CHANGELOG=
 
+Rev. 24:
+  * weekend update=> whole ticket-system rewritten:
+    * ticket-loading is now separated in 7 tickets/click (no fighting against MaNGOS spamfilter anymore)
+    * when getting a new ticket, there will be a sound + information regarding the newest tickets
+      in the icon tooltip, by clicking on it you can quicklaunch the ticket-tab or teleport the the player
+    * when loading a ticket, there will automatically informations about the player who created 
+      the ticket are loaded. The informations are shown at the right side of the ticket text 
+      instead of the old ticket listing. The new ticket list opens in a popup...
+    * there is a little bug left: When MangAdmin is activated you won't get ticket information
+      per chat anymore because MangAdmin will eat it. This bug will be fixed in next rev... I'm too tired atm
+  * in the server tab the graph shows the lag instead of the FPS, in next revision I want the graph to show
+    four things in the same time: lag, up, down and FPS
+  * localisations of all shown text have been added to the translations files,
+    this means that the translators have some work now :-)
+  * small code cleanup
+  
 Rev. 23:
   * added a send mail function to MangAdmin, 
     please remember not to use spaces in recipient and subject names
