@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -116,7 +116,8 @@ function Return_csCZ()
     ["ma_TicketCount"] = "|cFF00FF00Tickets:|r ",
     ["ma_TicketsNoNew"] = "You have no new tickets.",
     ["ma_TicketsNewNumber"] = "You have |cffeda55f%s|r new tickets!",
-    ["ma_TicketsLastBy"] = "Last ticket was created by %s.",
+    ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
+    ["ma_TicketsGetLast"] = "Bring %s to you.",
     ["ma_IconHint"] = "|cffeda55fClick|r to open MangAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
     ["ma_Reload"] = "Reload",
     ["ma_LoadMore"] = "Load more...",

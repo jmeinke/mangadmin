@@ -17,9 +17,21 @@
 **
 **    Please report bugs :  http://code.google.com/p/mangadmin/issues/list
 **
+** Notice: The revisions in this log differ from SVN-revisions. Example: LOG-rev. 24 -> SVN-rev. 65
+**
 ************************************************************************************************************/
 
-=CHANGELOG=
+=CHANGELOG= 
+
+Rev. 25:
+  * applied german language update, thanks to hArD kNoCkZ
+  * applied full translated french, thanks to Ancient
+  * added a new icon that only shows up when your getting new tickets
+  * added a button to the ticket-system to directly whisper a player
+  * fixed a bug: when switching from the ticket-load popup to another popup the tickets were still shown
+  * fixed the language files: my damn editor put "﻿" in the beginning of each file I saved...
+  * added an option to put transparency on or off. To do so type this: "/mangadmin transparency"
+  * for the next revision I'll try to add a style switcher (also to choose colors and other things)
 
 Rev. 24:
   * weekend update=> whole ticket-system rewritten:
