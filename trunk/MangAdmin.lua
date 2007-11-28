@@ -85,6 +85,30 @@ MangAdmin:RegisterDefaults("account",
       requested = 0,
       playerinfo = {},
       loading = false
+    },
+    style = {
+      transparency = {
+        buttons = 1.0,
+        frames = 0.7,
+        backgrounds = 0.5
+      },
+      color = {
+        buttons = {
+          r = 33, 
+          g = 164, 
+          b = 210
+        },
+        frames = {
+          r = 102,
+          g = 102,
+          b = 102
+        },
+        backgrounds = {
+          r = 0,
+          g = 0,
+          b = 0
+        }
+      }
     }
   }
 )
@@ -109,11 +133,29 @@ Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
+MangAdmin.consoleOpts = {
+  type = 'group',
+  args = {
+    toggle = {
+      name = "toggle",
+      desc = "Toggles the main window",
+      type = 'execute',
+      func = function() MangAdmin:OnClick() end
+    },
+    transparency = {
+      name = "transparency",
+      desc = "Toggles the transparency (0.5 or 1.0)",
+      type = 'execute',
+      func = function() MangAdmin:ToggleTransparency() end
+    }
+  }
+}
+
 function MangAdmin:OnInitialize()
   -- initializing MangAdmin
   self:SetLanguage()
   self:CreateFrames()
-  self:RegisterChatCommand(Locale["slashcmds"], opts) -- this registers the chat commands
+  self:RegisterChatCommand(Locale["slashcmds"], self.consoleOpts) -- this registers the chat commands
   self:InitButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
   self:SearchReset()
    -- FuBar plugin config
@@ -178,6 +220,7 @@ function MangAdmin:OnTooltipUpdate()
   if ticketCount == 0 then
     local cat = Tablet:AddCategory("columns", 1)
     cat:AddLine("text", Locale["ma_TicketsNoNew"])
+    MangAdmin:SetIcon(ROOT_PATH.."Textures\\icon.tga")
   else
     local cat = Tablet:AddCategory(
       "columns", 1,
@@ -197,12 +240,18 @@ function MangAdmin:OnTooltipUpdate()
       counter = counter + 1
       if counter == ticketCount then
         cat:AddLine(
-          "text", string.format(Locale["ma_TicketsLastBy"], name),
+          "text", string.format(Locale["ma_TicketsGoLast"], name),
           "func", function(name) MangAdmin:TelePlayer("gochar", name) end,
+          "arg1", name
+        )
+        cat:AddLine(
+          "text", string.format(Locale["ma_TicketsGetLast"], name),
+          "func", function(name) MangAdmin:TelePlayer("getchar", name) end,
           "arg1", name
         )
       end
     end
+    MangAdmin:SetIcon(ROOT_PATH.."Textures\\icon2.tga")
   end
   Tablet:SetHint(Locale["ma_IconHint"])
 end
@@ -248,24 +297,21 @@ function MangAdmin:TogglePopup(value, param)
     ma_searchbutton:SetText(Locale["ma_SearchButton"])
     ma_resetsearchbutton:SetScript("OnClick", function() MangAdmin:SearchReset() end)
     ma_resetsearchbutton:SetText(Locale["ma_ResetButton"])
+    ma_resetsearchbutton:Enable()
+    self:SearchReset()
     if param.type == "item" then
       ma_lookuptext:SetText(Locale["ma_ItemButton"])
       ma_var1editbox:Show()
       ma_var1text:Show()
       ma_var1text:SetText(Locale["ma_ItemVar1Button"])
-      self:SearchReset()
     elseif param.type == "itemset" then
       ma_lookuptext:SetText(Locale["ma_ItemSetButton"])
-      self:SearchReset()
     elseif param.type == "spell" then
       ma_lookuptext:SetText(Locale["ma_SpellButton"])
-      self:SearchReset()
     elseif param.type == "quest" then
       ma_lookuptext:SetText(Locale["ma_QuestButton"])
-      self:SearchReset()
     elseif param.type == "creature" then
       ma_lookuptext:SetText(Locale["ma_CreatureButton"])
-      self:SearchReset()
     elseif param.type == "object" then
       ma_lookuptext:SetText(Locale["ma_ObjectButton"])
       ma_var1editbox:Show()
@@ -274,10 +320,8 @@ function MangAdmin:TogglePopup(value, param)
       ma_var2text:Show()
       ma_var1text:SetText(Locale["ma_ObjectVar1Button"])
       ma_var2text:SetText(Locale["ma_ObjectVar2Button"])
-      self:SearchReset()
     elseif param.type == "tele" then
       ma_lookuptext:SetText(Locale["ma_TeleSearchButton"])
-      self:SearchReset()
     elseif param.type == "ticket" then
       ma_lookupresulttext:SetText(Locale["ma_TicketCount"].."0")
       ma_lookuptext:SetText(Locale["ma_LoadTicketsButton"])
@@ -429,7 +473,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     for name in string.gmatch(text, "New ticket from (%w+)") do
       -- now need function for: Got new ticket
       table.insert(self.db.char.newTicketQueue, name)
-      self:UpdateDisplay()
+      self:SetIcon(ROOT_PATH.."Textures\\icon2.tga")
       PlaySoundFile(ROOT_PATH.."Sound\\mail.wav")
       self:LogAction("Got new ticket from: "..name)
     end
@@ -971,6 +1015,7 @@ function MangAdmin:LoadTickets(number)
       if self.db.char.requests.ticket then
         self:LogAction("Load of tickets requested. Found "..number.." tickets!")
         self:RequestTickets()
+        self:SetIcon(ROOT_PATH.."Textures\\icon.tga")
         ma_resetsearchbutton:Enable()
       end
     else
@@ -1050,6 +1095,7 @@ function MangAdmin:SearchReset()
   self.db.char.requests.creature = false
   self.db.char.requests.object = false
   self.db.char.requests.tele = false
+  self.db.char.requests.ticket = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
@@ -1140,7 +1186,6 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("answer") end)
   self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("getchar") end)
   self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("gochar") end)
-  
 end
 
 function MangAdmin:InitLangDropDown()
@@ -1454,19 +1499,38 @@ function PopupScrollUpdate()
   end
 end
 
+-- STYLE FUNCTIONS
+function MangAdmin:ToggleTransparency()
+  if self.db.account.style.transparency.backgrounds < 1.0 then
+    self.db.account.style.transparency.backgrounds = 1.0
+  else
+    self.db.account.style.transparency.backgrounds = 0.5
+  end
+  ReloadUI()
+end
+
 --===============================================================================================================--
 --== Initializing Frames (with LUA) MUCH EASIER THAN WRITING F***ING HUGE XML-code
 --== This lua script is like the xml files to create the frames
 --===============================================================================================================--
-
 function MangAdmin:CreateFrames()
+  local transparency = {
+    bg = MangAdmin.db.account.style.transparency.backgrounds,
+    btn = MangAdmin.db.account.style.transparency.buttons,
+    frm = MangAdmin.db.account.style.transparency.frames
+  }
+  local color = {
+    bg = MangAdmin.db.account.style.color.backgrounds,
+    btn = MangAdmin.db.account.style.color.buttons,
+    frm = MangAdmin.db.account.style.color.frames
+  }
   -- [[ Main Elements ]]
   FrameLib:BuildFrame({
     name = "ma_bgframe",
     group = "bg",
     parent = UIParent,
     texture = {
-      color = {0,0,0,0.5}
+      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
     },
     draggable = true,
     size = {
@@ -1484,7 +1548,7 @@ function MangAdmin:CreateFrames()
     group = "bg",
     parent = ma_bgframe,
     texture = {
-      color = {0,0,0,0.5}
+      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
     },
     size = {
       width = 670,
@@ -1503,7 +1567,7 @@ function MangAdmin:CreateFrames()
     group = "bg",
     parent = ma_bgframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 675,
@@ -1521,7 +1585,7 @@ function MangAdmin:CreateFrames()
     group = "bg",
     parent = ma_bgframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 675,
@@ -1539,7 +1603,7 @@ function MangAdmin:CreateFrames()
     group = "bg",
     parent = ma_bgframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 374,
@@ -1558,7 +1622,7 @@ function MangAdmin:CreateFrames()
     group = "bg",
     parent = ma_bgframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 300,
@@ -1637,7 +1701,7 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_languagebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -1658,11 +1722,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_main_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,1},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1685,11 +1749,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_char_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1711,11 +1775,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_tele_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1737,11 +1801,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_ticket_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1763,11 +1827,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_misc_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1789,11 +1853,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_server_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1815,11 +1879,11 @@ function MangAdmin:CreateFrames()
     parent = ma_topframe,
     texture = {
       name = "ma_tabbutton_log_texture",
-      color = {102,102,102,0.7},
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
       gradient = {
         orientation = "vertical",
         min = {102,102,102,0},
-        max = {102,102,102,0.7}
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
       }
     },
     size = {
@@ -1842,7 +1906,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_itembutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1862,7 +1926,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_itemsetbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1882,7 +1946,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_spellbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1902,7 +1966,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_questbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1922,7 +1986,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_objectbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1942,7 +2006,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_creaturebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1962,7 +2026,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_telesearchbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -1982,7 +2046,7 @@ function MangAdmin:CreateFrames()
     parent = ma_leftframe,
     texture = {
       name = "ma_sendmailbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -2002,7 +2066,7 @@ function MangAdmin:CreateFrames()
     parent = ma_rightframe,
     texture = {
       name = "ma_languagebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 10,
@@ -2022,7 +2086,7 @@ function MangAdmin:CreateFrames()
     group = "popup",
     parent = UIParent,
     texture = {
-      color = {0,0,0,0.5}
+      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
     },
     draggable = true,
     size = {
@@ -2041,7 +2105,7 @@ function MangAdmin:CreateFrames()
     group = "popup",
     parent = ma_popupframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 435,
@@ -2059,7 +2123,7 @@ function MangAdmin:CreateFrames()
     group = "popup",
     parent = ma_popupframe,
     texture = {
-      color = {102,102,102,0.7}
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
       width = 435,
@@ -2078,7 +2142,7 @@ function MangAdmin:CreateFrames()
     parent = ma_popuptopframe,
     texture = {
       name = "ma_popupclosebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 10,
@@ -2144,7 +2208,7 @@ function MangAdmin:CreateFrames()
     parent = ma_popuptopframe,
     texture = {
       name = "ma_searchbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -2164,7 +2228,7 @@ function MangAdmin:CreateFrames()
     parent = ma_popuptopframe,
     texture = {
       name = "ma_resetsearchbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -2269,7 +2333,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry1_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2290,7 +2354,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry2_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2311,7 +2375,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry3_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2332,7 +2396,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry4_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2353,7 +2417,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry5_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2374,7 +2438,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry6_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2395,7 +2459,7 @@ function MangAdmin:CreateFrames()
     },
     texture = {
       name = "ma_PopupScrollBarEntry7_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 380,
@@ -2428,7 +2492,7 @@ function MangAdmin:CreateFrames()
     parent = ma_mailscrollframe,
     texture = {
       name = "ma_maileditbox_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 400,
@@ -2457,7 +2521,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gmonbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2477,7 +2541,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gmoffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2497,7 +2561,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_flyonbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2517,7 +2581,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_flyoffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2537,7 +2601,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_hoveronbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2557,7 +2621,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_hoveroffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2577,7 +2641,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_whisperonbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2597,7 +2661,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_whisperoffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2617,7 +2681,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_invisibleonbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2637,7 +2701,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_invisibleoffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2657,7 +2721,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_taxicheatonbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2677,7 +2741,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_taxicheatoffbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 40,
@@ -2697,7 +2761,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_screenshotbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -2717,7 +2781,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_bankbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -2768,7 +2832,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gridnaviaheadbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 20,
@@ -2788,7 +2852,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gridnavibackbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 20,
@@ -2808,7 +2872,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gridnavirightbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 20,
@@ -2828,7 +2892,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gridnavileftbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 20,
@@ -2906,7 +2970,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_learnallbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -2926,7 +2990,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_learncraftsbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 180,
@@ -2946,7 +3010,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_learngmbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 140,
@@ -2966,7 +3030,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_learnclassbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 200,
@@ -2986,7 +3050,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_learnlangbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 120,
@@ -3023,7 +3087,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_levelupbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 100,
@@ -3075,7 +3139,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_killbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3095,7 +3159,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_kickbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3115,7 +3179,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_dismountbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3135,7 +3199,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_revivebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3155,7 +3219,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_savebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3176,7 +3240,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_loadticketsbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 150,
@@ -3209,7 +3273,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_getcharticketbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3229,7 +3293,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_gocharticketbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3249,7 +3313,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_answerticketbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3269,7 +3333,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_deleteticketbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3312,7 +3376,7 @@ function MangAdmin:CreateFrames()
     parent = ma_ticketscrollframe,
     texture = {
       name = "ma_ticketeditbox_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 450,
@@ -3399,7 +3463,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_announcebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3419,7 +3483,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_resetannouncebutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
@@ -3456,7 +3520,7 @@ function MangAdmin:CreateFrames()
     parent = ma_midframe,
     texture = {
       name = "ma_shutdownbutton_texture",
-      color = {33,164,210,1.0}
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
       width = 80,
