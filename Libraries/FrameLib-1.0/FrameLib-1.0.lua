@@ -175,12 +175,11 @@ end
 
 --[[BUILD BUTTON]]
 function FrameLib:BuildButton(def)
-  local button = CreateFrame("Button", def.name, def.parent, def.inherits)
+  local button = CreateFrame(def.type or "Button", def.name, def.parent, def.inherits)
   self:AddGroupFrame(def.group, button)
-  local t = def.size
-  if t then
-    button:SetWidth(t.width or 100)
-    button:SetHeight(t.height or 100)	
+  if def.size then
+    button:SetWidth(def.size.width or 100)
+    button:SetHeight(def.size.height or 100)
   end
   button:SetTextFontObject(def.NormalFontObject or GameFontNormal)
   button:SetHighlightFontObject(def.HighlightFontObject or GameFontHighlight)
@@ -192,11 +191,16 @@ function FrameLib:BuildButton(def)
     button:SetPushedTextOffset(t[1] or t.x or t.xOffset,t[2] or t.y or t.yOffset)
   elseif type(t) == "number" then
     button:SetPushedTextOffset(0,t)
-  end	
-  t = def.clicks
-  if t then button:RegisterForClicks(t) end
-  t = def.text
-  if t then	button:SetText(t) end
+  end
+  if def.clicks then button:RegisterForClicks(def.clicks) end
+  local t = def.text
+  if t then
+    if def.type == "CheckButton" and def.inherits == "OptionsCheckButtonTemplate" then
+      getglobal(button:GetName().."Text"):SetText(t)
+    else
+      button:SetText(t)
+    end
+  end
   t = def.texture
   if t then
     local texture = button:CreateTexture(t.name or nil, "BACKGROUND")
@@ -224,8 +228,7 @@ function FrameLib:BuildButton(def)
       texture:SetGradientAlpha(t.gradient.orientation, min.r or min[1], min.g or min[2], min.b or min[3], min.a or min[4] or 1, max.r or max[2], max.g or max[2], max.b or max[3], max.a or max[4] or 1)
     end	
   end
-  t = def.disabled
-  if t then	button:Disable() end
+  if def.disabled then button:Disable() end
   t = def.script
   if type(t) == "function" then
     button:SetScript("OnClick", t)
