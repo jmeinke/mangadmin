@@ -93,6 +93,7 @@ MangAdmin:RegisterDefaults("account",
         backgrounds = 0.5
       },
       color = {
+        buffer = {},
         buttons = {
           r = 33, 
           g = 164, 
@@ -178,6 +179,9 @@ function MangAdmin:OnInitialize()
   self:InitLangDropDown()
   self:InitSliders()
   self:InitScrollFrames()
+  self:InitTransparencyButton()
+  --clear color buffer
+  self.db.account.style.color.buffer = {}
 end
 
 function MangAdmin:OnEnable()
@@ -366,7 +370,7 @@ function MangAdmin:HideAllGroups()
   FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
-  --FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
 end
 
@@ -470,7 +474,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
    
     -- hook all new tickets
-    for name in string.gmatch(text, "New ticket from (%w+)") do
+    for name in string.gmatch(text, "New ticket from (.*)") do
       -- now need function for: Got new ticket
       table.insert(self.db.char.newTicketQueue, name)
       self:SetIcon(ROOT_PATH.."Textures\\icon2.tga")
@@ -488,7 +492,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- get tickets
-    for char, category, message in string.gmatch(text, "Ticket of (%w+) %(Category: (%d+)%):\n(.*)\n") do
+    for char, category, message in string.gmatch(text, "Ticket of (.*) %(Category: (%d+)%):\n(.*)\n") do
       if self.db.char.requests.ticket then
         local ticketCount = 0
         table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
@@ -993,7 +997,15 @@ function MangAdmin:Ticket(value)
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
     self:TogglePopup("mail", {recipient = ticket["tChar"], subject = "RE:Ticket(Category:"..ticket["tCat"]..")", body = "------------------------------\n"..ticket["tMsg"]})
+  elseif value == "whisper" then
+    ChatFrameEditBox:Show()
+    ChatFrameEditBox:Insert("/w "..ticket["tChar"]);
   end
+end
+
+function MangAdmin:ToggleTickets(value)
+  MangAdmin:ChatMsg(".ticket "..value)
+  MangAdmin:LogAction("Turned receiving new tickets "..value..".")
 end
 
 function MangAdmin:ShowTicketTab()
@@ -1003,6 +1015,7 @@ function MangAdmin:ShowTicketTab()
   ma_answerticketbutton:Disable()
   ma_getcharticketbutton:Disable()
   ma_gocharticketbutton:Disable()
+  ma_whisperticketbutton:Disable()
   MangAdmin:InstantGroupToggle("ticket")
 end
 
@@ -1131,7 +1144,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_tabbutton_tele      , Locale["tt_TeleButton"]       , function() MangAdmin:InstantGroupToggle("tele") end)
   self:PrepareScript(ma_tabbutton_ticket    , Locale["tt_TicketButton"]     , function() MangAdmin:ShowTicketTab() end)
   self:PrepareScript(ma_tabbutton_server    , Locale["tt_ServerButton"]     , function() MangAdmin:InstantGroupToggle("server") end)
-  self:PrepareScript(ma_tabbutton_misc      , Locale["tt_MiscButton"]       , function() --[[MangAdmin:InstantGroupToggle("misc")]] MangAdmin:Print("Not available yet!") end)
+  self:PrepareScript(ma_tabbutton_misc      , Locale["tt_MiscButton"]       , function() MangAdmin:InstantGroupToggle("misc") end)
   self:PrepareScript(ma_tabbutton_log       , Locale["tt_LogButton"]        , function() MangAdmin:InstantGroupToggle("log") end)
   --end tab buttons
   self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]   , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
@@ -1158,6 +1171,8 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]   , function() MangAdmin:ToggleVisible("on") end)
   self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTaxicheat("on") end)
   self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTaxicheat("off") end)
+  self:PrepareScript(ma_ticketonbutton      , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTickets("on") end)
+  self:PrepareScript(ma_ticketoffbutton     , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTickets("off") end)
   self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]       , function() MangAdmin:ChatMsg(".bank") end)
   self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all") end)
   self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_crafts") end)
@@ -1186,6 +1201,11 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("answer") end)
   self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("getchar") end)
   self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("gochar") end)
+  self:PrepareScript(ma_whisperticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("whisper") end)
+  self:PrepareScript(ma_bgcolorshowbutton   , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("bg") end)
+  self:PrepareScript(ma_frmcolorshowbutton  , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("frm") end)
+  self:PrepareScript(ma_btncolorshowbutton  , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("btn") end)
+  self:PrepareScript(ma_applystylebutton    , "Tooltip not available yet."  , function() MangAdmin:ApplyStyleChanges() end)
 end
 
 function MangAdmin:InitLangDropDown()
@@ -1193,20 +1213,20 @@ function MangAdmin:InitLangDropDown()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
     local buttons = {
-      {"English","enUS"},
-      {"German","deDE"},
-      {"French","frFR"},
-      {"Italian","itIT"},
-      {"Finnish","fiFI"},
-      {"Polish","plPL"},
-      {"Swedish","svSV"},
-      {"Lithuania","liLI"},
-      {"Romania","roRO"},
       {"Czech","csCZ"},
-      {"Hungarian","huHU"},
+      {"German","deDE"},
+      {"English","enUS"},
       {"Spanish","esES"},
-      {"Chinese","zhCN"},
-      {"Portuguese","ptPT"}
+      {"Finnish","fiFI"},
+      {"French","frFR"},
+      {"Hungarian","huHU"},
+      {"Italian","itIT"},
+      {"Lithuanian","liLI"},
+      {"Polish","plPL"},
+      {"Portuguese","ptPT"},
+      {"Romanian","roRO"},
+      {"Swedish","svSV"},
+      {"Chinese","zhCN"}
     }
     for k,v in ipairs(buttons) do
       info.text = v[1]
@@ -1480,6 +1500,7 @@ function PopupScrollUpdate()
             ma_answerticketbutton:Enable()
             ma_getcharticketbutton:Enable()
             ma_gocharticketbutton:Enable()
+            ma_whisperticketbutton:Enable()
             MangAdmin:InstantGroupToggle("ticket")
           end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
@@ -1505,6 +1526,113 @@ function MangAdmin:ToggleTransparency()
     self.db.account.style.transparency.backgrounds = 1.0
   else
     self.db.account.style.transparency.backgrounds = 0.5
+  end
+  ReloadUI()
+end
+
+function MangAdmin:InitTransparencyButton()
+  if self.db.account.style.transparency.backgrounds < 1.0 then
+    ma_checktransparencybutton:SetChecked(true)
+  else
+    ma_checktransparencybutton:SetChecked(false)
+  end
+end
+
+function MangAdmin:ShowColorPicker(t)
+  if t == "bg" then
+    local r,g,b
+    if MangAdmin.db.account.style.color.buffer.backgrounds then
+      r = MangAdmin.db.account.style.color.buffer.backgrounds.r
+      g = MangAdmin.db.account.style.color.buffer.backgrounds.g
+      b = MangAdmin.db.account.style.color.buffer.backgrounds.b
+    else
+      r = MangAdmin.db.account.style.color.backgrounds.r
+      g = MangAdmin.db.account.style.color.backgrounds.g
+      b = MangAdmin.db.account.style.color.backgrounds.b
+    end
+    ColorPickerFrame.cancelFunc = function(prev)
+      local r,g,b = unpack(prev)
+      ma_bgcolorshowbutton_texture:SetTexture(r,g,b)
+    end
+    ColorPickerFrame.func = function()
+      local r,g,b = ColorPickerFrame:GetColorRGB()
+      ma_bgcolorshowbutton_texture:SetTexture(r,g,b)
+      MangAdmin.db.account.style.color.buffer.backgrounds = {}
+      MangAdmin.db.account.style.color.buffer.backgrounds.r = r
+      MangAdmin.db.account.style.color.buffer.backgrounds.g = g
+      MangAdmin.db.account.style.color.buffer.backgrounds.b = b
+    end
+    ColorPickerFrame:SetColorRGB(r,g,b)
+    ColorPickerFrame.previousValues = {r,g,b}
+  elseif t == "frm" then
+    local r,g,b
+    if MangAdmin.db.account.style.color.buffer.frames then
+      r = MangAdmin.db.account.style.color.buffer.frames.r
+      g = MangAdmin.db.account.style.color.buffer.frames.g
+      b = MangAdmin.db.account.style.color.buffer.frames.b
+    else
+      r = MangAdmin.db.account.style.color.frames.r
+      g = MangAdmin.db.account.style.color.frames.g
+      b = MangAdmin.db.account.style.color.frames.b
+    end
+    ColorPickerFrame.cancelFunc = function(prev)
+      local r,g,b = unpack(prev)
+      ma_frmcolorshowbutton_texture:SetTexture(r,g,b)
+    end
+    ColorPickerFrame.func = function()
+      local r,g,b = ColorPickerFrame:GetColorRGB()
+      ma_frmcolorshowbutton_texture:SetTexture(r,g,b)
+      MangAdmin.db.account.style.color.buffer.frames = {}
+      MangAdmin.db.account.style.color.buffer.frames.r = r
+      MangAdmin.db.account.style.color.buffer.frames.g = g
+      MangAdmin.db.account.style.color.buffer.frames.b = b
+    end
+    ColorPickerFrame:SetColorRGB(r,g,b)
+    ColorPickerFrame.previousValues = {r,g,b}
+  elseif t == "btn" then
+    local r,g,b
+    if MangAdmin.db.account.style.color.buffer.buttons then
+      r = MangAdmin.db.account.style.color.buffer.buttons.r
+      g = MangAdmin.db.account.style.color.buffer.buttons.g
+      b = MangAdmin.db.account.style.color.buffer.buttons.b
+    else
+      r = MangAdmin.db.account.style.color.buttons.r
+      g = MangAdmin.db.account.style.color.buttons.g
+      b = MangAdmin.db.account.style.color.buttons.b
+    end
+    ColorPickerFrame.cancelFunc = function(prev)
+      local r,g,b = unpack(prev)
+      ma_btncolorshowbutton_texture:SetTexture(r,g,b)
+    end
+    ColorPickerFrame.func = function()
+      local r,g,b = ColorPickerFrame:GetColorRGB();
+      ma_btncolorshowbutton_texture:SetTexture(r,g,b)
+      MangAdmin.db.account.style.color.buffer.buttons = {}
+      MangAdmin.db.account.style.color.buffer.buttons.r = r
+      MangAdmin.db.account.style.color.buffer.buttons.g = g
+      MangAdmin.db.account.style.color.buffer.buttons.b = b
+    end
+    ColorPickerFrame:SetColorRGB(r,g,b)
+    ColorPickerFrame.previousValues = {r,g,b}
+  end
+  ColorPickerFrame.hasOpacity = false
+  ColorPickerFrame:Show()
+end
+
+function MangAdmin:ApplyStyleChanges()
+  if MangAdmin.db.account.style.color.buffer.backgrounds then
+    MangAdmin.db.account.style.color.backgrounds = MangAdmin.db.account.style.color.buffer.backgrounds
+  end
+  if MangAdmin.db.account.style.color.buffer.frames then
+    MangAdmin.db.account.style.color.frames = MangAdmin.db.account.style.color.buffer.frames
+  end
+  if MangAdmin.db.account.style.color.buffer.buttons then
+    MangAdmin.db.account.style.color.buttons = MangAdmin.db.account.style.color.buffer.buttons
+  end
+  if ma_checktransparencybutton:GetChecked() then
+    self.db.account.style.transparency.backgrounds = 0.5
+  else
+    self.db.account.style.transparency.backgrounds = 1.0
   end
   ReloadUI()
 end
@@ -2714,7 +2842,7 @@ function MangAdmin:CreateFrames()
     },
     text = Locale["ma_OffButton"]
   })
-
+  
   FrameLib:BuildButton({
     name = "ma_taxicheatonbutton",
     group = "main",
@@ -2751,6 +2879,46 @@ function MangAdmin:CreateFrames()
       pos = "TOPLEFT",
       offX = 134,
       offY = -130
+    },
+    text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_ticketonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_ticketonbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -154
+    },
+    text = "Announce tickets"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ticketoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_ticketoffbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -154
     },
     text = Locale["ma_OffButton"]
   })
@@ -3268,6 +3436,26 @@ function MangAdmin:CreateFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_whisperticketbutton",
+    group = "ticket",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_whisperticketbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -346,
+      offY = 10
+    },
+    text = "Whisper" --Locale["ma_WhisperButton"]
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_getcharticketbutton",
     group = "ticket",
     parent = ma_midframe,
@@ -3397,6 +3585,135 @@ function MangAdmin:CreateFrames()
     textcolor = {0, 0, 0, 1.0}
   })
   
+  --MISC
+  FrameLib:BuildButton({
+    type = "CheckButton",
+    name = "ma_checktransparencybutton",
+    group = "misc",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 6,
+      offY = -4
+    },
+    text = "Transparency",
+    inherits = "OptionsCheckButtonTemplate"
+  })
+  
+  --merker = function()
+  
+  FrameLib:BuildButton({
+    name = "ma_bgcolorshowbutton",
+    group = "misc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_bgcolorshowbutton_texture",
+      color = {color.bg.r, color.bg.g, color.bg.b, 1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -34
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_bgcolorshowtext",
+    group = "misc",
+    parent = ma_midframe,
+    text = "Backgroundcolor",
+    setpoint = {
+      pos = "LEFT",
+      relTo = ma_bgcolorshowbutton,
+      offX = 25
+    }
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_frmcolorshowbutton",
+    group = "misc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_frmcolorshowbutton_texture",
+      color = {color.frm.r, color.frm.g, color.frm.b, 1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -58
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_frmcolorshowtext",
+    group = "misc",
+    parent = ma_midframe,
+    text = "Framecolor",
+    setpoint = {
+      pos = "LEFT",
+      relTo = ma_frmcolorshowbutton,
+      offX = 25
+    }
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_btncolorshowbutton",
+    group = "misc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_btncolorshowbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, 1.0}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -82
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_btncolorshowtext",
+    group = "misc",
+    parent = ma_midframe,
+    text = "Buttoncolor",
+    setpoint = {
+      pos = "LEFT",
+      relTo = ma_btncolorshowbutton,
+      offX = 25
+    }
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_applystylebutton",
+    group = "misc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_applystylebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -106
+    },
+    text = "Apply changes"
+  })
   
   --SERVER
   FrameLib:BuildFrame({
@@ -3418,7 +3735,6 @@ function MangAdmin:CreateFrames()
     inherits = nil
   })
   
-  -- LAG GRAPH
   RealGraph=Graph:CreateGraphRealtime("ma_netgraph_lag",ma_netgraphframe,"CENTER","CENTER",0,0,150,150)
   local g=RealGraph
   g:SetAutoScale(true)
@@ -3541,7 +3857,7 @@ function MangAdmin:CreateFrames()
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
-  --FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
   
 end

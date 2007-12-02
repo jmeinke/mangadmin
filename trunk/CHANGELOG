@@ -23,6 +23,17 @@
 
 =CHANGELOG= 
 
+Rev. 26:
+  * applied italian language update, thanks to hybrid1907
+  * applied czech language update, thanks to Yas (http://forsan.eu)
+  * applied romanian language update, thanks to x_ray
+  * fixed bug: not loading tickets with special-chars in owners name, thanks to galeane for reporting
+    problem: I can't create a character with special-chars, but I think it's fixed now, need confirmation
+  * now really added a direct-whisper button to the ticket tab (forgot in last revision)
+  * added a style changer for color and transparency, located in misc section. 
+    Changing colors can be really funny but also ugly :)
+  * ordered language dropdown in alphabetical way
+
 Rev. 25:
   * applied german language update, thanks to hArD kNoCkZ
   * applied full translated french, thanks to Ancient
