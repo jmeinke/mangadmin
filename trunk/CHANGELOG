@@ -22,6 +22,11 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 27:
+  * applied french language update with fixed chars, thanks to Ancient
+  * implement show bytes left on mail sending, because mail will be cut if using more...
+  * changed default entry for mail subject when answering ticket to subject: "Ticket(catnr)"
+  * changed the command for sendmail from ".sendmail" to ".sendm". Now 3 bytes more for mails ;-)
 
 Rev. 26:
   * applied italian language update, thanks to hybrid1907
