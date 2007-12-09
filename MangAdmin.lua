@@ -339,9 +339,12 @@ function MangAdmin:TogglePopup(value, param)
     for n = 1,7 do
       getglobal("ma_PopupScrollBarEntry"..n):Hide()
     end
-    ma_lookupresulttext:Hide()
+    ma_lookupresulttext:SetText("Bytes left: 246")
+    ma_lookupresulttext:Show()
     ma_resetsearchbutton:Hide()
     ma_PopupScrollBar:Hide()
+    ma_searcheditbox:SetScript("OnTextChanged", function() MangAdmin:UpdateMailBytesLeft() end)
+    ma_var1editbox:SetScript("OnTextChanged", function() MangAdmin:UpdateMailBytesLeft() end)
     if param.recipient then
       ma_searcheditbox:SetText(param.recipient)
     else
@@ -980,8 +983,13 @@ function MangAdmin:Shutdown(value)
 end
 
 function MangAdmin:SendMail(recipient, subject, body)
-  self:ChatMsg(".sendmail "..recipient.." "..subject.." "..body)
+  self:ChatMsg(".sendm "..recipient.." "..subject.." "..body)
   self:LogAction("Sent a mail to "..recipient..". Subject was: "..subject)
+end
+
+function MangAdmin:UpdateMailBytesLeft()
+  local bleft = 246 - strlen(ma_searcheditbox:GetText()) - strlen(ma_var1editbox:GetText()) - strlen(ma_maileditbox:GetText())
+  ma_lookupresulttext:SetText("Bytes left: "..bleft)
 end
 
 function MangAdmin:Ticket(value)
@@ -996,7 +1004,7 @@ function MangAdmin:Ticket(value)
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
-    self:TogglePopup("mail", {recipient = ticket["tChar"], subject = "RE:Ticket(Category:"..ticket["tCat"]..")", body = "------------------------------\n"..ticket["tMsg"]})
+    self:TogglePopup("mail", {recipient = ticket["tChar"], subject = "Ticket("..ticket["tCat"]..")", body = ticket["tMsg"]})
   elseif value == "whisper" then
     ChatFrameEditBox:Show()
     ChatFrameEditBox:Insert("/w "..ticket["tChar"]);
@@ -1097,6 +1105,8 @@ function MangAdmin:SearchStart(var, value)
 end
 
 function MangAdmin:SearchReset()
+  ma_searcheditbox:SetScript("OnTextChanged", function() end)
+  ma_var1editbox:SetScript("OnTextChanged", function() end)
   ma_searcheditbox:SetText("")
   ma_var1editbox:SetText("")
   ma_var2editbox:SetText("")
@@ -1171,8 +1181,8 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]   , function() MangAdmin:ToggleVisible("on") end)
   self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTaxicheat("on") end)
   self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTaxicheat("off") end)
-  self:PrepareScript(ma_ticketonbutton      , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTickets("on") end)
-  self:PrepareScript(ma_ticketoffbutton     , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTickets("off") end)
+  self:PrepareScript(ma_ticketonbutton      , "Tooltip not available yet."  , function() MangAdmin:ToggleTickets("on") end)
+  self:PrepareScript(ma_ticketoffbutton     , "Tooltip not available yet."  , function() MangAdmin:ToggleTickets("off") end)
   self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]       , function() MangAdmin:ChatMsg(".bank") end)
   self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all") end)
   self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_crafts") end)
@@ -1270,7 +1280,7 @@ function MangAdmin:InitScrollFrames()
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
     {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
   ma_mailscrollframe:SetScrollChild(ma_maileditbox)
-  self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
+  self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(); MangAdmin:UpdateMailBytesLeft() end},
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
     {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
 end
