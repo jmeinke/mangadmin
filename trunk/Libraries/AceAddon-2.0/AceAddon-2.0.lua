@@ -1,6 +1,6 @@
 ﻿--[[
 Name: AceAddon-2.0
-Revision: $Rev: 46764 $
+Revision: $Rev: 57245 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -12,7 +12,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceAddon-2.0"
-local MINOR_VERSION = "$Revision: 46764 $"
+local MINOR_VERSION = "$Revision: 57245 $"
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
@@ -291,9 +291,9 @@ elseif GetLocale() == "zhCN" then
 		["Shaman"] = "萨满祭司",
 		["Warlock"] = "术士",
 		["Warrior"] = "战士",
---		["Healer"] = "治疗保障",
---		["Tank"] = "近战控制",
---		["Caster"] = "远程输出",
+		["Healer"] = "Healer",
+		["Tank"] = "Tank",
+		["Caster"] = "Caster",
 		["Combat"] = "战斗",
 		["Compilations"] = "编译",
 		["Data Export"] = "数据导出",
@@ -431,6 +431,7 @@ setmetatable(CATEGORIES, { __index = function(self, key) -- case-insensitive
 	local lowerKey = key:lower()
 	for k,v in pairs(CATEGORIES) do
 		if k:lower() == lowerKey then
+			self[lowerKey] = v
 			return v
 		end
 	end
@@ -754,11 +755,9 @@ function AceAddon.prototype:PrintAddonInfo()
 	if isGoodVariable(self.date) then
 		aboutFrame:AddLine(DATE, tostring(self.date))
 	end
-	if self.category then
+	if isGoodVariable(self.category) then
 		local category = CATEGORIES[self.category]
-		if category then
-			aboutFrame:AddLine(CATEGORY, tostring(self.category))
-		end
+		aboutFrame:AddLine(CATEGORY, category or tostring(self.category))
 	end
 	if isGoodVariable(self.email) then
 		aboutFrame:AddLine(EMAIL, unobfuscateEmail(tostring(self.email)))

@@ -1,6 +1,6 @@
 --[[
 Name: AceComm-2.0
-Revision: $Rev: 49773 $
+Revision: $Rev: 57236 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceComm-2.0"
-local MINOR_VERSION = "$Revision: 49773 $"
+local MINOR_VERSION = "$Revision: 57236 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -39,23 +39,13 @@ local AceComm = Mixin {
 
 AceComm.hooks = {}
 
-local WoW22
-do
-	local buildMajor, buildMinor = ("."):split((GetBuildInfo()))
-	buildMajor, buildMinor = tonumber(buildMajor), tonumber(buildMinor)
-	WoW22 = buildMajor < 1 or (buildMajor >= 2 and buildMinor >= 2)
-end
-
 local AceEvent = AceLibrary:HasInstance("AceEvent-2.0") and AceLibrary("AceEvent-2.0")
 
 local byte_a = ("a"):byte()
 local byte_z = ("z"):byte()
 local byte_A = ("A"):byte()
 local byte_Z = ("Z"):byte()
-local byte_fake_s = ("\015"):byte()
-local byte_fake_S = ("\020"):byte()
 local byte_deg = ("\176"):byte()
-local byte_percent = ("%"):byte() -- 37
 
 local byte_b = ("b"):byte()
 local byte_B = ("B"):byte()
@@ -136,7 +126,7 @@ local GetFramerate = _G.GetFramerate
 
 local player = UnitName("player")
 
-local new, del, deepDel
+local new, del
 do
 	local list = setmetatable({},{__mode='k'})
 	function new(...)
@@ -160,24 +150,11 @@ do
 		list[t] = true
 		return nil
 	end
-	function deepDel(t)
-		for k,v in pairs(t) do
-			if type(v) == "table" then
-				deepDel(v)
-			end
-			t[k] = nil
-		end
-		t[''] = true
-		t[''] = nil
-		list[t] = true
-		return nil
-	end
 end
 
-local NumericCheckSum, HexCheckSum, BinaryCheckSum
-local TailoredNumericCheckSum, TailoredHexCheckSum, TailoredBinaryCheckSum
+local NumericCheckSum, HexCheckSum
+local TailoredNumericCheckSum, TailoredBinaryCheckSum
 do
-	local SOME_PRIME = 16777213
 	function NumericCheckSum(text)
 		local counter = 1
 		local len = text:len()
@@ -192,11 +169,6 @@ do
 	
 	function HexCheckSum(text)
 		return ("%06x"):format(NumericCheckSum(text))
-	end
-	
-	function BinaryCheckSum(text)
-		local num = NumericCheckSum(text)
-		return string_char(math_floor(num / 256^2), math_floor(num / 256) % 256, num % 256)
 	end
 	
 	function TailoredNumericCheckSum(text)
@@ -224,26 +196,17 @@ do
 		return a * 256^2 + b * 256 + c
 	end
 	
-	function TailoredHexCheckSum(text)
-		return ("%06x"):format(TailoredNumericCheckSum(text))
-	end
-	
 	function TailoredBinaryCheckSum(text)
 		local num = TailoredNumericCheckSum(text)
 		return string_char(math_floor(num / 256^2), math_floor(num / 256) % 256, num % 256)
 	end
 end
 
-local function GetLatency()
-	local _,_,lag = GetNetStats()
-	return lag / 1000
-end
-
 local function IsInChannel(chan)
 	return GetChannelName(chan) ~= 0
 end
 
-local Encode, EncodeByte
+local Encode, EncodeByte, EncodeBytes
 do
 	local drunkHelper_t = {
 		[29] = "\029\030",
@@ -489,30 +452,19 @@ local function SupposedToBeInChannel(chan)
 	end
 end
 
+local function checkChannelList(...)
+	for i = 2, select("#", ...), 2 do
+		local c = select(i, ...)
+		if c and not SupposedToBeInChannel(c) then
+			LeaveChannelByName(c)
+		end
+	end
+end
 local function LeaveAceCommChannels(all)
 	if all then
 		shutdown = true
 	end
-	local _,a,_,b,_,c,_,d,_,e,_,f,_,g,_,h,_,i,_,j = GetChannelList()
-	local tmp = new()
-	tmp[1] = a
-	tmp[2] = b
-	tmp[3] = c
-	tmp[4] = d
-	tmp[5] = e
-	tmp[6] = f
-	tmp[7] = g
-	tmp[8] = h
-	tmp[9] = i
-	tmp[10] = j
-	for _,v in ipairs(tmp) do
-		if v and v:find("^AceComm") then
-			if not SupposedToBeInChannel(v) then
-				LeaveChannelByName(v)
-			end
-		end
-	end
-	tmp = del(tmp)
+	checkChannelList(GetChannelList())
 end
 
 local lastRefix = 0
@@ -526,7 +478,6 @@ local function RefixAceCommChannelsAndEvents()
 	
 	local channel = false
 	local whisper = false
-	local addon = false
 	if SupposedToBeInChannel("AceComm") then
 		JoinChannel("AceComm")
 		channel = true
@@ -544,7 +495,13 @@ local function RefixAceCommChannelsAndEvents()
 		end
 	end
 	if AceComm_registry.WHISPER or AceComm_registry.GROUP or AceComm_registry.PARTY or AceComm_registry.RAID or AceComm_registry.BATTLEGROUND or AceComm_registry.GUILD then
-		addon = true
+		if not AceComm:IsEventRegistered("CHAT_MSG_ADDON") then
+			AceComm:RegisterEvent("CHAT_MSG_ADDON")
+		end
+	else
+		if AceComm:IsEventRegistered("CHAT_MSG_ADDON") then
+			AceComm:UnregisterEvent("CHAT_MSG_ADDON")
+		end
 	end
 	
 	if channel then
@@ -572,16 +529,6 @@ local function RefixAceCommChannelsAndEvents()
 		end
 		if AceComm:IsEventRegistered("CHAT_MSG_CHANNEL_LEAVE") then
 			AceComm:UnregisterEvent("CHAT_MSG_CHANNEL_LEAVE")
-		end
-	end
-	
-	if addon then
-		if not AceComm:IsEventRegistered("CHAT_MSG_ADDON") then
-			AceComm:RegisterEvent("CHAT_MSG_ADDON")
-		end
-	else
-		if AceComm:IsEventRegistered("CHAT_MSG_ADDON") then
-			AceComm:UnregisterEvent("CHAT_MSG_ADDON")
 		end
 	end
 end
@@ -612,7 +559,7 @@ do
 			else
 				self:TriggerEvent("AceComm_LeftChannel", "CUSTOM", channel:sub(8))
 			end
-			if channel:find("^AceComm") and SupposedToBeInChannel(channel) then
+			if SupposedToBeInChannel(channel) then
 				self:ScheduleEvent("AceComm-JoinChannel-" .. channel, JoinChannel, 0, channel)
 			end
 			if AceComm.userRegistry[channel] then
@@ -648,7 +595,7 @@ end
 
 local SerializeAndEncode
 do
-	local recurse
+	local recurse = {}
 	local function _Serialize(v, textToHash, sb, drunk)
 		local kind = type(v)
 		if kind == "boolean" then
@@ -703,11 +650,6 @@ do
 				sb[#sb+1] = "!"
 				return 1
 			end
---			do
---				local s = tostring(v)
---				local len = s:len()
---				return string_char(byte_plus, len) .. s
---			end
 			local sign = v < 0 or v == 0 and tostring(v) == "-0"
 			if sign then
 				v = -v
@@ -806,14 +748,8 @@ do
 					num = num + 1
 				end
 				t = del(t)
---				if not notFirst then
-					for k in pairs(recurse) do
-						recurse[k] = nil
-					end
---				end
-				if not WoW22 then
-					-- still using byte-length instead of element-length
-					num = len
+				for k in pairs(recurse) do
+					recurse[k] = nil
 				end
 				if num <= 255 then
 					sb[sb_id] = "o"
@@ -837,7 +773,7 @@ do
 					end
 				end
 			end
-			local isset = WoW22 -- only have sets in >= 2.2
+			local isset = true
 			for k, v in pairs(v) do
 				if v ~= true then
 					isset = false
@@ -870,14 +806,8 @@ do
 				end
 			end
 			t = del(t)
---			if not notFirst then
-				for k in pairs(recurse) do
-					recurse[k] = nil
-				end
---			end
-			if not WoW22 then
-				-- still using length instead of element-size
-				num = len
+			for k in pairs(recurse) do
+				recurse[k] = nil
 			end
 			if islist then
 				if num <= 255 then
@@ -914,20 +844,15 @@ do
 	end
 	
 	function SerializeAndEncode(value, textToHash, drunk)
-		if not recurse then
-			recurse = new()
-		end
 		local sb = new()
 		sb[1] = ""
 		sb[2] = ""
 		_Serialize(value, textToHash, sb, drunk)
-		if WoW22 then
-			-- expect a table, chop off the initial byte.
-			for i = 1, #sb do
-				if #sb[i] > 0 then
-					sb[i] = sb[i]:sub(2)
-					break
-				end
+		-- expect a table, chop off the initial byte.
+		for i = 1, #sb do
+			if #sb[i] > 0 then
+				sb[i] = sb[i]:sub(2)
+				break
 			end
 		end
 		local len = 0
@@ -1059,51 +984,25 @@ do
 			return val, position + 8
 		elseif x == byte_u or x == byte_U then
 			-- numerically-indexed table
-			if WoW22 then
-				-- byte #2 is element-length, not byte-length
-				local start
-				local num
-				if x == byte_u then
-					num = value:byte(position + 1)
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					num = a * 256 + b
-					start = position + 3
-				end
-				local t = new()
-				local curr = start - 1
-				for i = 1, num do
-					local v
-					v, curr = _Deserialize(value, curr + 1, hashToText)
-					t[i] = v
-				end
-				return t, curr
+			-- byte #2 is element-length, not byte-length
+			local start
+			local num
+			if x == byte_u then
+				num = value:byte(position + 1)
+				start = position + 2
 			else
-				-- byte #2 is byte-length, not element-length
-				local finish
-				local start
-				if x == byte_u then
-					local len = value:byte(position + 1)
-					finish = position + 1 + len
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					local len = a * 256 + b
-					finish = position + 2 + len
-					start = position + 3
-				end
-				local t = new()
-				local n = 0
-				local curr = start - 1
-				while curr < finish do
-					local v
-					v, curr = _Deserialize(value, curr + 1, hashToText)
-					n = n + 1
-					t[n] = v
-				end
-				return t, finish
+				local a, b = value:byte(position + 1, position + 2)
+				num = a * 256 + b
+				start = position + 3
 			end
+			local t = new()
+			local curr = start - 1
+			for i = 1, num do
+				local v
+				v, curr = _Deserialize(value, curr + 1, hashToText)
+				t[i] = v
+			end
+			return t, curr
 		elseif x == byte_v or x == byte_V then
 			-- set-style table
 			local start
@@ -1126,130 +1025,63 @@ do
 			return t, curr
 		elseif x == byte_o or x == byte_O then
 			-- numerically-indexed table
-			if WoW22 then
-				-- byte #2 is element-length, not byte-length
-				local start
-				local num
-				if x == byte_o then
-					num = value:byte(position + 1)
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					num = a * 256 + b
-					start = position + 3
-				end
-				local a, b, c = value:byte(start, start + 3)
-				local hash = a * 256^2 + b * 256 + c
-				local curr = start + 2
-				if not AceComm.classes[hash] then
-					return nil, finish
-				end
-				local class = AceComm.classes[hash]
-				if type(class.Deserialize) ~= "function" or type(class.prototype.Serialize) ~= "function" then
-					return nil, finish
-				end
-				local tmp = new()
-				for i = 1, num do
-					local v
-					v, curr = _Deserialize(value, curr + 1, hashToText)
-					tmp[i] = v
-				end
-				local object = class:Deserialize(unpack(tmp, 1, num))
-				tmp = del(tmp)
-				return object, curr+1
+			-- byte #2 is element-length, not byte-length
+			local start
+			local num
+			if x == byte_o then
+				num = value:byte(position + 1)
+				start = position + 2
 			else
-				-- byte #2 is byte-length, not element-length
-				local finish
-				local start
-				if x == byte_o then
-					local len = value:byte(position + 1)
-					finish = position + 1 + len
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					local len = a * 256 + b
-					finish = position + 2 + len
-					start = position + 3
-				end
-				local a, b, c = value:byte(start, start + 3)
-				local hash = a * 256^2 + b * 256 + c
-				local curr = start + 2
-				if not AceComm.classes[hash] then
-					return nil, finish
-				end
-				local class = AceComm.classes[hash]
-				if type(class.Deserialize) ~= "function" or type(class.prototype.Serialize) ~= "function" then
-					return nil, finish
-				end
-				local n = 0
-				local tmp = new()
-				while curr < finish do
-					local v
-					v, curr = _Deserialize(value, curr + 1, hashToText)
-					n = n + 1
-					tmp[n] = v
-				end
-				local object = class:Deserialize(unpack(tmp, 1, n))
-				tmp = del(tmp)
-				return object, finish
+				local a, b = value:byte(position + 1, position + 2)
+				num = a * 256 + b
+				start = position + 3
 			end
+			local a, b, c = value:byte(start, start + 3)
+			local hash = a * 256^2 + b * 256 + c
+			local curr = start + 2
+			local class = AceComm.classes[hash]
+			local tmp = new()
+			for i = 1, num do
+				local v
+				v, curr = _Deserialize(value, curr + 1, hashToText)
+				tmp[i] = v
+			end
+			local object
+			if class and type(class.Deserialize) == "function" and type(class.prototype.Serialize) == "function" then
+				object = class:Deserialize(unpack(tmp, 1, num))
+			end
+			tmp = del(tmp)
+			return object, curr+1
 		elseif x == byte_t or x == byte_T then
 			-- table
-			if WoW22 then
-				-- byte #2 is element-length, not byte-length
-				local start
-				local num
-				if x == byte_t then
-					num = value:byte(position + 1)
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					num = a * 256 + b
-					start = position + 3
-				end
-				local t = new()
-				local curr = start - 1
-				for i = 1, num do
-					local key, val
-					key, curr = _Deserialize(value, curr + 1, hashToText)
-					val, curr = _Deserialize(value, curr + 1, hashToText)
-					t[key] = val
-				end
-				return t, curr
+			-- byte #2 is element-length, not byte-length
+			local start
+			local num
+			if x == byte_t then
+				num = value:byte(position + 1)
+				start = position + 2
 			else
-				-- byte #2 is byte-length, not element-length
-				local finish
-				local start
-				if x == byte_t then
-					local len = value:byte(position + 1)
-					finish = position + 1 + len
-					start = position + 2
-				else
-					local a, b = value:byte(position + 1, position + 2)
-					local len = a * 256 + b
-					finish = position + 2 + len
-					start = position + 3
-				end
-				local t = new()
-				local curr = start - 1
-				while curr < finish do
-					local key, l = _Deserialize(value, curr + 1, hashToText)
-					local value, m = _Deserialize(value, l + 1, hashToText)
-					curr = m
-					t[key] = value
-				end
-				return t, finish
+				local a, b = value:byte(position + 1, position + 2)
+				num = a * 256 + b
+				start = position + 3
 			end
+			local t = new()
+			local curr = start - 1
+			for i = 1, num do
+				local key, val
+				key, curr = _Deserialize(value, curr + 1, hashToText)
+				val, curr = _Deserialize(value, curr + 1, hashToText)
+				t[key] = val
+			end
+			return t, curr
 		else
 			error(("Improper serialized value provided: %s"):format(x))
 		end
 	end
-	
+
 	function Deserialize(value, hashToText)
-		if WoW22 then
-			-- prefix the table byte
-			value = "u" .. value
-		end
+		-- prefix the table byte
+		value = "u" .. value
 		local ret,msg = pcall(_Deserialize, value, nil, hashToText)
 		if ret then
 			return msg
@@ -1258,7 +1090,7 @@ do
 end
 
 local function GetCurrentGroupDistribution()
-	if MiniMapBattlefieldFrame.status == "active" then
+	if select(2, IsInInstance()) == "pvp" then
 		return "BATTLEGROUND"
 	elseif UnitInRaid("player") then
 		return "RAID"
@@ -1271,7 +1103,7 @@ local function IsInDistribution(dist, customChannel)
 	if dist == "GROUP" then
 		return not not GetCurrentGroupDistribution()
 	elseif dist == "BATTLEGROUND" then
-		return MiniMapBattlefieldFrame.status == "active"
+		return select(2, IsInInstance()) == "pvp"
 	elseif dist == "RAID" then
 		return GetNumRaidMembers() > 0
 	elseif dist == "PARTY" then
@@ -1316,7 +1148,7 @@ function AceComm:RegisterComm(prefix, distribution, method, a4)
 		method = "OnCommReceive"
 	end
 	if type(method) == "string" and type(self[method]) ~= "function" and type(self[method]) ~= "table" then
-		AceEvent:error("Cannot register comm %q to method %q, it does not exist", prefix, method)
+		AceComm:error("Cannot register comm %q to method %q, it does not exist", prefix, method)
 	end
 	
 	local registry = AceComm_registry
@@ -1514,41 +1346,9 @@ end
 
 local id = byte_Z
 
-local encodedChar = {
-	[10] = "\029\011",
-	[0] = "\127",
-	[127] = "\029\126",
-	[124] = "\029\125",
-	[byte_s] = "\015",
-	[byte_S] = "\020",
-	[15] = "\029\016",
-	[20] = "\029\021",
-	[29] = "\029\030",
-	[37] = "\029\038",
-}
-
-local soberEncodedChar = {
-	[10] = "\176\011",
-	[0] = "\255",
-	[255] = "\176\254",
-	[124] = "\176\125",
-	[byte_deg] = "\176\177",
-	[37] = "\176\038",
-}
-
-for i = 0, 255 do
-	if not encodedChar[i] then
-		encodedChar[i] = string_char(i)
-	end
-	if not soberEncodedChar[i] then
-		soberEncodedChar[i] = string_char(i)
-	end
-end
-
 local recentGuildMessage = 0
 local firstGuildMessage = true
 local stopGuildMessages = false
-
 
 function AceComm:PLAYER_GUILD_UPDATE(arg1)
 	if arg1 and arg1 ~= "player" then return end
@@ -1567,10 +1367,7 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 	end
 	if distribution == "GROUP" then
 		distribution = GetCurrentGroupDistribution()
-		if not distribution then
-			return false
-		end
-	end	
+	end
 	if distribution == "GUILD" and stopGuildMessages then
 		return false
 	end
@@ -1588,7 +1385,7 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 	prefix = Encode(prefix, drunk)
 	local sb, messageLen = SerializeAndEncode(message, textToHash, drunk)
 	local headerLen = prefix:len() + 6
-	local max = math_floor(messageLen / (250 - headerLen) + 1)
+	local max = math_floor(messageLen / (240 - headerLen) + 1)
 	if max > 1 then
 		local segment = math_floor(messageLen / max + 0.5)
 		local last = 0
@@ -1617,27 +1414,6 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 				end
 				local index = GetChannelName(channel)
 				if index and index > 0 then
-					if WoW22 then
-						local point
-						if i == 1 then
-							point = "b"
-						elseif i == max then
-							point = "d"
-						else
-							point = "c"
-						end
-						
-						bit = prefix .. string_char(9 --[[\t]], id) .. point .. "-" .. bit .. "\029"
-					else
-						-- old way
-						bit = prefix .. string_char(9 --[[\t]], id) .. encodedChar[i] .. encodedChar[max] .. "\t" .. bit .. "\029"
-					end
-					ChatThrottleLib:SendChatMessage(priority, prefix, bit, "CHANNEL", nil, index)
-				else
-					return false
-				end
-			else
-				if WoW22 then
 					local point
 					if i == 1 then
 						point = "b"
@@ -1647,11 +1423,22 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 						point = "c"
 					end
 					
-					bit = string_char(id) .. point .. "-" .. bit
+					bit = prefix .. string_char(9 --[[\t]], id) .. point .. "-" .. bit .. "\029"
+					ChatThrottleLib:SendChatMessage(priority, prefix, bit, "CHANNEL", nil, index)
 				else
-					-- old way
-					bit = string_char(id) .. soberEncodedChar[i] .. soberEncodedChar[max] .. "\t" .. bit
+					return false
 				end
+			else
+				local point
+				if i == 1 then
+					point = "b"
+				elseif i == max then
+					point = "d"
+				else
+					point = "c"
+				end
+				
+				bit = string_char(id) .. point .. "-" .. bit
 				ChatThrottleLib:SendAddonMessage(priority, prefix, bit, distribution, person)
 			end
 		end
@@ -1669,12 +1456,7 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 			local index = GetChannelName(channel)
 			if index and index > 0 then
 				sb[1] = prefix
-				if WoW22 then
-					sb[2] = string_char(9 --[[\t]], id, byte_a, byte_minus)
-				else
-					-- old way
-					sb[2] = string_char(9 --[[\t]], id, 1, 1, 9 --[[\t]])
-				end
+				sb[2] = string_char(9 --[[\t]], id, byte_a, byte_minus)
 				sb[#sb+1] = "\029"
 				local message = table_concat(sb)
 				sb = del(sb)
@@ -1685,20 +1467,15 @@ local function SendMessage(prefix, priority, distribution, person, message, text
 		else
 			if distribution == "GUILD" and firstGuildMessage then
 				firstGuildMessage = false
-				if GetCVar(WoW22 and "Sound_EnableErrorSpeech" or "EnableErrorSpeech") == "1" then
-					SetCVar(WoW22 and "Sound_EnableErrorSpeech" or "EnableErrorSpeech", "0")
+				if GetCVar("Sound_EnableErrorSpeech") == "1" then
+					SetCVar("Sound_EnableErrorSpeech", "0")
 					AceLibrary("AceEvent-2.0"):ScheduleEvent("AceComm-EnableErrorSpeech", function()
-						SetCVar(WoW22 and "Sound_EnableErrorSpeech" or "EnableErrorSpeech", "1")
+						SetCVar("Sound_EnableErrorSpeech", "1")
 					end, 10)
 				end
 				recentGuildMessage = GetTime() + 10
 			end
-			if WoW22 then
-				sb[1] = string_char(id, byte_a, byte_minus)
-			else
-				-- old way
-				sb[1] = string_char(id, 1, 1, 9 --[[\t]])
-			end
+			sb[1] = string_char(id, byte_a, byte_minus)
 			local message = table_concat(sb)
 			sb = del(sb)
 			ChatThrottleLib:SendAddonMessage(priority, prefix, message, distribution, person)
@@ -1711,7 +1488,7 @@ end
 function AceComm:SendPrioritizedCommMessage(priority, distribution, person, ...)
 	AceComm:argCheck(priority, 2, "string")
 	if priority ~= "NORMAL" and priority ~= "BULK" and priority ~= "ALERT" then
-		AceComm:error('Argument #2 to `SendPrioritizedCommMessage\' must be either "NORMAL", "BULK", or "ALERT"')
+		AceComm:error('Priority for `Send[Prioritized]CommMessage\' must be either "NORMAL", "BULK", or "ALERT"')
 	end
 	AceComm:argCheck(distribution, 3, "string")
 	local includePerson = true
@@ -1719,115 +1496,49 @@ function AceComm:SendPrioritizedCommMessage(priority, distribution, person, ...)
 		includePerson = false
 		AceComm:argCheck(person, 4, "string")
 		if person:len() == 0 then
-			AceComm:error("Argument #4 to `SendPrioritizedCommMessage' must be a non-zero-length string")
+			AceComm:error("Person for `Send[Prioritized]CommMessage' must be a non-zero-length string")
 		end
 	end
 	if self == AceComm then
 		AceComm:error("Cannot send a comm message from AceComm directly.")
 	end
 	if distribution and distribution ~= "GLOBAL" and distribution ~= "WHISPER" and distribution ~= "PARTY" and distribution ~= "RAID" and distribution ~= "GUILD" and distribution ~= "BATTLEGROUND" and distribution ~= "GROUP" and distribution ~= "ZONE" and distribution ~= "CUSTOM" then
-		AceComm:error('Argument #4 to `SendPrioritizedCommMessage\' must be either nil, "GLOBAL", "ZONE", "WHISPER", "PARTY", "RAID", "GUILD", "BATTLEGROUND", "GROUP", or "CUSTOM". %q is not appropriate', distribution)
+		AceComm:error('Distribution for `Send[Prioritized]CommMessage\' must be either nil, "GLOBAL", "ZONE", "WHISPER", "PARTY", "RAID", "GUILD", "BATTLEGROUND", "GROUP", or "CUSTOM". %q is not appropriate', distribution)
 	end
 	
 	local prefix = AceComm.commPrefixes[self]
 	if type(prefix) ~= "string" then
 		AceComm:error("`SetCommPrefix' must be called before sending a message.")
 	end
-	
-	local message
-	if not WoW22 and includePerson and select('#', ...) == 0 and type(person) ~= "table" then
-		message = person
-	elseif not WoW22 and not includePerson and select('#', ...) == 1 and type((...)) ~= "table" then
-		message = ...
-	else
-		message = new()
-		local n = 1
+
+	local ret = nil
+	local n = select('#', ...)
+	if includePerson or n > 1 then
+		local message = new()
 		if includePerson then
 			message[1] = person
-			n = 2
+			person = nil
 		end
-		for i = 1, select('#', ...) do
-			message[n] = select(i, ...)
-			n = n + 1
+		for i = 1, n do
+			message[includePerson and i + 1 or i] = select(i, ...)
 		end
-	end
-	
-	if includePerson then
-		person = nil
-	end
-	
-	local ret = SendMessage(AceComm.prefixTextToHash[prefix], priority, distribution, person, message, self.commMemoTextToHash)
-	
-	if type(message) == "table" then
+		ret = SendMessage(AceComm.prefixTextToHash[prefix], priority, distribution, person, message, self.commMemoTextToHash)
 		message = del(message)
+	else
+		ret = SendMessage(AceComm.prefixTextToHash[prefix], priority, distribution, person, (select(1, ...)), self.commMemoTextToHash)
 	end
-	
+
 	return ret
 end
 
-function AceComm:SendCommMessage(distribution, person, ...)
-	AceComm:argCheck(distribution, 2, "string")
-	local includePerson = true
-	if distribution == "WHISPER" or distribution == "CUSTOM" then
-		includePerson = false
-		AceComm:argCheck(person, 3, "string")
-		if person:len() == 0 then
-			AceComm:error("Argument #3 to `SendCommMessage' must be a non-zero-length string")
-		end
-	end
-	if self == AceComm then
-		AceComm:error("Cannot send a comm message from AceComm directly.")
-	end
-	if distribution and distribution ~= "GLOBAL" and distribution ~= "WHISPER" and distribution ~= "PARTY" and distribution ~= "RAID" and distribution ~= "GUILD" and distribution ~= "BATTLEGROUND" and distribution ~= "GROUP" and distribution ~= "ZONE" and distribution ~= "CUSTOM" then
-		AceComm:error('Argument #2 to `SendCommMessage\' must be either nil, "GLOBAL", "ZONE", "WHISPER", "PARTY", "RAID", "GUILD", "BATTLEGROUND", "GROUP", or "CUSTOM". %q is not appropriate', distribution)
-	end
-	
-	local prefix = AceComm.commPrefixes[self]
-	if type(prefix) ~= "string" then
-		AceComm:error("`SetCommPrefix' must be called before sending a message.")
-	end
-	
-	local message
-	if not WoW22 and includePerson and select('#', ...) == 0 and type(person) ~= "table" then
-		message = person
-	elseif not WoW22 and not includePerson and select('#', ...) == 1 and type((...)) ~= "table" then
-		message = ...
-	else
-		message = new()
-		local n = 1
-		if includePerson then
-			message[1] = person
-			n = 2
-		end
-		for i = 1, select('#', ...) do
-			message[n] = select(i, ...)
-			n = n + 1
-		end
-	end
-	
-	local priority = self.commPriority or "NORMAL"
-	
-	if includePerson then
-		person = nil
-	end
-	
-	local ret = SendMessage(AceComm.prefixTextToHash[prefix], priority, distribution, person, message, self.commMemoTextToHash)
-	
-	if type(message) == "table" then
-		message = del(message)
-	end
-	
-	return ret
+function AceComm:SendCommMessage(...)
+	return AceComm.SendPrioritizedCommMessage(self, self.commPriority or "NORMAL", ...)
 end
 
 function AceComm:SetDefaultCommPriority(priority)
 	AceComm:argCheck(priority, 2, "string")
 	if priority ~= "NORMAL" and priority ~= "BULK" and priority ~= "ALERT" then
 		AceComm:error('Argument #2 must be either "NORMAL", "BULK", or "ALERT"')
-	end
-	
-	if self.commPriority then
-		AceComm:error("Cannot call `SetDefaultCommPriority' more than once")
 	end
 	
 	self.commPriority = priority
@@ -1911,6 +1622,105 @@ local function CheckRefix()
 	end
 end
 
+local function reallyHandleTableMessage(handlers, prefix, sender, distribution, message, custom)
+	local n = #message * 4
+	if n < 40 then n = 40 end
+	while message[n] == nil and n > 0 do
+		n = n - 1
+	end
+	for k, v in pairs(handlers) do
+		local type_v = type(v)
+		if type_v == "string" then
+			local f = k[v]
+			if type(f) == "table" then
+				local i = 1
+				local g = f[message[i]]
+				while g do
+					if type(g) ~= "table" then -- function
+						if custom then
+							g(k, prefix, sender, distribution, custom, unpack(message, i+1, n))
+						else
+							g(k, prefix, sender, distribution, unpack(message, i+1, n))
+						end
+						break
+					else
+						i = i + 1
+						g = g[message[i]]
+					end
+				end
+			else -- function
+				if custom then
+					f(k, prefix, sender, distribution, custom, unpack(message, 1, n))
+				else
+					f(k, prefix, sender, distribution, unpack(message, 1, n))
+				end
+			end
+		elseif type_v == "table" then
+			local i = 1
+			local g = v[message[i]]
+			while g do
+				if type(g) ~= "table" then -- function
+					if custom then
+						g(prefix, sender, distribution, custom, unpack(message, i+1, n))
+					else
+						g(prefix, sender, distribution, unpack(message, i+1, n))
+					end
+					break
+				else
+					i = i + 1
+					g = g[message[i]]
+				end
+			end
+		else -- function
+			if custom then
+				v(prefix, sender, distribution, custom, unpack(message, 1, n))
+			else
+				v(prefix, sender, distribution, unpack(message, 1, n))
+			end
+		end
+	end
+end
+
+local function reallyHandleNonTableMessage(handlers, prefix, sender, distribution, message, custom)
+	for k, v in pairs(handlers) do
+		local type_v = type(v)
+		if type_v == "string" then
+			local f = k[v]
+			if type(f) == "table" then
+				local g = f[message]
+				if g and type(g) == "function" then
+					if custom then
+						g(k, prefix, sender, distribution, custom)
+					else
+						g(k, prefix, sender, distribution)
+					end
+				end
+			else -- function
+				if custom then
+					f(k, prefix, sender, distribution, custom, message)
+				else
+					f(k, prefix, sender, distribution, message)
+				end
+			end
+		elseif type_v == "table" then
+			local g = v[message]
+			if g and type(g) == "function" then
+				if custom then
+					g(k, prefix, sender, distribution, custom)
+				else
+					g(k, prefix, sender, distribution)
+				end
+			end
+		else -- function
+			if custom then
+				v(prefix, sender, distribution, custom, message)
+			else
+				v(prefix, sender, distribution, message)
+			end
+		end
+	end
+end
+
 local function HandleMessage(prefix, message, distribution, sender, customChannel)
 	local isGroup = GetCurrentGroupDistribution() == distribution
 	local isCustom = distribution == "CUSTOM"
@@ -1978,7 +1788,6 @@ local function HandleMessage(prefix, message, distribution, sender, customChanne
 	if not message then
 		return
 	end
-	local smallCustomChannel = customChannel and customChannel:sub(8)
 	if point ~= 'a' then
 		local queue = AceComm.recvQueue
 		local x
@@ -2009,207 +1818,16 @@ local function HandleMessage(prefix, message, distribution, sender, customChanne
 	end
 	message = Deserialize(message, AceComm.prefixMemoizations[prefix])
 	local isTable = type(message) == "table"
-	local n
-	if isTable then
-		n = #message * 4
-		if n < 40 then
-			n = 40
-		end
-		while message[n] == nil and n > 0 do
-			n = n - 1
-		end
-	end
+	local f = isTable and reallyHandleTableMessage or reallyHandleNonTableMessage
 	if AceComm_registry[distribution] then
-		if isTable then
-			if isCustom then
-				if AceComm_registry.CUSTOM[customChannel][prefix] then
-					for k,v in pairs(AceComm_registry.CUSTOM[customChannel][prefix]) do
-						local type_v = type(v)
-						if type_v == "string" then
-							local f = k[v]
-							if type(f) == "table" then
-								local i = 1
-								local g = f[message[i]]
-								while g do
-									if type(g) ~= "table" then -- function
-										g(k, prefix, sender, distribution, smallCustomChannel, unpack(message, i+1, n))
-										break
-									else
-										i = i + 1
-										g = g[message[i]]
-									end
-								end
-							else -- function
-								f(k, prefix, sender, distribution, smallCustomChannel, unpack(message, 1, n))
-							end
-						elseif type_v == "table" then
-							local i = 1
-							local g = v[message[i]]
-							while g do
-								if type(g) ~= "table" then -- function
-									g(prefix, sender, distribution, smallCustomChannel, unpack(message, i+1, n))
-									break
-								else
-									i = i + 1
-									g = g[message[i]]
-								end
-							end
-						else -- function
-							v(prefix, sender, distribution, smallCustomChannel, unpack(message, 1, n))
-						end
-					end
-				end
-			else
-				if AceComm_registry[distribution][prefix] then
-					for k,v in pairs(AceComm_registry[distribution][prefix]) do
-						local type_v = type(v)
-						if type_v == "string" then
-							local f = k[v]
-							if type(f) == "table" then
-								local i = 1
-								local g = f[message[i]]
-								while g do
-									if type(g) ~= "table" then -- function
-										g(k, prefix, sender, distribution, unpack(message, i+1, n))
-										break
-									else
-										i = i + 1
-										g = g[message[i]]
-									end
-								end
-							else -- function
-								f(k, prefix, sender, distribution, unpack(message, 1, n))
-							end
-						elseif type_v == "table" then
-							local i = 1
-							local g = v[message[i]]
-							while g do
-								if type(g) ~= "table" then -- function
-									g(prefix, sender, distribution, unpack(message, i+1, n))
-									break
-								else
-									i = i + 1
-									g = g[message[i]]
-								end
-							end
-						else -- function
-							v(prefix, sender, distribution, unpack(message, 1, n))
-						end
-					end
-				end
-			end
-		else
-			if isCustom then
-				if AceComm_registry.CUSTOM[customChannel][prefix] then
-					for k,v in pairs(AceComm_registry.CUSTOM[customChannel][prefix]) do
-						local type_v = type(v)
-						if type_v == "string" then
-							local f = k[v]
-							if type(f) == "table" then
-								local g = f[message]
-								if g and type(g) == "function" then
-									g(k, prefix, sender, distribution, smallCustomChannel)
-								end
-							else -- function
-								f(k, prefix, sender, distribution, smallCustomChannel, message)
-							end
-						elseif type_v == "table" then
-							local g = v[message]
-							if g and type(g) == "function" then
-								g(k, prefix, sender, distribution, smallCustomChannel)
-							end
-						else -- function
-							v(prefix, sender, distribution, smallCustomChannel, message)
-						end
-					end
-				end
-			else
-				if AceComm_registry[distribution][prefix] then
-					for k,v in pairs(AceComm_registry[distribution][prefix]) do
-						local type_v = type(v)
-						if type_v == "string" then
-							local f = k[v]
-							if type(f) == "table" then
-								local g = f[message]
-								if g and type(g) == "function" then
-									g(k, prefix, sender, distribution)
-								end
-							else -- function
-								f(k, prefix, sender, distribution, message)
-							end
-						elseif type_v == "table" then
-							local g = v[message]
-							if g and type(g) == "function" then
-								g(k, prefix, sender, distribution)
-							end
-						else -- function
-							v(prefix, sender, distribution, message)
-						end
-					end
-				end
-			end
+		if isCustom and AceComm_registry.CUSTOM[customChannel][prefix] then
+			f(AceComm_registry.CUSTOM[customChannel][prefix], prefix, sender, distribution, message, customChannel and customChannel:sub(8))
+		elseif not isCustom and AceComm_registry[distribution][prefix] then
+			f(AceComm_registry[distribution][prefix], prefix, sender, distribution, message)
 		end
 	end
 	if isGroup and AceComm_registry.GROUP and AceComm_registry.GROUP[prefix] then
-		if isTable then
-			for k,v in pairs(AceComm_registry.GROUP[prefix]) do
-				local type_v = type(v)
-				if type_v == "string" then
-					local f = k[v]
-					if type(f) == "table" then
-						local i = 1
-						local g = f[message[i]]
-						while g do
-							if type(g) ~= "table" then -- function
-								g(k, prefix, sender, "GROUP", unpack(message, i+1, n))
-								break
-							else
-								i = i + 1
-								g = g[message[i]]
-							end
-						end
-					else -- function
-						f(k, prefix, sender, "GROUP", unpack(message, 1, n))
-					end
-				elseif type_v == "table" then
-					local i = 1
-					local g = v[message[i]]
-					while g do
-						if type(g) ~= "table" then -- function
-							g(prefix, sender, "GROUP", unpack(message, i+1, n))
-							break
-						else
-							i = i + 1
-							g = g[message[i]]
-						end
-					end
-				else -- function
-					v(prefix, sender, "GROUP", unpack(message, 1, n))
-				end
-			end
-		else
-			for k,v in pairs(AceComm_registry.GROUP[prefix]) do
-				local type_v = type(v)
-				if type_v == "string" then
-					local f = k[v]
-					if type(f) == "table" then
-						local g = f[message]
-						if g and type(g) == "function" then
-							g(k, prefix, sender, "GROUP")
-						end
-					else -- function
-						f(k, prefix, sender, "GROUP", message)
-					end
-				elseif type_v == "table" then
-					local g = v[message]
-					if g and type(g) == "function" then
-						g(k, prefix, sender, "GROUP")
-					end
-				else -- function
-					v(prefix, sender, "GROUP", message)
-				end
-			end
-		end
+		f(AceComm_registry.GROUP[prefix], prefix, sender, "GROUP", message)
 	end
 	if isTable then
 		message = del(message)
@@ -2354,25 +1972,25 @@ local notSeenString = '^' .. _G.ERR_CHAT_PLAYER_NOT_FOUND_S:gsub("%%s", "(.-)"):
 local ambiguousString = '^' .. _G.ERR_CHAT_PLAYER_AMBIGUOUS_S:gsub("%%s", "(.-)"):gsub("%%1%$s", "(.-)") .. '$'
 local ERR_GUILD_PERMISSIONS = _G.ERR_GUILD_PERMISSIONS
 function AceComm.hooks:ChatFrame_MessageEventHandler(orig, event)
-	if event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_CHANNEL_LIST" then
-		if _G.arg9:find("^AceComm") then
-			return
-		end
+	if (event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_CHANNEL_LIST") and _G.arg9:find("^AceComm") then
+		return
 	elseif event == "CHAT_MSG_SYSTEM" then
 		local arg1 = _G.arg1
-		local player = arg1:match(notSeenString) or arg1:match(ambiguousString)
-		if player then
-			local t = GetTime()
-			if recentNotSeen[player] and recentNotSeen[player] > t then
-				recentNotSeen[player] = t + 10
-				return
-			else
-				recentNotSeen[player] = t + 10
-			end
-		elseif arg1 == ERR_GUILD_PERMISSIONS then
+		if arg1 == ERR_GUILD_PERMISSIONS then
 			if recentGuildMessage > GetTime() then
 				stopGuildMessages = true
 				return
+			end
+		else
+			local player = arg1:match(notSeenString) or arg1:match(ambiguousString)
+			if player then
+				local t = GetTime()
+				if recentNotSeen[player] and recentNotSeen[player] > t then
+					recentNotSeen[player] = t + 10
+					return
+				else
+					recentNotSeen[player] = t + 10
+				end
 			end
 		end
 	end
@@ -2426,37 +2044,32 @@ function AceComm:CHAT_MSG_SYSTEM(text)
 	if text ~= _G.ERR_TOO_MANY_CHAT_CHANNELS then
 		return
 	end
-	
-	local chan = lastChannelJoined
-	if not chan then
-		return
-	end
-	if not lastChannelJoined:find("^AceComm") then
+	if not lastChannelJoined or not lastChannelJoined:find("^AceComm") then
 		return
 	end
 	
 	local text
-	if chan == "AceComm" then
+	if lastChannelJoined == "AceComm" then
 		local addon = self.registry.GLOBAL and next(AceComm_registry.GLOBAL)
 		if not addon then
 			return
 		end
 		addon = tostring(addon)
-		text = ("%s has tried to join the AceComm global channel, but there are not enough channels available. %s may not work because of this"):format(addon, addon)
-	elseif chan == GetCurrentZoneChannel() then
+		text = ("%s has tried to join the AceComm global channel, but there are not enough channels available. %s may not work because of this."):format(addon, addon)
+	elseif lastChannelJoined == GetCurrentZoneChannel() then
 		local addon = AceComm_registry.ZONE and next(AceComm_registry.ZONE)
 		if not addon then
 			return
 		end
 		addon = tostring(addon)
-		text = ("%s has tried to join the AceComm zone channel, but there are not enough channels available. %s may not work because of this"):format(addon, addon)
+		text = ("%s has tried to join the AceComm zone channel, but there are not enough channels available. %s may not work because of this."):format(addon, addon)
 	else
-		local addon = AceComm_registry.CUSTOM and AceComm_registry.CUSTOM[chan] and next(AceComm_registry.CUSTOM[chan])
+		local addon = AceComm_registry.CUSTOM and AceComm_registry.CUSTOM[lastChannelJoined] and next(AceComm_registry.CUSTOM[lastChannelJoined])
 		if not addon then
 			return
 		end
 		addon = tostring(addon)
-		text = ("%s has tried to join the AceComm custom channel %s, but there are not enough channels available. %s may not work because of this"):format(addon, chan, addon)
+		text = ("%s has tried to join the AceComm custom channel %s, but there are not enough channels available. %s may not work because of this."):format(addon, lastChannelJoined, addon)
 	end
 	
 	_G.StaticPopupDialogs["ACECOMM_TOO_MANY_CHANNELS"] = {
@@ -2630,7 +2243,7 @@ local function external(self, major, instance)
 		self.addonVersionPinger.OnCommReceive = {
 			PING = function(self, prefix, sender, distribution, addon)
 				local version = ""
-				if AceLibrary:HasInstance(addon) then
+				if AceLibrary:HasInstance(addon, false) then
 					local revision
 					version, revision = AceLibrary(addon):GetLibraryVersion()
 					version = version .. "-" .. revision
@@ -2722,7 +2335,6 @@ AceLibrary:Register(AceComm, MAJOR_VERSION, MINOR_VERSION, activate, nil, extern
 
 
 
-
 --
 -- ChatThrottleLib by Mikk
 --
@@ -2746,7 +2358,7 @@ AceLibrary:Register(AceComm, MAJOR_VERSION, MINOR_VERSION, activate, nil, extern
 -- Can run as a standalone addon also, but, really, just embed it! :-)
 --
 
-local CTL_VERSION = 18
+local CTL_VERSION = 19
 
 if _G.ChatThrottleLib and _G.ChatThrottleLib.version >= CTL_VERSION then
 	-- There's already a newer (or same) version loaded. Buh-bye.
@@ -2759,6 +2371,8 @@ end
 
 ChatThrottleLib = _G.ChatThrottleLib  -- in case some addon does "local ChatThrottleLib" above use and we're copypasted (AceComm, sigh)
 local ChatThrottleLib = _G.ChatThrottleLib
+
+------------------ TWEAKABLES -----------------
 
 ChatThrottleLib.MAX_CPS = 800			  -- 2000 seems to be safe if NOTHING ELSE is happening. let's call it 800.
 ChatThrottleLib.MSG_OVERHEAD = 40		-- Guesstimate overhead for sending a message; source+dest+chattype+protocolstuff
@@ -2774,6 +2388,8 @@ local tostring = tostring
 local GetTime = GetTime
 local math_min = math.min
 local math_max = math.max
+local next = next
+local strlen = string.len
 
 ChatThrottleLib.version = CTL_VERSION
 
@@ -2817,43 +2433,29 @@ end
 
 
 -----------------------------------------------------------------------
--- Recycling bin for pipes (kept in a linked list because that's 
--- how they're worked with in the rotating rings; just reusing members)
+-- Recycling bin for pipes 
+-- A pipe is a plain integer-indexed queue, which also happens to be a ring member
 
-ChatThrottleLib.PipeBin = { count = 0 }
+ChatThrottleLib.PipeBin = nil -- pre-v19, drastically different
+local PipeBin = setmetatable({}, {__mode="k"})
 
-function ChatThrottleLib.PipeBin:Put(pipe)
+local function DelPipe(pipe)
 	for i = #pipe, 1, -1 do
 		pipe[i] = nil
 	end
 	pipe.prev = nil
-	pipe.next = self.list
-	self.list = pipe
-	self.count = self.count + 1
+	pipe.next = nil
+	
+	PipeBin[pipe] = true
 end
 
-function ChatThrottleLib.PipeBin:Get()
-	if self.list then
-		local ret = self.list
-		self.list = ret.next
-		ret.next = nil
-		self.count = self.count - 1
-		return ret
+local function NewPipe()
+	local pipe = next(PipeBin)
+	if pipe then
+		PipeBin[pipe] = nil
+		return pipe
 	end
 	return {}
-end
-
-function ChatThrottleLib.PipeBin:Tidy()
-	if self.count <= 40 then	-- = max raid size, nice arbitrary number
-		return
-	end
-	
-	for i = 1, 10 do
-		local delme = self.list
-		self.list = self.list.next
-		delme.next = nil
-	end
-	self.count = self.count - 10
 end
 
 
@@ -2862,30 +2464,22 @@ end
 -----------------------------------------------------------------------
 -- Recycling bin for messages
 
-ChatThrottleLib.MsgBin = {}
+ChatThrottleLib.MsgBin = nil -- pre-v19, drastically different
+local MsgBin = setmetatable({}, {__mode="k"})
 
-function ChatThrottleLib.MsgBin:Put(msg)
-	msg.text = nil
-	self[#self + 1] = msg
+local function DelMsg(msg)
+	msg[1] = nil
+	-- there's more parameters, but they're very repetetive so the string pool doesn't suffer really, and it's faster to just not delete them.
+	MsgBin[msg] = true
 end
 
-function ChatThrottleLib.MsgBin:Get()
-	return table_remove(self) or {}
-end
-
-function ChatThrottleLib.MsgBin:Tidy()
-	if #self < 50 then
-		return
+local function NewMsg()
+	local msg = next(MsgBin)
+	if msg then
+		MsgBin[msg] = nil
+		return msg
 	end
-	if #self > 150 then	 -- "can't happen" but ...
-		for n = #self, 120, -1 do
-			self[n] = nil
-		end
-	else
-		for n = #self, #self - 20, -1 do
-			self[n] = nil
-		end
-	end
+	return {}
 end
 
 
@@ -2952,7 +2546,7 @@ end
 -- ChatThrottleLib.Hook_SendChatMessage / .Hook_SendAddonMessage
 function ChatThrottleLib.Hook_SendChatMessage(text, chattype, language, destination, ...)
 	local self = ChatThrottleLib
-	local size = tostring(text or ""):len() + tostring(chattype or ""):len() + tostring(destination or ""):len() + 40
+	local size = strlen(tostring(text or "")) + strlen(tostring(destination or "")) + self.MSG_OVERHEAD
 	self.avail = self.avail - size
 	self.nBypass = self.nBypass + size	-- just a statistic
 	if not self.securelyHooked then
@@ -2962,7 +2556,7 @@ end
 function ChatThrottleLib.Hook_SendAddonMessage(prefix, text, chattype, destination, ...)
 	local self = ChatThrottleLib
 	local size = tostring(text or ""):len() + tostring(prefix or ""):len();
-	size = size + tostring(chattype or ""):len() + tostring(destination or ""):len() + 40
+	size = size + tostring(destination or ""):len() + self.MSG_OVERHEAD
 	self.avail = self.avail - size
 	self.nBypass = self.nBypass + size	-- just a statistic
 	if not self.securelyHooked then
@@ -2980,23 +2574,26 @@ function ChatThrottleLib:UpdateAvail()
 	local now = GetTime()
 	local MAX_CPS = self.MAX_CPS;
 	local newavail = MAX_CPS * (now - self.LastAvailUpdate)
+	local avail = self.avail
 
 	if now - self.HardThrottlingBeginTime < 5 then
 		-- First 5 seconds after startup/zoning: VERY hard clamping to avoid irritating the server rate limiter, it seems very cranky then
-		self.avail = math_min(self.avail + (newavail*0.1), MAX_CPS*0.5)
+		avail = math_min(avail + (newavail*0.1), MAX_CPS*0.5)
+		self.bChoking = true
 	elseif GetFramerate() < self.MIN_FPS then		-- GetFrameRate call takes ~0.002 secs
-		newavail = newavail * 0.5
-		self.avail = math_min(MAX_CPS, self.avail + newavail)
+		avail = math_min(MAX_CPS, avail + newavail*0.5)
 		self.bChoking = true		-- just a statistic
 	else
-		self.avail = math_min(self.BURST, self.avail + newavail)
+		avail = math_min(self.BURST, avail + newavail)
 		self.bChoking = false
 	end
 	
-	self.avail = math_max(self.avail, 0-(MAX_CPS*2))	-- Can go negative when someone is eating bandwidth past the lib. but we refuse to stay silent for more than 2 seconds; if they can do it, we can.
+	avail = math_max(avail, 0-(MAX_CPS*2))	-- Can go negative when someone is eating bandwidth past the lib. but we refuse to stay silent for more than 2 seconds; if they can do it, we can.
+	
+	self.avail = avail
 	self.LastAvailUpdate = now
 	
-	return self.avail
+	return avail
 end
 
 
@@ -3011,19 +2608,19 @@ function ChatThrottleLib:Despool(Prio)
 			local pipe = Prio.Ring.pos
 			Prio.Ring:Remove(pipe)
 			Prio.ByName[pipe.name] = nil
-			self.PipeBin:Put(pipe)
+			DelPipe(pipe)
 		else
 			Prio.Ring.pos = Prio.Ring.pos.next
 		end
 		Prio.avail = Prio.avail - msg.nSize
 		msg.f(unpack(msg, 1, msg.n))
 		Prio.nTotalSent = Prio.nTotalSent + msg.nSize
-		self.MsgBin:Put(msg)
+		DelMsg(msg)
 	end
 end
 
 
-function ChatThrottleLib.OnEvent()
+function ChatThrottleLib.OnEvent(this,event)
 	-- v11: We know that the rate limiter is touchy after login. Assume that it's touch after zoning, too.
 	local self = ChatThrottleLib
 	if event == "PLAYER_ENTERING_WORLD" then
@@ -3033,10 +2630,10 @@ function ChatThrottleLib.OnEvent()
 end
 
 
-function ChatThrottleLib.OnUpdate()
+function ChatThrottleLib.OnUpdate(this,delay)
 	local self = ChatThrottleLib
 	
-	self.OnUpdateDelay = self.OnUpdateDelay + arg1
+	self.OnUpdateDelay = self.OnUpdateDelay + delay
 	if self.OnUpdateDelay < 0.08 then
 		return
 	end
@@ -3048,7 +2645,7 @@ function ChatThrottleLib.OnUpdate()
 		return -- argh. some bastard is spewing stuff past the lib. just bail early to save cpu.
 	end
 
-	-- See how many of or priorities have queued messages
+	-- See how many of our priorities have queued messages
 	local n = 0
 	for prioname,Prio in pairs(self.Prio) do
 		if Prio.Ring.pos or Prio.avail < 0 then 
@@ -3081,9 +2678,6 @@ function ChatThrottleLib.OnUpdate()
 		end
 	end
 
-	-- Expire recycled tables if needed	
-	self.MsgBin:Tidy()
-	self.PipeBin:Tidy()
 end
 
 
@@ -3098,7 +2692,7 @@ function ChatThrottleLib:Enqueue(prioname, pipename, msg)
 	local pipe = Prio.ByName[pipename]
 	if not pipe then
 		self.Frame:Show()
-		pipe = self.PipeBin:Get()
+		pipe = NewPipe()
 		pipe.name = pipename
 		Prio.ByName[pipename] = pipe
 		Prio.Ring:Add(pipe)
@@ -3111,7 +2705,7 @@ end
 
 
 
-function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, language, destination)
+function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, language, destination, queueName)
 	if not self or not prio or not text or not self.Prio[prio] then
 		error('Usage: ChatThrottleLib:SendChatMessage("{BULK||NORMAL||ALERT}", "prefix" or nil, "text"[, "chattype"[, "language"[, "destination"]]]', 2)
 	end
@@ -3133,7 +2727,7 @@ function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, languag
 	end
 	
 	-- Message needs to be queued
-	local msg = self.MsgBin:Get()
+	local msg = NewMsg()
 	msg.f = self.ORIG_SendChatMessage
 	msg[1] = text
 	msg[2] = chattype or "SAY"
@@ -3142,11 +2736,11 @@ function ChatThrottleLib:SendChatMessage(prio, prefix,   text, chattype, languag
 	msg.n = 4
 	msg.nSize = nSize
 
-	self:Enqueue(prio, prefix..(chattype or "SAY")..(destination or ""), msg)
+	self:Enqueue(prio, queueName or (prefix..(chattype or "SAY")..(destination or "")), msg)
 end
 
 
-function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target)
+function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target, queueName)
 	if not self or not prio or not prefix or not text or not chattype or not self.Prio[prio] then
 		error('Usage: ChatThrottleLib:SendAddonMessage("{BULK||NORMAL||ALERT}", "prefix", "text", "chattype"[, "target"])', 0)
 	end
@@ -3166,7 +2760,7 @@ function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target)
 	end
 	
 	-- Message needs to be queued
-	local msg = self.MsgBin:Get()
+	local msg = NewMsg()
 	msg.f = self.ORIG_SendAddonMessage
 	msg[1] = prefix
 	msg[2] = text
@@ -3175,7 +2769,7 @@ function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target)
 	msg.n = (target~=nil) and 4 or 3;
 	msg.nSize = nSize
 	
-	self:Enqueue(prio, prefix..chattype..(target or ""), msg)
+	self:Enqueue(prio, queueName or (prefix..chattype..(target or "")), msg)
 end
 
 

@@ -1,6 +1,6 @@
 ﻿--[[
 Name: AceDB-2.0
-Revision: $Rev: 46764 $
+Revision: $Rev: 56534 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceDB-2.0"
-local MINOR_VERSION = "$Revision: 46764 $"
+local MINOR_VERSION = "$Revision: 56534 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -33,6 +33,10 @@ local DELETE_PROFILE_DESC = "Deletes a profile. Note that no check is made wheth
 local DELETE_PROFILE_USAGE = "<profile name>"
 
 if GetLocale() == "deDE" then
+	DELETE_PROFILE = "L\195\182schen"
+	DELETE_PROFILE_DESC = "L\195\182scht ein Profil. Beachte das nicht \195\188berpr\195\188ft wird ob das zu l\195\182schende Profil von anderen Charakteren genutzt wird oder nicht."
+	DELETE_PROFILE_USAGE = "<profil name>"
+
 	ACTIVE = "Aktiv"
 	ENABLED = "Aktiviert"
 	STATE = "Status"
@@ -49,15 +53,15 @@ if GetLocale() == "deDE" then
 	OTHER_PROFILE_DESC = "W\195\164hle ein anderes Profil."
 	OTHER_PROFILE_GUI = "Anderes"
 	OTHER_PROFILE_USAGE = "<Profilname>"
-	RESET_PROFILE = "Reset profile" -- fix
-	RESET_PROFILE_DESC = "Clear all settings of the current profile." -- fix
+	RESET_PROFILE = "Resette das Profil"
+	RESET_PROFILE_DESC = "Entfernt alle Einstellungen des gegenw\195\164rtigen Profils."
 
 	CHARACTER_COLON = "Charakter: "
 	REALM_COLON = "Realm: "
 	CLASS_COLON = "Klasse: "
 
-	DEFAULT = "Default" -- fix
-	ALTERNATIVE = "Alternative" -- fix
+	DEFAULT = "Vorgabe"
+	ALTERNATIVE = "Alternativ"
 elseif GetLocale() == "frFR" then
 	ACTIVE = "Actif"
 	ENABLED = "Activ\195\169"
