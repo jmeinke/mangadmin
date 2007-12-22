@@ -400,7 +400,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all item lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):%d+:%d+:%d+|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):0:0:0:0:0:0:0|h%[(.-)%]|h|r") do
       if self.db.char.requests.item then
         table.insert(self.db.account.buffer.items, {itId = id, itName = name})
         -- for item info in cache

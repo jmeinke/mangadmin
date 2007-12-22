@@ -1,6 +1,6 @@
 ﻿--[[
 Name: Dewdrop-2.0
-Revision: $Rev: 48630 $
+Revision: $Rev: 56529 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://wiki.wowace.com/index.php/Dewdrop-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Dewdrop-2.0"
-local MINOR_VERSION = "$Revision: 48630 $"
+local MINOR_VERSION = "$Revision: 56529 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -36,7 +36,7 @@ if GetLocale() == "deDE" then
 	CLOSE_DESC = "Men\195\188 schlie\195\159en."
 	VALIDATION_ERROR = "Validierungsfehler."
 	USAGE_TOOLTIP = "Benutzung: %s."
-	RANGE_TOOLTIP = "Beachte das du mit dem Mausrad scrollen kannst solange du \195\188ber dem Schieberegler bist, um 10er Spr\195\188nge zu machen."
+	RANGE_TOOLTIP = "Beachte das du mit dem Mausrad scrollen kannst solange du mit dem Mauszeiger \195\188ber dem Schieberegler bist, um feinere Spr\195\188nge zu machen."
 	RESET_KEYBINDING_DESC = "Escape dr\195\188cken, um die Tastenbelegung zu l\195\182schen."
 	KEY_BUTTON1 = "Linke Maustaste"
 	KEY_BUTTON2 = "Rechte Maustaste"

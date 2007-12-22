@@ -19,43 +19,52 @@
 
 =TODO=
 
-  - GameObject onglet:
-    - add, delete, move with possibilities:
-      - up
-      - down
-      - left
-      - right
-      - with +
-    - example:
-      By clicking move up with +4 the command, the result is: 
-      .move 0 0 4 0 (with a gameobject coordinate at 0 0 0 0)
-    - idea provided by killerdead
-   
-  - buttons:
-    - reset level/spells/stats/talents
-    - create guild leader name
-    - learn profession* with skill
-    - modify money/energy/rage/hp/mana
-    - delete
-    - add creature guid
-    - respawn
-    - distance
-    - info
-    - modify level/spawn distance/spawn time/model id/faction/flags
-    - add gameobject id
-    - delete gameobject
-    - turn gameobject
-    - move up/down/left/right gameobject
-    - delete
-    - more
-    
-    - fix the log view (also add the ability to scroll with the mouse-scrollbutton)
-    - add morph function
-    
-    =Suggestions by Yas (Quote)=
-      Next, i have a few suggestions - Bookmark system of favourite items, itemsets, teleports, spells etc could be very usefull.
-      - Field for morph command, combined with bookmarks can be usefull too (at least for me :-)
-      - New window with informations about targetted object (by .targetobject) and with button to delete/move..
-      - Window like Who List but with simplier filtering of players, teleporting, (mass teleporting?), mailing...
-      - Minimalize option with shortcuts to sections like mangadmin for 1.12
+- GameObject onglet:
+  - add, delete, move with possibilities:
+    - up
+    - down
+    - left
+    - right
+    - with +
+  - example:
+    By clicking move up with +4 the command, the result is: 
+    .move 0 0 4 0 (with a gameobject coordinate at 0 0 0 0)
+  - idea provided by killerdead
+ 
+- buttons:
+  - reset level/spells/stats/talents
+  - create guild leader name
+  - learn profession* with skill
+  - modify money/energy/rage/hp/mana
+  - delete
+  - add creature guid
+  - respawn
+  - distance
+  - info
+  - modify level/spawn distance/spawn time/model id/faction/flags
+  - add gameobject id
+  - delete gameobject
+  - turn gameobject
+  - move up/down/left/right gameobject
+  - delete
+  - more
+  
+  - fix the log view (also add the ability to scroll with the mouse-scrollbutton)
+  - add morph function and morph favourites...maybe morph search
+  
+=Suggestions by Yas (Quote)=
+  Next, i have a few suggestions - Bookmark system of favourite items, itemsets, teleports, spells etc could be very usefull.
+  - Field for morph command, combined with bookmarks can be usefull too (at least for me :-)
+  - New window with informations about targetted object (by .targetobject) and with button to delete/move..
+  - Window like Who List but with simplier filtering of players, teleporting, (mass teleporting?), mailing...
+  - Minimalize option with shortcuts to sections like mangadmin for 1.12
       
+==What is coming next:==
+  * added favourite system for all searchables:
+    * items / itemsets
+    * spells
+    * quests
+    * objects
+    * creatures
+    * teleport-locations
+  * added support for exchanging favourites with other players running MangAdmin

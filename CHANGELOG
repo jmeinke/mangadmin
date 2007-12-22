@@ -22,12 +22,19 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 28:
+  * repaired item search (broken after MaNGOS move to 2.3 client)
+  * updated ace-libraries and others
+  * updated toc to version 20300 now no need to tick the 'load old addons' checkbox
+  * fixed 2 little visual errors on german language files (attempt to fix others later)
+  * added some things to the TODO, you might have a look at it
+  
 Rev. 27:
   * applied french language update with fixed chars, thanks to Ancient
   * implement show bytes left on mail sending, because mail will be cut if using more...
   * changed default entry for mail subject when answering ticket to subject: "Ticket(catnr)"
   * changed the command for sendmail from ".sendmail" to ".sendm". Now 3 bytes more for mails ;-)
-
+  
 Rev. 26:
   * applied italian language update, thanks to hybrid1907
   * applied czech language update, thanks to Yas (http://forsan.eu)
@@ -38,7 +45,7 @@ Rev. 26:
   * added a style changer for color and transparency, located in misc section. 
     Changing colors can be really funny but also ugly :)
   * ordered language dropdown in alphabetical way
-
+  
 Rev. 25:
   * applied german language update, thanks to hArD kNoCkZ
   * applied full translated french, thanks to Ancient
@@ -48,7 +55,7 @@ Rev. 25:
   * fixed the language files: my damn editor put "﻿" in the beginning of each file I saved...
   * added an option to put transparency on or off. To do so type this: "/mangadmin transparency"
   * for the next revision I'll try to add a style switcher (also to choose colors and other things)
-
+  
 Rev. 24:
   * weekend update=> whole ticket-system rewritten:
     * ticket-loading is now separated in 7 tickets/click (no fighting against MaNGOS spamfilter anymore)
@@ -75,21 +82,21 @@ Rev. 23:
     This function will handle _all_ popup calls and not just the search popups
   * please test the now tools and report bugs and wishes here: http://code.google.com/p/mangadmin/issues/list
   * I just decided to write more details to the changelog in the future...
-
+  
 Rev. 22:
   * added teleport-search (patch by Marcus R.)
   * added a provisory (mail-/answer-) functionality to the ticket system:
     * when clicking the answer button the content of the tickets textfield 
     is taken for the message body
   * Happy Halloween 2007
-
+  
 Rev. 21:
   * corrected the scrollbar when showing the search results
   * implemented the ticket-system (answering is not yet working, comes next time when I have more),
     improvements will follow, the ticket-system needs lots of testing!
     * please report bugs here!: http://code.google.com/p/mangadmin/issues/list
   * fixed some bugs all around
-
+  
 Rev. 20:
   * updated the libraries
   * applied patch by Infamousblob (great! you did a very good work)
@@ -102,7 +109,7 @@ Rev. 19:
   * quick-fixed gm-switching, thanks to 99.rogers
   * notice: I am taking a break :-/, but I'll definately continue in some time!
   * please report any bugs here: http://code.google.com/p/mangadmin/issues/list
-
+  
 Rev. 18:
   * when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
     on normal-click you/your target learn/s the spell (like before)
@@ -115,7 +122,7 @@ Rev. 18:
   * added a grid-navigator, now you can move between the grid 
     by clicking up-, down-, right-, left- buttons, which are added to the main-section
   * few optimizations for toggling MangAdmin by clicking the Mini-Icon
-    
+  
 Rev. 17:
   * updated the libraries
   * changed speed slider to change swim speed also
@@ -126,7 +133,7 @@ Rev. 17:
   * added on TODO: 
     * add X-close buttons
     * finish the ticket system (about half completed, but not able to implement yet)
-
+  
 Rev. 16:
   * added Spanish language, thanks to Riven
   * added Chinese language, thanks to galaxyvis/Elvis
@@ -147,7 +154,7 @@ Rev. 16:
     * show bank
     * make screenshot
   * stopped spamming of log with navigation-messages
-
+  
 Rev. 15:
   * corrected a few typos
   * made the learn buttons greater, to support more languages and don't mess up the design
@@ -155,11 +162,11 @@ Rev. 15:
   * updated Italian language, thanks to hybrid1907
   * updated Finnish language, thanks to Lone
   * updated Czech language, thanks to Virnik
-
+  
 Rev. 14:
   * applied UTF-8 encoding to the language files
   * updated Czech language, thanks to Virnik
-
+  
 Rev. 13:
   * finally implemented item-lookup and spell-lookup
   * reactivated Character Tab and implemented new buttons: 
@@ -175,26 +182,26 @@ Rev. 13:
   * tempotary fixed "Toggle Flymode" button, flymode satus will not be queried from server, but from
     ingame variable. If you only click the flymode button and not type the command manually, it is fine
   * added Czech language, thanks to Virnik
-
+  
 Rev. 12:
   * added support for 2.1.3 client version, due to new compability with MaNGOS
   * uploaded all included libraries to the newest revisions
   * implemented scale slider
   * todo for next revs: finish implementing item-lookup and favourites
-
+  
 Rev. 11:
   * added Romania translation, thanks to x_ray
   * updated Finnish translation, by Lone
-
+  
 Rev. 10:
   * added Lithuania translation, thanks to visagalis
-
+  
 Rev. 9:
   * upgraded MangAdmin's License to GPL v.3
   * applied GPL v.3 headers to nearly all MangAdmin files
   * added a more clearly format to this changelog now each lines maximum is 110 columns
   * updated Finnish translation, thanks to Lone
-
+  
 Rev. 8:
   * added a speed-slider
   * several changes to FrameLib
@@ -225,7 +232,7 @@ Rev. 6:
   
 Rev. 5:
   * added Italian language, thanks to hybrid1907
-
+  
 Rev. 4:
   * updated Finnish translation, thanks to Lone
   * updated Polish translation, thanks to sahib
@@ -244,10 +251,10 @@ Rev. 3:
     * Polish, thanks to gerard
   * a language switcher comes with the next revision, no time now
   * updated the libraries
-
+  
 Rev. 2:
   * french translation added, thanks to luciolis
-
+  
 Rev. 1:
   * initial import
   * logo/header made
@@ -257,3 +264,4 @@ Rev. 1:
   * added Libraries:
     * AceLibrary, AceOO-2.0, AceDB-2.0, AceHook-2.1, DewDrop-2.0, AceAddon-2.0,
     * AceLocale-2.2, AceConsole-2.0, FrameLib-1.0, Tablet-2.0, Graph-1.0, FuBarPlugin-2.0
+  
