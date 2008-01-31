@@ -1,10 +1,14 @@
+## Name: MangAdmin
 ## Interface: 20300
 ## Title: MangAdmin
-## Website: http://mangadmin.all-mag.de
+## Version: 0.1
 ## DefaultState: Enabled
 ## OptionalDeps: AceLibrary, AceOO-2.0, AceEvent-2.0, AceHook-2.1, AceDebug-2.0, AceLocale-2.2, AceTab-2.0, AceConsole-2.0, AceComm-2.0, AceAddon-2.0, AceModuleCore-2.0
-## Notes: MaNGOS Admin-Addon
+## Notes: This addon does only work with MaNGO-Servers
 ## License: GPLv3
+## X-Date: 02.January 2008
+## X-eMail: josh.developer@gmail.com
+## X-Webiste: http://mangadmin.all-mag.de
 ## SavedVariables: MangAdminDb
 ## SavedVariablesPerCharacter: MangAdminDbPerChar
 
@@ -41,5 +45,19 @@ Locales\esES.lua
 Locales\zhCN.lua
 Locales\ptPT.lua
 
-TelePositions.lua
 MangAdmin.lua
+MangLinkifier.lua
+## Frame Generation ;-)
+Frames\MangFrames_Start.lua
+Frames\MangFrames_Tabs.lua
+Frames\MangFrames_LookupButtons.lua
+Frames\MangFrames_PopupFrames.lua
+Frames\MangFrames_SectionMain.lua
+Frames\MangFrames_SectionTele.lua
+Frames\MangFrames_SectionLog.lua
+Frames\MangFrames_SectionChar.lua
+Frames\MangFrames_SectionTicket.lua
+Frames\MangFrames_SectionMisc.lua
+Frames\MangFrames_SectionServer.lua
+MangFrames.lua
+
