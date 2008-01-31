@@ -11,31 +11,52 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 **
-**      Official Website : http://mangadmin.all-mag.de
+**      Official Forums  : http://www.manground.de/forums/
 **    GoogleCode Website : http://code.google.com/p/mangadmin/
 ** Subversion Repository : http://mangadmin.googlecode.com/svn/
 **
 **    Please report bugs :  http://code.google.com/p/mangadmin/issues/list
 **
-** Notice: The revisions in this log differ from SVN-revisions. Example: LOG-rev. 24 -> SVN-rev. 65
-**
 ************************************************************************************************************/
 
 =CHANGELOG= 
-Rev. 28:
+Rev. 74:
+  * implemented favorites for items, itemsets, teleport-locations, quests, creatures, objects, spells
+  * applied hungarian language update, thanks to cyberdragon777
+  * applied french language update, thanks to mrtijo
+  * added weather change selection to the misc tab
+  * added modify money, energy, rage, healthpoints, mana thanks to dxers
+  * fixed the speedslider: now also modifying speed back-swim and back-run
+  * added saveall, reload scripts, and all reload table options (info from MaNGOS source) to the server tab
+  * splitted MangAdmin.lua in two files, made some variables global (hopefully there won't be any problems)
+  * fixed mail bytes left: when going to minus the warning text gets colored red, if greater -1 green
+  * added a great feature, made by Infamousblob: MangLinkifier
+    * this tool adds links to chat messages from the server for example search results
+    * when typing .lookup object commands you will be able to click the word [Spawn] on the
+    side of an object-lookup result to spawn the object. This makes things really easy!
+  * added option to the misc tab to modify the color of MangLinkifier urls
+  * lots of little layout changes
+  * official forums online (sorry for .de domain. It was the cheapest and unfortunately I didn't think
+    about what I was doing when buying it. I'm going to get an .org domain also...
+    * Manground forums: http://www.manground.de/forum/
+    * official MangAdmin forums: http://www.manground.de/forum/index.php?showforum=5
+    * and PseuWoW forums: http://www.manground.de/forum/index.php?showforum=15
+  * morph- and teleport- functionality come along with the next revision ;-)
+
+Rev. 70:
   * repaired item search (broken after MaNGOS move to 2.3 client)
   * updated ace-libraries and others
   * updated toc to version 20300 now no need to tick the 'load old addons' checkbox
   * fixed 2 little visual errors on german language files (attempt to fix others later)
   * added some things to the TODO, you might have a look at it
   
-Rev. 27:
+Rev. 69:
   * applied french language update with fixed chars, thanks to Ancient
   * implement show bytes left on mail sending, because mail will be cut if using more...
   * changed default entry for mail subject when answering ticket to subject: "Ticket(catnr)"
   * changed the command for sendmail from ".sendmail" to ".sendm". Now 3 bytes more for mails ;-)
   
-Rev. 26:
+Rev. 68:
   * applied italian language update, thanks to hybrid1907
   * applied czech language update, thanks to Yas (http://forsan.eu)
   * applied romanian language update, thanks to x_ray
@@ -46,7 +67,7 @@ Rev. 26:
     Changing colors can be really funny but also ugly :)
   * ordered language dropdown in alphabetical way
   
-Rev. 25:
+Rev. 66:
   * applied german language update, thanks to hArD kNoCkZ
   * applied full translated french, thanks to Ancient
   * added a new icon that only shows up when your getting new tickets
@@ -56,7 +77,7 @@ Rev. 25:
   * added an option to put transparency on or off. To do so type this: "/mangadmin transparency"
   * for the next revision I'll try to add a style switcher (also to choose colors and other things)
   
-Rev. 24:
+Rev. 65:
   * weekend update=> whole ticket-system rewritten:
     * ticket-loading is now separated in 7 tickets/click (no fighting against MaNGOS spamfilter anymore)
     * when getting a new ticket, there will be a sound + information regarding the newest tickets
@@ -72,7 +93,7 @@ Rev. 24:
     this means that the translators have some work now :-)
   * small code cleanup
   
-Rev. 23:
+Rev. 63:
   * added a send mail function to MangAdmin, 
     please remember not to use spaces in recipient and subject names
   * next time I'll updates the language files, atm it's a bit messy
@@ -83,21 +104,21 @@ Rev. 23:
   * please test the now tools and report bugs and wishes here: http://code.google.com/p/mangadmin/issues/list
   * I just decided to write more details to the changelog in the future...
   
-Rev. 22:
+Rev. 61:
   * added teleport-search (patch by Marcus R.)
   * added a provisory (mail-/answer-) functionality to the ticket system:
     * when clicking the answer button the content of the tickets textfield 
     is taken for the message body
   * Happy Halloween 2007
   
-Rev. 21:
+Rev. 57:
   * corrected the scrollbar when showing the search results
   * implemented the ticket-system (answering is not yet working, comes next time when I have more),
     improvements will follow, the ticket-system needs lots of testing!
     * please report bugs here!: http://code.google.com/p/mangadmin/issues/list
   * fixed some bugs all around
   
-Rev. 20:
+Rev. 52:
   * updated the libraries
   * applied patch by Infamousblob (great! you did a very good work)
   * removed the "by Josh" from the logo, because also other people contribute to MangAdmin
@@ -105,12 +126,12 @@ Rev. 20:
   * did some code optimization and clean-up
   * notice: I have only very little time :-/
   
-Rev. 19:
+Rev. 51:
   * quick-fixed gm-switching, thanks to 99.rogers
   * notice: I am taking a break :-/, but I'll definately continue in some time!
   * please report any bugs here: http://code.google.com/p/mangadmin/issues/list
   
-Rev. 18:
+Rev. 50:
   * when right-clicking on a spell from the spell-search-results list, you/your target now unlearn/s the spell
     on normal-click you/your target learn/s the spell (like before)
   * fixed:
@@ -123,7 +144,7 @@ Rev. 18:
     by clicking up-, down-, right-, left- buttons, which are added to the main-section
   * few optimizations for toggling MangAdmin by clicking the Mini-Icon
   
-Rev. 17:
+Rev. 47:
   * updated the libraries
   * changed speed slider to change swim speed also
   * updated Chinese language, thanks to Elvis
@@ -133,7 +154,11 @@ Rev. 17:
   * added on TODO: 
     * add X-close buttons
     * finish the ticket system (about half completed, but not able to implement yet)
-  
+    
+== | | | ============================================== | | | ==
+== | | | = FROM HERE REV NUMBERS DIFFER FROM SVN REVS = | | | ==
+== v v v ============================================== v v v ==
+
 Rev. 16:
   * added Spanish language, thanks to Riven
   * added Chinese language, thanks to galaxyvis/Elvis
@@ -187,7 +212,7 @@ Rev. 12:
   * added support for 2.1.3 client version, due to new compability with MaNGOS
   * uploaded all included libraries to the newest revisions
   * implemented scale slider
-  * todo for next revs: finish implementing item-lookup and favourites
+  * todo for next revs: finish implementing item-lookup and favorites
   
 Rev. 11:
   * added Romania translation, thanks to x_ray

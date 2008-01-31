@@ -11,23 +11,23 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
---   Official Website    : http://mangadmin.all-mag.de
--- GoogleCode Website    : http://code.google.com/p/mangadmin/
--- Subversion Repository : http://mangadmin.googlecode.com/svn/
+-- Official Forums: http://www.manground.de/forums/
+-- GoogleCode Website: http://code.google.com/p/mangadmin/
+-- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
 -------------------------------------------------------------------------------------------------------------
 
 local MAJOR_VERSION = "MangAdmin-1.0"
 local MINOR_VERSION = "$Revision: 1 $"
-local ROOT_PATH     = "Interface\\AddOns\\MangAdmin\\"
+ROOT_PATH     = "Interface\\AddOns\\MangAdmin\\"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
-local MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0", "AceEvent-2.0")
-local Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
-local FrameLib   = AceLibrary("FrameLib-1.0")
-local Graph      = AceLibrary("Graph-1.0")
+--[[local]] MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0", "AceEvent-2.0")
+--[[local]] Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
+--[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
+--[[local]] Graph      = AceLibrary("Graph-1.0")
 local Tablet     = AceLibrary("Tablet-2.0")
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
@@ -45,6 +45,7 @@ MangAdmin:RegisterDefaults("char",
       tpinfo = false,
       ticket = false,
       item = false,
+      favitem = false,
       itemset = false,
       spell = false,
       quest = false,
@@ -59,7 +60,7 @@ MangAdmin:RegisterDefaults("char",
 MangAdmin:RegisterDefaults("account", 
   {
     language = nil,
-    favourites = {
+    favorites = {
       items = {},
       itemsets = {},
       spells = {},
@@ -108,6 +109,11 @@ MangAdmin:RegisterDefaults("account",
           r = 0,
           g = 0,
           b = 0
+        },
+        linkifier = {
+          r = 0,
+          g = 0,
+          b = 150
         }
       }
     }
@@ -177,11 +183,17 @@ function MangAdmin:OnInitialize()
   end
   -- initializing Frames, like DropDowns, Sliders, aso
   self:InitLangDropDown()
+  self:InitWeatherDropDown()
+  self:InitReloadTableDropDown()
+  self:InitModifyDropDown()
   self:InitSliders()
   self:InitScrollFrames()
   self:InitTransparencyButton()
   --clear color buffer
   self.db.account.style.color.buffer = {}
+  --altering the function setitemref, to make it possible to click links
+  MangLinkifier_SetItemRef_Original = SetItemRef
+  SetItemRef = MangLinkifier_SetItemRef
 end
 
 function MangAdmin:OnEnable()
@@ -291,6 +303,8 @@ function MangAdmin:TogglePopup(value, param)
   else]]
   if value == "search" then
     FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
+    getglobal("ma_ptabbutton_1_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
+    getglobal("ma_ptabbutton_2_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
     ma_mailscrollframe:Hide()
     ma_maileditbox:Hide()
     ma_var1editbox:Hide()
@@ -302,22 +316,30 @@ function MangAdmin:TogglePopup(value, param)
     ma_resetsearchbutton:SetScript("OnClick", function() MangAdmin:SearchReset() end)
     ma_resetsearchbutton:SetText(Locale["ma_ResetButton"])
     ma_resetsearchbutton:Enable()
+    ma_ptabbutton_1:SetScript("OnClick", function() MangAdmin:TogglePopup("search", {type = param.type}) end)
+    ma_ptabbutton_2:SetScript("OnClick", function() MangAdmin:TogglePopup("favorites", {type = param.type}) end)
+    ma_ptabbutton_2:Show()
+    ma_selectallbutton:SetScript("OnClick", function() self:Favorites("select", param.type) end)
+    ma_deselectallbutton:SetScript("OnClick", function() self:Favorites("deselect", param.type) end)
+    ma_modfavsbutton:SetScript("OnClick", function() self:Favorites("add", param.type) end)
+    ma_modfavsbutton:SetText("Add selected")
+    ma_modfavsbutton:Enable()
     self:SearchReset()
     if param.type == "item" then
-      ma_lookuptext:SetText(Locale["ma_ItemButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_ItemButton"])
       ma_var1editbox:Show()
       ma_var1text:Show()
       ma_var1text:SetText(Locale["ma_ItemVar1Button"])
     elseif param.type == "itemset" then
-      ma_lookuptext:SetText(Locale["ma_ItemSetButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_ItemSetButton"])
     elseif param.type == "spell" then
-      ma_lookuptext:SetText(Locale["ma_SpellButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_SpellButton"])
     elseif param.type == "quest" then
-      ma_lookuptext:SetText(Locale["ma_QuestButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_QuestButton"])
     elseif param.type == "creature" then
-      ma_lookuptext:SetText(Locale["ma_CreatureButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_CreatureButton"])
     elseif param.type == "object" then
-      ma_lookuptext:SetText(Locale["ma_ObjectButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_ObjectButton"])
       ma_var1editbox:Show()
       ma_var2editbox:Show()
       ma_var1text:Show()
@@ -325,16 +347,30 @@ function MangAdmin:TogglePopup(value, param)
       ma_var1text:SetText(Locale["ma_ObjectVar1Button"])
       ma_var2text:SetText(Locale["ma_ObjectVar2Button"])
     elseif param.type == "tele" then
-      ma_lookuptext:SetText(Locale["ma_TeleSearchButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_TeleSearchButton"])
     elseif param.type == "ticket" then
+      ma_modfavsbutton:Hide()
+      ma_selectallbutton:Hide()
+      ma_deselectallbutton:Hide()
+      ma_ptabbutton_2:Hide()
       ma_lookupresulttext:SetText(Locale["ma_TicketCount"].."0")
-      ma_lookuptext:SetText(Locale["ma_LoadTicketsButton"])
+      ma_ptabbutton_1:SetText(Locale["ma_LoadTicketsButton"])
       ma_searchbutton:SetText(Locale["ma_Reload"])
       ma_searchbutton:SetScript("OnClick", function() self:LoadTickets() end)
       ma_resetsearchbutton:SetText(Locale["ma_LoadMore"])
       ma_resetsearchbutton:SetScript("OnClick", function() MangAdmin.db.account.tickets.loading = true; self:LoadTickets(MangAdmin.db.account.tickets.count) end)
     end
+  elseif value == "favorites" then
+    self:SearchReset()
+    getglobal("ma_ptabbutton_2_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
+    getglobal("ma_ptabbutton_1_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
+    ma_modfavsbutton:SetScript("OnClick", function() self:Favorites("remove", param.type) end)
+    ma_modfavsbutton:SetText("Remove selected")
+    ma_modfavsbutton:Enable()
+    self:Favorites("show", param.type)
   elseif value == "mail" then
+    getglobal("ma_ptabbutton_1_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
+    getglobal("ma_ptabbutton_2_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
     FrameLib:HandleGroup("popup", function(frame) frame:Show() end)
     for n = 1,7 do
       getglobal("ma_PopupScrollBarEntry"..n):Hide()
@@ -345,12 +381,16 @@ function MangAdmin:TogglePopup(value, param)
     ma_PopupScrollBar:Hide()
     ma_searcheditbox:SetScript("OnTextChanged", function() MangAdmin:UpdateMailBytesLeft() end)
     ma_var1editbox:SetScript("OnTextChanged", function() MangAdmin:UpdateMailBytesLeft() end)
+    ma_modfavsbutton:Hide()
+    ma_selectallbutton:Hide()
+    ma_deselectallbutton:Hide()
     if param.recipient then
       ma_searcheditbox:SetText(param.recipient)
     else
       ma_searcheditbox:SetText(Locale["ma_MailRecipient"])
     end
-    ma_lookuptext:SetText(Locale["ma_Mail"])
+    ma_ptabbutton_1:SetText(Locale["ma_Mail"])
+    ma_ptabbutton_2:Hide()
     ma_searchbutton:SetText(Locale["ma_Send"])
     ma_searchbutton:SetScript("OnClick", function() self:SendMail(ma_searcheditbox:GetText(), ma_var1editbox:GetText(), ma_maileditbox:GetText()) end)
     ma_var2editbox:Hide()
@@ -402,7 +442,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all item lookups
     for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):0:0:0:0:0:0:0|h%[(.-)%]|h|r") do
       if self.db.char.requests.item then
-        table.insert(self.db.account.buffer.items, {itId = id, itName = name})
+        table.insert(self.db.account.buffer.items, {itId = id, itName = name, checked = false})
         -- for item info in cache
         local itemName, itemLink, itemQuality, _, _, _, _, _, _ = GetItemInfo(id);
         if not itemName then
@@ -419,7 +459,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all itemset lookups
     for id, name in string.gmatch(text, "|cffffffff|Hitemset:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.itemset then
-        table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name})
+        table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -429,7 +469,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all spell lookups
     for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.spell then
-        table.insert(self.db.account.buffer.spells, {spId = id, spName = name})
+        table.insert(self.db.account.buffer.spells, {spId = id, spName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -439,7 +479,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all creature lookups
     for id, name in string.gmatch(text, "|cffffffff|Hcreature_entry:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.creature then
-        table.insert(self.db.account.buffer.creatures, {crId = id, crName = name})
+        table.insert(self.db.account.buffer.creatures, {crId = id, crName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -449,7 +489,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all object lookups
     for id, name in string.gmatch(text, "|cffffffff|Hgameobject_entry:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.object then
-        table.insert(self.db.account.buffer.objects, {objId = id, objName = name})
+        table.insert(self.db.account.buffer.objects, {objId = id, objName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -459,7 +499,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all quest lookups
     for id, name in string.gmatch(text, "|cffffffff|Hquest:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.quest then
-        table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name})
+        table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -469,7 +509,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook all tele lookups
     for name in string.gmatch(text, "h%[(.-)%]") do
       if self.db.char.requests.tele then
-        table.insert(self.db.account.buffer.teles, {tName = name})
+        table.insert(self.db.account.buffer.teles, {tName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -533,6 +573,15 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
     end
     
+    -- Check for possible UrlModification
+    if catchedSth then
+      if output then
+        output = MangLinkifier_Decompose(text)
+      end
+    else
+      catchedSth = true
+      output = MangLinkifier_Decompose(text)
+    end
   else
     -- message is not from server
   end
@@ -691,9 +740,10 @@ function MangAdmin:SetSpeed()
   local value = string.format("%.1f", ma_speedslider:GetValue())
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
-    self:ChatMsg(".modify speed "..value)
-    self:ChatMsg(".modify fly "..value)
-    self:ChatMsg(".modify swim "..value)
+    --self:ChatMsg(".modify speed "..value)
+    --self:ChatMsg(".modify fly "..value)
+    --self:ChatMsg(".modify swim "..value)
+    self:ChatMsg(".modify aspeed "..value)
     self:LogAction("Set speed of "..player.." to "..value..".")
   else
     self:Print(Locale["selectionerror1"])
@@ -915,11 +965,33 @@ function MangAdmin:KillSomething()
   self:LogAction("Killed "..target..".")
 end
 
-function MangAdmin:LevelupPlayer(value)
+function MangAdmin:Modify(case, value) 
+  -- to dxers: I think it's better to do switch case with names (so other devs can see quicker what it is for) 
+  -- and level down is possible: pass negative amount with .levelup
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
-    self:ChatMsg(".levelup "..value)
-    self:LogAction("Leveled up player "..player.." by "..value.." levels.")
+    if case == "money" then
+      self:ChatMsg(".modify money "..value)
+      self:LogAction("Give player "..player.." "..value.." copper).")
+    elseif case == "levelup" then
+      self:ChatMsg(".levelup "..value)
+      self:LogAction("Leveled up player "..player.." by "..value.." levels.")
+    elseif case == "leveldown" then
+      self:ChatMsg(".levelup "..value*(-1))
+      self:LogAction("Leveled down player "..player.." by "..value.." levels.")
+    elseif case == "enery" then
+      self:ChatMsg(".modify energy "..value)
+      self:LogAction("Modified energy for "..player.." to "..value.." energy.")
+    elseif case == "rage" then
+      self:ChatMsg(".modify rage "..value)
+      self:LogAction("Modified rage for "..player.." to "..value.." rage.")
+    elseif case == "health" then
+      self:ChatMsg(".modify hp "..value)
+      self:LogAction("Modified hp for "..player.." to "..value.." healthpoints")
+    elseif case == "mana" then
+      self:ChatMsg(".modify mana "..value)
+      self:LogAction("Modified mana for "..player.." to "..value.." mana")
+    end
   else
     self:Print(Locale["selectionerror1"])
   end
@@ -987,9 +1059,37 @@ function MangAdmin:SendMail(recipient, subject, body)
   self:LogAction("Sent a mail to "..recipient..". Subject was: "..subject)
 end
 
+function MangAdmin:ReloadTable(tablename)
+  if not (tablename == "") then
+    self:ChatMsg(".reload "..tablename)
+    if tablename == "all" then
+      self:LogAction("Reloaded all reloadable MaNGOS database tables.")
+    else
+      self:LogAction("Reloaded the table "..tablename..".")
+    end
+  end
+end
+
+function MangAdmin:ReloadScripts()
+  self:ChatMsg(".loadscripts")
+  self:LogAction("(Re-)Loaded scripts.")
+end
+
+function MangAdmin:ChangeWeather(status)
+  if not (status == "") then
+    self:ChatMsg(".wchange "..status)
+    self:LogAction(".wchange "..status)
+    self:LogAction("Changed weather.")
+  end
+end
+
 function MangAdmin:UpdateMailBytesLeft()
   local bleft = 246 - strlen(ma_searcheditbox:GetText()) - strlen(ma_var1editbox:GetText()) - strlen(ma_maileditbox:GetText())
-  ma_lookupresulttext:SetText("Bytes left: "..bleft)
+  if bleft >= 0 then
+    ma_lookupresulttext:SetText("Bytes left: |cff00ff00"..bleft.."|r")
+  else
+    ma_lookupresulttext:SetText("Bytes left: |cffff0000"..bleft.."|r")
+  end
 end
 
 function MangAdmin:Ticket(value)
@@ -1041,7 +1141,7 @@ function MangAdmin:LoadTickets(number)
       end
     else
       ma_resetsearchbutton:Disable()
-      self:NoTickets()
+      self:NoResults("ticket")
     end
   else
     self.db.char.requests.ticket = true
@@ -1067,6 +1167,125 @@ function MangAdmin:RequestTickets()
     self:ChatMsg(".ticket "..tnumber)
     MangAdmin.db.account.tickets.requested = MangAdmin.db.account.tickets.requested + 1;
     self:LogAction("Loading ticket "..tnumber.."...")
+  end
+end
+
+function MangAdmin:Favorites(value, searchtype)
+  if value == "add" then
+    if searchtype == "item" then
+      table.foreachi(self.db.account.buffer.items, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.items, {itId = v["itId"], itName = v["itName"], checked = false}) end end)
+    elseif searchtype == "itemset" then
+      table.foreachi(self.db.account.buffer.itemsets, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.itemsets, {isId = v["isId"], isName = v["isName"], checked = false}) end end)
+    elseif searchtype == "spell" then
+      table.foreachi(self.db.account.buffer.spells, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.spells, {spId = v["spId"], spName = v["spName"], checked = false}) end end)
+    elseif searchtype == "quest" then
+      table.foreachi(self.db.account.buffer.quests, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.quests, {qsId = v["qsId"], qsName = v["qsName"], checked = false}) end end)
+    elseif searchtype == "creature" then
+      table.foreachi(self.db.account.buffer.creatures, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.creatures, {crId = v["crId"], crName = v["crName"], checked = false}) end end)
+    elseif searchtype == "object" then
+      table.foreachi(self.db.account.buffer.objects, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.objects, {objId = v["objId"], objName = v["objName"], checked = false}) end end)
+    elseif searchtype == "tele" then
+      table.foreachi(self.db.account.buffer.teles, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.teles, {tName = v["tName"], checked = false}) end end)
+    end
+    self:LogAction("Added some "..searchtype.."s to the favorites.")
+  elseif value == "remove" then
+    if searchtype == "item" then
+      for k,v in pairs(self.db.account.favorites.items) do
+        if v["checked"] then table.remove(self.db.account.favorites.items, k) end 
+      end
+    elseif searchtype == "itemset" then
+      for k,v in pairs(self.db.account.favorites.itemsets) do
+        if v["checked"] then table.remove(self.db.account.favorites.itemsets, k) end 
+      end
+    elseif searchtype == "spell" then
+      for k,v in pairs(self.db.account.favorites.spells) do
+        if v["checked"] then table.remove(self.db.account.favorites.spells, k) end 
+      end
+    elseif searchtype == "quest" then
+      for k,v in pairs(self.db.account.favorites.quests) do
+        if v["checked"] then table.remove(self.db.account.favorites.quests, k) end 
+      end
+    elseif searchtype == "creature" then
+      for k,v in pairs(self.db.account.favorites.creatures) do
+        if v["checked"] then table.remove(self.db.account.favorites.creatures, k) end 
+      end
+    elseif searchtype == "object" then
+      for k,v in pairs(self.db.account.favorites.objects) do
+        if v["checked"] then table.remove(self.db.account.favorites.objects, k) end 
+      end
+    elseif searchtype == "tele" then
+      for k,v in pairs(self.db.account.favorites.teles) do
+        if v["checked"] then table.remove(self.db.account.favorites.teles, k) end 
+      end
+    end
+    self:LogAction("Removed some favorited "..searchtype.."s from the list.")
+    PopupScrollUpdate()
+  elseif value == "show" then
+    if searchtype == "item" then
+      self.db.char.requests.favitem = true
+    elseif searchtype == "itemset" then
+      self.db.char.requests.favitemset = true
+    elseif searchtype == "spell" then
+      self.db.char.requests.favspell = true
+    elseif searchtype == "quest" then
+      self.db.char.requests.favquest = true
+    elseif searchtype == "creature" then
+      self.db.char.requests.favcreature = true
+    elseif searchtype == "object" then
+      self.db.char.requests.favobject = true
+    elseif searchtype == "tele" then
+      self.db.char.requests.favtele = true
+    end
+    PopupScrollUpdate()
+  elseif value == "select" or value == "deselect" then
+    local selected = true
+    if value == "deselect" then
+      selected = false
+    end
+    if searchtype == "item" then
+      if MangAdmin.db.char.requests.item then
+        table.foreachi(self.db.account.buffer.items, function(k,v) self.db.account.buffer.items[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favitem then
+        table.foreachi(self.db.account.favorites.items, function(k,v) self.db.account.favorites.items[k].checked = selected end)
+      end
+    elseif searchtype == "itemset" then
+      if MangAdmin.db.char.requests.itemset then
+        table.foreachi(self.db.account.buffer.itemsets, function(k,v) self.db.account.buffer.itemsets[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favitemset then
+        table.foreachi(self.db.account.favorites.itemsets, function(k,v) self.db.account.favorites.itemsets[k].checked = selected end)
+      end
+    elseif searchtype == "spell" then
+      if MangAdmin.db.char.requests.spell then
+        table.foreachi(self.db.account.buffer.spells, function(k,v) self.db.account.buffer.spells[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favspell then
+        table.foreachi(self.db.account.favorites.spells, function(k,v) self.db.account.favorites.spells[k].checked = selected end)
+      end
+    elseif searchtype == "quest" then
+      if MangAdmin.db.char.requests.quest then
+        table.foreachi(self.db.account.buffer.quests, function(k,v) self.db.account.buffer.quests[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favquest then
+        table.foreachi(self.db.account.favorites.quests, function(k,v) self.db.account.favorites.quests[k].checked = selected end)
+      end
+    elseif searchtype == "creature" then
+      if MangAdmin.db.char.requests.creature then
+        table.foreachi(self.db.account.buffer.creatures, function(k,v) self.db.account.buffer.creatures[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favcreature then
+        table.foreachi(self.db.account.favorites.creatures, function(k,v) self.db.account.favorites.creatures[k].checked = selected end)
+      end
+    elseif searchtype == "object" then
+      if MangAdmin.db.char.requests.object then
+        table.foreachi(self.db.account.buffer.objects, function(k,v) self.db.account.buffer.objects[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favobject then
+        table.foreachi(self.db.account.favorites.objects, function(k,v) self.db.account.favorites.objects[k].checked = selected end)
+      end
+    elseif searchtype == "tele" then
+      if MangAdmin.db.char.requests.tele then
+        table.foreachi(self.db.account.buffer.teles, function(k,v) self.db.account.buffer.teles[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favtele then
+        table.foreachi(self.db.account.favorites.teles, function(k,v) self.db.account.favorites.teles[k].checked = selected end)
+      end
+    end
+    PopupScrollUpdate()
   end
 end
 
@@ -1101,7 +1320,7 @@ function MangAdmin:SearchStart(var, value)
     self:ChatMsg(".lookup tele "..value)
   end
   self.db.account.buffer.counter = 0
-  self:LogAction("Started search for "..var.."s with the keyword '"..value.."'.")
+  self:LogAction("Searching for "..var.."s with the keyword '"..value.."'.")
 end
 
 function MangAdmin:SearchReset()
@@ -1112,12 +1331,19 @@ function MangAdmin:SearchReset()
   ma_var2editbox:SetText("")
   ma_lookupresulttext:SetText(Locale["searchResults"].."0")
   self.db.char.requests.item = false
+  self.db.char.requests.favitem = false
   self.db.char.requests.itemset = false
+  self.db.char.requests.favitemset = false
   self.db.char.requests.spell = false
+  self.db.char.requests.favspell = false
   self.db.char.requests.quest = false
+  self.db.char.requests.favquest = false
   self.db.char.requests.creature = false
+  self.db.char.requests.favcreature = false
   self.db.char.requests.object = false
+  self.db.char.requests.favobject = false
   self.db.char.requests.tele = false
+  self.db.char.requests.favtele = false
   self.db.char.requests.ticket = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
@@ -1149,73 +1375,77 @@ end
 --[[INITIALIZION FUNCTIONS]]
 function MangAdmin:InitButtons()
   -- start tab buttons
-  self:PrepareScript(ma_tabbutton_main      , Locale["tt_MainButton"]       , function() MangAdmin:InstantGroupToggle("main") end)
-  self:PrepareScript(ma_tabbutton_char      , Locale["tt_CharButton"]       , function() MangAdmin:InstantGroupToggle("char") end)
-  self:PrepareScript(ma_tabbutton_tele      , Locale["tt_TeleButton"]       , function() MangAdmin:InstantGroupToggle("tele") end)
-  self:PrepareScript(ma_tabbutton_ticket    , Locale["tt_TicketButton"]     , function() MangAdmin:ShowTicketTab() end)
-  self:PrepareScript(ma_tabbutton_server    , Locale["tt_ServerButton"]     , function() MangAdmin:InstantGroupToggle("server") end)
-  self:PrepareScript(ma_tabbutton_misc      , Locale["tt_MiscButton"]       , function() MangAdmin:InstantGroupToggle("misc") end)
-  self:PrepareScript(ma_tabbutton_log       , Locale["tt_LogButton"]        , function() MangAdmin:InstantGroupToggle("log") end)
+  self:PrepareScript(ma_tabbutton_main       , Locale["tt_MainButton"]         , function() MangAdmin:InstantGroupToggle("main") end)
+  self:PrepareScript(ma_tabbutton_char       , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
+  self:PrepareScript(ma_tabbutton_tele       , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele") end)
+  self:PrepareScript(ma_tabbutton_ticket     , Locale["tt_TicketButton"]       , function() MangAdmin:ShowTicketTab() end)
+  self:PrepareScript(ma_tabbutton_server     , Locale["tt_ServerButton"]       , function() MangAdmin:InstantGroupToggle("server") end)
+  self:PrepareScript(ma_tabbutton_misc       , Locale["tt_MiscButton"]         , function() MangAdmin:InstantGroupToggle("misc") end)
+  self:PrepareScript(ma_tabbutton_log        , Locale["tt_LogButton"]          , function() MangAdmin:InstantGroupToggle("log") end)
   --end tab buttons
-  self:PrepareScript(ma_languagebutton      , Locale["tt_LanguageButton"]   , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
-  self:PrepareScript(ma_speedslider         , Locale["tt_SpeedSlider"]      , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
-  self:PrepareScript(ma_scaleslider         , Locale["tt_ScaleSlider"]      , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
-  self:PrepareScript(ma_itembutton          , Locale["tt_ItemButton"]       , function() MangAdmin:TogglePopup("search", {type = "item"}) end)
-  self:PrepareScript(ma_itemsetbutton       , Locale["tt_ItemSetButton"]    , function() MangAdmin:TogglePopup("search", {type = "itemset"}) end)
-  self:PrepareScript(ma_spellbutton         , Locale["tt_SpellButton"]      , function() MangAdmin:TogglePopup("search", {type = "spell"}) end)
-  self:PrepareScript(ma_questbutton         , Locale["tt_QuestButton"]      , function() MangAdmin:TogglePopup("search", {type = "quest"}) end)
-  self:PrepareScript(ma_creaturebutton      , Locale["tt_CreatureButton"]   , function() MangAdmin:TogglePopup("search", {type = "creature"}) end)
-  self:PrepareScript(ma_objectbutton        , Locale["tt_ObjectButton"]     , function() MangAdmin:TogglePopup("search", {type = "object"}) end)
-  self:PrepareScript(ma_telesearchbutton    , Locale["ma_TeleSearchButton"] , function() MangAdmin:TogglePopup("search", {type = "tele"}) end)
-  self:PrepareScript(ma_sendmailbutton      , "Tooltip not available yet."  , function() MangAdmin:TogglePopup("mail", {}) end)
-  self:PrepareScript(ma_screenshotbutton    , Locale["tt_ScreenButton"]     , function() MangAdmin:Screenshot() end)
-  self:PrepareScript(ma_gmonbutton          , Locale["tt_GMOnButton"]       , function() MangAdmin:ToggleGMMode("on") end)
-  self:PrepareScript(ma_gmoffbutton         , Locale["tt_GMOffButton"]      , function() MangAdmin:ToggleGMMode("off") end)
-  self:PrepareScript(ma_flyonbutton         , Locale["tt_FlyOnButton"]      , function() MangAdmin:ToggleFlyMode("on") end)
-  self:PrepareScript(ma_flyoffbutton        , Locale["tt_FlyOffButton"]     , function() MangAdmin:ToggleFlyMode("off") end)
-  self:PrepareScript(ma_hoveronbutton       , Locale["tt_HoverOnButton"]    , function() MangAdmin:ToggleHoverMode(1) end)
-  self:PrepareScript(ma_hoveroffbutton      , Locale["tt_HoverOffButton"]   , function() MangAdmin:ToggleHoverMode(0) end)
-  self:PrepareScript(ma_whisperonbutton     , Locale["tt_WhispOnButton"]    , function() MangAdmin:ToggleWhisper("on") end)
-  self:PrepareScript(ma_whisperoffbutton    , Locale["tt_WhispOffButton"]   , function() MangAdmin:ToggleWhisper("off") end)
-  self:PrepareScript(ma_invisibleonbutton   , Locale["tt_InvisOnButton"]    ,  function() MangAdmin:ToggleVisible("off") end)
-  self:PrepareScript(ma_invisibleoffbutton  , Locale["tt_InvisOffButton"]   , function() MangAdmin:ToggleVisible("on") end)
-  self:PrepareScript(ma_taxicheatonbutton   , Locale["tt_TaxiOnButton"]     , function() MangAdmin:ToggleTaxicheat("on") end)
-  self:PrepareScript(ma_taxicheatoffbutton  , Locale["tt_TaxiOffButton"]    , function() MangAdmin:ToggleTaxicheat("off") end)
-  self:PrepareScript(ma_ticketonbutton      , "Tooltip not available yet."  , function() MangAdmin:ToggleTickets("on") end)
-  self:PrepareScript(ma_ticketoffbutton     , "Tooltip not available yet."  , function() MangAdmin:ToggleTickets("off") end)
-  self:PrepareScript(ma_bankbutton          , Locale["tt_BankButton"]       , function() MangAdmin:ChatMsg(".bank") end)
-  self:PrepareScript(ma_learnallbutton      , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all") end)
-  self:PrepareScript(ma_learncraftsbutton   , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_crafts") end)
-  self:PrepareScript(ma_learngmbutton       , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_gm") end)
-  self:PrepareScript(ma_learnlangbutton     , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_lang") end)
-  self:PrepareScript(ma_learnclassbutton    , "Tooltip not available yet."  , function() MangAdmin:LearnSpell("all_myclass") end)
-  self:PrepareScript(ma_levelupbutton       , "Tooltip not available yet."  , function() MangAdmin:LevelupPlayer(ma_levelupeditbox:GetText()) end)
-  self:PrepareScript(ma_searchbutton        , "Tooltip not available yet."  , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
-  self:PrepareScript(ma_resetsearchbutton   , "Tooltip not available yet."  , function() MangAdmin:SearchReset() end)
-  self:PrepareScript(ma_revivebutton        , "Tooltip not available yet."  , function() MangAdmin:RevivePlayer() end)
-  self:PrepareScript(ma_killbutton          , "Tooltip not available yet."  , function() MangAdmin:KillSomething() end)
-  self:PrepareScript(ma_savebutton          , "Tooltip not available yet."  , function() MangAdmin:SavePlayer() end)
-  self:PrepareScript(ma_dismountbutton      , "Tooltip not available yet."  , function() MangAdmin:DismountPlayer() end)
-  self:PrepareScript(ma_kickbutton          , Locale["tt_KickButton"]       , function() MangAdmin:KickPlayer() end)
-  self:PrepareScript(ma_gridnaviaheadbutton , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
-  self:PrepareScript(ma_gridnavibackbutton  , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
-  self:PrepareScript(ma_gridnavirightbutton , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
-  self:PrepareScript(ma_gridnavileftbutton  , "Tooltip not available yet."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
-  self:PrepareScript(ma_announcebutton      , Locale["tt_AnnounceButton"]   , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
-  self:PrepareScript(ma_resetannouncebutton , "Tooltip not available yet."  , function() ma_announceeditbox:SetText("") end)
-  self:PrepareScript(ma_shutdownbutton      , Locale["tt_ShutdownButton"]   , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
-  self:PrepareScript(ma_closebutton         , "Tooltip not available yet."  , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
-  self:PrepareScript(ma_popupclosebutton    , "Tooltip not available yet."  , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
-  self:PrepareScript(ma_showticketsbutton   , "Tooltip not available yet."  , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
-  self:PrepareScript(ma_deleteticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("delete") end)
-  self:PrepareScript(ma_answerticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("answer") end)
-  self:PrepareScript(ma_getcharticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("getchar") end)
-  self:PrepareScript(ma_gocharticketbutton  , "Tooltip not available yet."  , function() MangAdmin:Ticket("gochar") end)
-  self:PrepareScript(ma_whisperticketbutton , "Tooltip not available yet."  , function() MangAdmin:Ticket("whisper") end)
-  self:PrepareScript(ma_bgcolorshowbutton   , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("bg") end)
-  self:PrepareScript(ma_frmcolorshowbutton  , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("frm") end)
-  self:PrepareScript(ma_btncolorshowbutton  , "Tooltip not available yet."  , function() MangAdmin:ShowColorPicker("btn") end)
-  self:PrepareScript(ma_applystylebutton    , "Tooltip not available yet."  , function() MangAdmin:ApplyStyleChanges() end)
+  self:PrepareScript(ma_languagebutton       , Locale["tt_LanguageButton"]     , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
+  self:PrepareScript(ma_speedslider          , Locale["tt_SpeedSlider"]        , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
+  self:PrepareScript(ma_scaleslider          , Locale["tt_ScaleSlider"]        , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
+  self:PrepareScript(ma_itembutton           , Locale["tt_ItemButton"]         , function() MangAdmin:TogglePopup("search", {type = "item"}) end)
+  self:PrepareScript(ma_itemsetbutton        , Locale["tt_ItemSetButton"]      , function() MangAdmin:TogglePopup("search", {type = "itemset"}) end)
+  self:PrepareScript(ma_spellbutton          , Locale["tt_SpellButton"]        , function() MangAdmin:TogglePopup("search", {type = "spell"}) end)
+  self:PrepareScript(ma_questbutton          , Locale["tt_QuestButton"]        , function() MangAdmin:TogglePopup("search", {type = "quest"}) end)
+  self:PrepareScript(ma_creaturebutton       , Locale["tt_CreatureButton"]     , function() MangAdmin:TogglePopup("search", {type = "creature"}) end)
+  self:PrepareScript(ma_objectbutton         , Locale["tt_ObjectButton"]       , function() MangAdmin:TogglePopup("search", {type = "object"}) end)
+  self:PrepareScript(ma_telesearchbutton     , Locale["ma_TeleSearchButton"]   , function() MangAdmin:TogglePopup("search", {type = "tele"}) end)
+  self:PrepareScript(ma_sendmailbutton       , "Tooltip not yet implemented."  , function() MangAdmin:TogglePopup("mail", {}) end)
+  self:PrepareScript(ma_screenshotbutton     , Locale["tt_ScreenButton"]       , function() MangAdmin:Screenshot() end)
+  self:PrepareScript(ma_gmonbutton           , Locale["tt_GMOnButton"]         , function() MangAdmin:ToggleGMMode("on") end)
+  self:PrepareScript(ma_gmoffbutton          , Locale["tt_GMOffButton"]        , function() MangAdmin:ToggleGMMode("off") end)
+  self:PrepareScript(ma_flyonbutton          , Locale["tt_FlyOnButton"]        , function() MangAdmin:ToggleFlyMode("on") end)
+  self:PrepareScript(ma_flyoffbutton         , Locale["tt_FlyOffButton"]       , function() MangAdmin:ToggleFlyMode("off") end)
+  self:PrepareScript(ma_hoveronbutton        , Locale["tt_HoverOnButton"]      , function() MangAdmin:ToggleHoverMode(1) end)
+  self:PrepareScript(ma_hoveroffbutton       , Locale["tt_HoverOffButton"]     , function() MangAdmin:ToggleHoverMode(0) end)
+  self:PrepareScript(ma_whisperonbutton      , Locale["tt_WhispOnButton"]      , function() MangAdmin:ToggleWhisper("on") end)
+  self:PrepareScript(ma_whisperoffbutton     , Locale["tt_WhispOffButton"]     , function() MangAdmin:ToggleWhisper("off") end)
+  self:PrepareScript(ma_invisibleonbutton    , Locale["tt_InvisOnButton"]      ,  function() MangAdmin:ToggleVisible("off") end)
+  self:PrepareScript(ma_invisibleoffbutton   , Locale["tt_InvisOffButton"]     , function() MangAdmin:ToggleVisible("on") end)
+  self:PrepareScript(ma_taxicheatonbutton    , Locale["tt_TaxiOnButton"]       , function() MangAdmin:ToggleTaxicheat("on") end)
+  self:PrepareScript(ma_taxicheatoffbutton   , Locale["tt_TaxiOffButton"]      , function() MangAdmin:ToggleTaxicheat("off") end)
+  self:PrepareScript(ma_ticketonbutton       , "Tooltip not yet implemented."  , function() MangAdmin:ToggleTickets("on") end)
+  self:PrepareScript(ma_ticketoffbutton      , "Tooltip not yet implemented."  , function() MangAdmin:ToggleTickets("off") end)
+  self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
+  self:PrepareScript(ma_learnallbutton       , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all") end)
+  self:PrepareScript(ma_learncraftsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_crafts") end)
+  self:PrepareScript(ma_learngmbutton        , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_gm") end)
+  self:PrepareScript(ma_learnlangbutton      , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_lang") end)
+  self:PrepareScript(ma_learnclassbutton     , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_myclass") end)
+  self:PrepareScript(ma_modifybutton         , "Tooltip not yet implemented."  , function() MangAdmin:Modify(UIDropDownMenu_GetSelectedValue(ma_modifydropdown),ma_modifyeditbox:GetText()) end)
+  self:PrepareScript(ma_searchbutton         , "Tooltip not yet implemented."  , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  self:PrepareScript(ma_resetsearchbutton    , "Tooltip not yet implemented."  , function() MangAdmin:SearchReset() end)
+  self:PrepareScript(ma_revivebutton         , "Tooltip not yet implemented."  , function() MangAdmin:RevivePlayer() end)
+  self:PrepareScript(ma_killbutton           , "Tooltip not yet implemented."  , function() MangAdmin:KillSomething() end)
+  self:PrepareScript(ma_savebutton           , "Tooltip not yet implemented."  , function() MangAdmin:SavePlayer() end)
+  self:PrepareScript(ma_dismountbutton       , "Tooltip not yet implemented."  , function() MangAdmin:DismountPlayer() end)
+  self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
+  self:PrepareScript(ma_gridnaviaheadbutton  , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
+  self:PrepareScript(ma_gridnavibackbutton   , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
+  self:PrepareScript(ma_gridnavirightbutton  , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
+  self:PrepareScript(ma_gridnavileftbutton   , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
+  self:PrepareScript(ma_announcebutton       , Locale["tt_AnnounceButton"]     , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
+  self:PrepareScript(ma_resetannouncebutton  , "Tooltip not yet implemented."  , function() ma_announceeditbox:SetText("") end)
+  self:PrepareScript(ma_shutdownbutton       , Locale["tt_ShutdownButton"]     , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
+  self:PrepareScript(ma_closebutton          , "Tooltip not yet implemented."  , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
+  self:PrepareScript(ma_popupclosebutton     , "Tooltip not yet implemented."  , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
+  self:PrepareScript(ma_showticketsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
+  self:PrepareScript(ma_deleteticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("delete") end)
+  self:PrepareScript(ma_answerticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("answer") end)
+  self:PrepareScript(ma_getcharticketbutton  , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("getchar") end)
+  self:PrepareScript(ma_gocharticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("gochar") end)
+  self:PrepareScript(ma_whisperticketbutton  , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("whisper") end)
+  self:PrepareScript(ma_bgcolorshowbutton    , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("bg") end)
+  self:PrepareScript(ma_frmcolorshowbutton   , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("frm") end)
+  self:PrepareScript(ma_btncolorshowbutton   , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("btn") end)
+  self:PrepareScript(ma_linkifiercolorbutton , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("linkifier") end)
+  self:PrepareScript(ma_applystylebutton     , "Tooltip not yet implemented."  , function() MangAdmin:ApplyStyleChanges() end)
+  self:PrepareScript(ma_loadtablebutton      , "Tooltip not yet implemented."  , function() MangAdmin:ReloadTable(UIDropDownMenu_GetSelectedValue(ma_reloadtabledropdown)) end)
+  self:PrepareScript(ma_loadscriptsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:ReloadScripts() end)
+  self:PrepareScript(ma_changeweatherbutton  , "Tooltip not yet implemented."  , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weathertabledropdown)) end)
 end
 
 function MangAdmin:InitLangDropDown()
@@ -1257,6 +1487,118 @@ function MangAdmin:InitLangDropDown()
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
 end
 
+function MangAdmin:InitWeatherDropDown()
+  local function WeatherDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {"Fine","0 0"},
+      {"Fog ","0 1"},
+      {"Rain","1 1"},
+      {"Snow","2 1"},
+      {"Sand","3 1"}
+    }
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_weathertabledropdown, this.value) end
+      info.checked = nil
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_weathertabledropdown, WeatherDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_weathertabledropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_weathertabledropdown)
+end
+
+function MangAdmin:InitReloadTableDropDown()
+  local function ReloadTableDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {"all","all"},
+      {"all_area","all_area"},
+      {"all_loot","all_loot"},
+      {"all_quest","all_quest"},
+      {"all_spell","all_spell"},
+      {"areatrigger_tavern","areatrigger_tavern"},
+      {"areatrigger_teleport","areatrigger_teleport"},
+      {"command","command"},
+      {"creature_questrelation","creature_questrelation"},
+      {"creature_involvedrelation","creature_involvedrelation"},
+      {"gameobject_questrelation","gameobject_questrelation"},
+      {"gameobject_involvedrelation","gameobject_involvedrelation"},
+      {"areatrigger_involvedrelation","areatrigger_involvedrelation"},
+      {"quest_template","quest_template"},
+      {"creature_loot_template","creature_loot_template"},
+      {"disenchant_loot_template","disenchant_loot_template"},
+      {"fishing_loot_template","fishing_loot_template"},
+      {"gameobject_loot_template","gameobject_loot_template"},
+      {"item_loot_template","item_loot_template"},
+      {"pickpocketing_loot_template","pickpocketing_loot_template"},
+      {"prospecting_loot_template","prospecting_loot_template"},
+      {"skinning_loot_template","skinning_loot_template"},
+      {"reserved_name","reserved_name"},
+      {"skill_discovery_template","skill_discovery_template"},
+      {"skill_extra_item_template","skill_extra_item_template"},
+      {"spell_affect","spell_affect"},
+      {"spell_chain","spell_chain"},
+      {"spell_learn_skill","spell_learn_skill"},
+      {"spell_learn_spell","spell_learn_spell"},
+      {"spell_proc_event","spell_proc_event"},
+      {"spell_script_target","spell_script_target"},
+      {"spell_teleport","spell_teleport"},
+      {"button_scripts","button_scripts"},
+      {"quest_end_scripts","quest_end_scripts"},
+      {"quest_start_scripts","quest_start_scripts"},
+      {"spell_scripts","spell_scripts"},
+      {"game_graveyard_zone","game_graveyard_zone"}
+    }
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.checked = nil
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_reloadtabledropdown, this.value) end
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_reloadtabledropdown, ReloadTableDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_reloadtabledropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_reloadtabledropdown)
+end
+
+function MangAdmin:InitModifyDropDown()
+  local function ModifyDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {"Level up","levelup"},
+      {"Level down ","leveldown"},
+      {"Money","money"},
+      {"Energy","energy"},
+      {"Rage","rage"},
+      {"Mana","mana"},
+      {"Healthpoints","health"}
+    }
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_modifydropdown, this.value) end
+      info.checked = nil
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_modifydropdown, ModifyDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_modifydropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_modifydropdown)
+end
+
 function MangAdmin:InitSliders()
   -- Speed Slider
   ma_speedslider:SetOrientation("HORIZONTAL")
@@ -1285,32 +1627,50 @@ function MangAdmin:InitScrollFrames()
     {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
 end
 
-function MangAdmin:NoTickets()
-  -- Reset list and make an entry "No Tickets"
-  self:LogAction(Locale["ma_TicketsNoTickets"])
-  ma_ticketeditbox:SetText(Locale["ma_TicketsNoTickets"])
-  FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
-  for line = 1,7 do
-    getglobal("ma_PopupScrollBarEntry"..line):Disable()
-    if line == 1 then
-      getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["ma_TicketsNoTickets"])
-      getglobal("ma_PopupScrollBarEntry"..line):Show()
-    else
-      getglobal("ma_PopupScrollBarEntry"..line):Hide()
+function MangAdmin:NoResults(var)
+  if var == "ticket" then
+    -- Reset list and make an entry "No Tickets"
+    self:LogAction(Locale["ma_TicketsNoTickets"])
+    ma_ticketeditbox:SetText(Locale["ma_TicketsNoTickets"])
+    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
+    for line = 1,7 do
+      getglobal("ma_PopupScrollBarEntry"..line):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
+      if line == 1 then
+        getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["ma_TicketsNoTickets"])
+        getglobal("ma_PopupScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_PopupScrollBarEntry"..line):Hide()
+      end
     end
-  end
-end
-
-function MangAdmin:NoSearchOrResult()
-  ma_lookupresulttext:SetText(Locale["searchResults"].."0")
-  FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
-  for line = 1,7 do
-    getglobal("ma_PopupScrollBarEntry"..line):Disable()
-    if line == 1 then
-      getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["tt_SearchDefault"])
-      getglobal("ma_PopupScrollBarEntry"..line):Show()
-    else
-      getglobal("ma_PopupScrollBarEntry"..line):Hide()
+  elseif var == "search" then
+    ma_lookupresulttext:SetText(Locale["searchResults"].."0")
+    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
+    for line = 1,7 do
+      getglobal("ma_PopupScrollBarEntry"..line):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
+      if line == 1 then
+        getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["tt_SearchDefault"])
+        getglobal("ma_PopupScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_PopupScrollBarEntry"..line):Hide()
+      end
+    end
+  elseif var == "favorites" then
+    ma_lookupresulttext:SetText("Favorites: ".."0")
+    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
+    for line = 1,7 do
+      getglobal("ma_PopupScrollBarEntry"..line):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
+      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
+      if line == 1 then
+        getglobal("ma_PopupScrollBarEntry"..line):SetText("There are currently no saved favorites!")
+        getglobal("ma_PopupScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_PopupScrollBarEntry"..line):Hide()
+      end
     end
   end
 end
@@ -1319,172 +1679,389 @@ function PopupScrollUpdate()
   local line -- 1 through 7 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
   
-  if MangAdmin.db.char.requests.item then --get items
-    local itemCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.items, function() itemCount = itemCount + 1 end)
-    if itemCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..itemCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,itemCount,7,30)
+  if MangAdmin.db.char.requests.item or MangAdmin.db.char.requests.favitem then --get items
+    local count = 0
+    if MangAdmin.db.char.requests.item then
+      table.foreachi(MangAdmin.db.account.buffer.items, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favitem then
+      table.foreachi(MangAdmin.db.account.favorites.items, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= itemCount then
-          local item = MangAdmin.db.account.buffer.items[lineplusoffset]
+        if lineplusoffset <= count then
+          local item
+          if MangAdmin.db.char.requests.item then
+            item = MangAdmin.db.account.buffer.items[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favitem then
+            item = MangAdmin.db.account.favorites.items[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..item["itId"].."|r Name: |cffffffff"..item["itName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddItem(item["itId"], arg1) end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..item["itId"]..":0:0:0:0:0:0:0"); GameTooltip:Show() end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.item then
+            if item["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.items[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.items[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favitem then
+            if item["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.items[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.items[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(item["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.item then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favitem then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.itemset then --get itemsets
-    local itemsetCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.itemsets, function() itemsetCount = itemsetCount + 1 end)
-    if itemsetCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..itemsetCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,itemsetCount,7,30)
+  elseif MangAdmin.db.char.requests.itemset or MangAdmin.db.char.requests.favitemset then --get itemsets
+    local count = 0
+    if MangAdmin.db.char.requests.itemset then
+      table.foreachi(MangAdmin.db.account.buffer.itemsets, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favitemset then
+      table.foreachi(MangAdmin.db.account.favorites.itemsets, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= itemsetCount then
-          local itemset = MangAdmin.db.account.buffer.itemsets[lineplusoffset]
+        if lineplusoffset <= count then
+          local itemset
+          if MangAdmin.db.char.requests.itemset then
+            itemset = MangAdmin.db.account.buffer.itemsets[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favitemset then
+            itemset = MangAdmin.db.account.favorites.itemsets[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..itemset["isId"].."|r Name: |cffffffff"..itemset["isName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddItemSet(itemset["isId"]) end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.itemset then
+            if itemset["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.itemsets[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.itemsets[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favitemset then
+            if itemset["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.itemsets[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.itemsets[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(itemset["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.itemset then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favitemset then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.quest then --get quests
-    local questCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.quests, function() questCount = questCount + 1 end)
-    if questCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..questCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,questCount,7,30)
+  elseif MangAdmin.db.char.requests.quest or MangAdmin.db.char.requests.favquest then --get quests
+    local count = 0
+    if MangAdmin.db.char.requests.quest then
+      table.foreachi(MangAdmin.db.account.buffer.quests, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favquest then
+      table.foreachi(MangAdmin.db.account.favorites.quests, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= questCount then
-          local quest = MangAdmin.db.account.buffer.quests[lineplusoffset]
+        if lineplusoffset <= count then
+          local quest
+          if MangAdmin.db.char.requests.quest then
+            quest = MangAdmin.db.account.buffer.quests[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favquest then
+            quest = MangAdmin.db.account.favorites.quests[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..quest["qsId"].."|r Name: |cffffffff"..quest["qsName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:Quest(quest["qsId"], arg1) end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.quest then
+            if quest["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.quests[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.quests[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favquest then
+            if quest["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.quests[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.quests[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(quest["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.quest then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favquest then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.creature then --get creatures
-    local creatureCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.creatures, function() creatureCount = creatureCount + 1 end)
-    if creatureCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..creatureCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,creatureCount,7,30)
+  elseif MangAdmin.db.char.requests.creature or MangAdmin.db.char.requests.favcreature then --get creatures
+    local count = 0
+    if MangAdmin.db.char.requests.creature then
+      table.foreachi(MangAdmin.db.account.buffer.creatures, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favcreature then
+      table.foreachi(MangAdmin.db.account.favorites.creatures, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= creatureCount then
-          local creature = MangAdmin.db.account.buffer.creatures[lineplusoffset]
+        if lineplusoffset <= count then
+          local creature
+          if MangAdmin.db.char.requests.creature then
+            creature = MangAdmin.db.account.buffer.creatures[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favcreature then
+            creature = MangAdmin.db.account.favorites.creatures[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..creature["crId"].."|r Name: |cffffffff"..creature["crName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:Creature(creature["crId"], arg1) end) 
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.creature then
+            if creature["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.creatures[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.creatures[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favcreature then
+            if creature["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.creatures[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.creatures[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(creature["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.creature then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favcreature then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.spell then --get spells
-    local spellCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.spells, function() spellCount = spellCount + 1 end)
-    if spellCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..spellCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,spellCount,7,30)
+  elseif MangAdmin.db.char.requests.spell or MangAdmin.db.char.requests.favspell then --get spells
+    local count = 0
+    if MangAdmin.db.char.requests.spell then
+      table.foreachi(MangAdmin.db.account.buffer.spells, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favspell then
+      table.foreachi(MangAdmin.db.account.favorites.spells, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= spellCount then
-          local spell = MangAdmin.db.account.buffer.spells[lineplusoffset]
+        if lineplusoffset <= count then
+          local spell
+          if MangAdmin.db.char.requests.spell then
+            spell = MangAdmin.db.account.buffer.spells[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favspell then
+            spell = MangAdmin.db.account.favorites.spells[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..spell["spId"].."|r Name: |cffffffff"..spell["spName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:LearnSpell(spell["spId"], arg1) end)  
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.spell then
+            if spell["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.spells[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.spells[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favspell then
+            if spell["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.spells[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.spells[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(spell["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.spell then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favspell then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.object then --get objects
-    local objectCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.objects, function() objectCount = objectCount + 1 end)
-    if objectCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..objectCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,objectCount,7,30)
+  elseif MangAdmin.db.char.requests.object or MangAdmin.db.char.requests.favobject then --get objects
+    local count = 0
+    if MangAdmin.db.char.requests.object then
+      table.foreachi(MangAdmin.db.account.buffer.objects, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favobject then
+      table.foreachi(MangAdmin.db.account.favorites.objects, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= objectCount then
-          local object = MangAdmin.db.account.buffer.objects[lineplusoffset]
+        if lineplusoffset <= count then
+          local object
+          if MangAdmin.db.char.requests.object then
+            object = MangAdmin.db.account.buffer.objects[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favobject then
+            object = MangAdmin.db.account.favorites.objects[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..object["objId"].."|r Name: |cffffffff"..object["objName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddObject(object["objId"], arg1) end)    
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.object then
+            if object["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.objects[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.objects[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favobject then
+            if object["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.objects[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.objects[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(object["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.object then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favobject then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
-  elseif MangAdmin.db.char.requests.tele then --get teles
-    local teleCount = 0
-    table.foreachi(MangAdmin.db.account.buffer.teles, function() teleCount = teleCount + 1 end)
-    if teleCount > 0 then
-      ma_lookupresulttext:SetText(Locale["searchResults"]..teleCount)
-      FauxScrollFrame_Update(ma_PopupScrollBar,teleCount,7,30)
+  elseif MangAdmin.db.char.requests.tele or MangAdmin.db.char.requests.favtele then --get teles
+    local count = 0
+    if MangAdmin.db.char.requests.tele then
+      table.foreachi(MangAdmin.db.account.buffer.teles, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favtele then
+      table.foreachi(MangAdmin.db.account.favorites.teles, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
-        if lineplusoffset <= teleCount then
-          local tele = MangAdmin.db.account.buffer.teles[lineplusoffset]
+        if lineplusoffset <= count then
+          local tele
+          if MangAdmin.db.char.requests.tele then
+            tele = MangAdmin.db.account.buffer.teles[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favtele then
+            tele = MangAdmin.db.account.favorites.teles[lineplusoffset]
+          end
+          local key = lineplusoffset
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Name: |cffffffff"..tele["tName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:ChatMsg(".tele "..tele["tName"]) end)    
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):Enable()
           getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.tele then
+            if tele["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.teles[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.teles[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favtele then
+            if tele["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.teles[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.teles[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(tele["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoSearchOrResult()
+      if MangAdmin.db.char.requests.tele then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favtele then
+        MangAdmin:NoResults("favorites")
+      end
     end
     
   elseif MangAdmin.db.char.requests.ticket then --get tickets
@@ -1522,11 +2099,11 @@ function PopupScrollUpdate()
         end
       end
     else
-      MangAdmin:NoTickets()
+      MangAdmin:NoResults("ticket")
     end
     
   else
-    MangAdmin:NoSearchOrResult()
+    MangAdmin:NoResults("search")
   end
 end
 
@@ -1624,6 +2201,31 @@ function MangAdmin:ShowColorPicker(t)
     end
     ColorPickerFrame:SetColorRGB(r,g,b)
     ColorPickerFrame.previousValues = {r,g,b}
+  elseif t == "linkifier" then
+    local r,g,b
+    if MangAdmin.db.account.style.color.buffer.linkifier then
+      r = MangAdmin.db.account.style.color.buffer.linkifier.r
+      g = MangAdmin.db.account.style.color.buffer.linkifier.g
+      b = MangAdmin.db.account.style.color.buffer.linkifier.b
+    else
+      r = MangAdmin.db.account.style.color.linkifier.r
+      g = MangAdmin.db.account.style.color.linkifier.g
+      b = MangAdmin.db.account.style.color.linkifier.b
+    end
+    ColorPickerFrame.cancelFunc = function(prev)
+      local r,g,b = unpack(prev)
+      ma_linkifiercolorbutton_texture:SetTexture(r,g,b)
+    end
+    ColorPickerFrame.func = function()
+      local r,g,b = ColorPickerFrame:GetColorRGB();
+      ma_linkifiercolorbutton_texture:SetTexture(r,g,b)
+      MangAdmin.db.account.style.color.buffer.linkifier = {}
+      MangAdmin.db.account.style.color.buffer.linkifier.r = r
+      MangAdmin.db.account.style.color.buffer.linkifier.g = g
+      MangAdmin.db.account.style.color.buffer.linkifier.b = b
+    end
+    ColorPickerFrame:SetColorRGB(r,g,b)
+    ColorPickerFrame.previousValues = {r,g,b}
   end
   ColorPickerFrame.hasOpacity = false
   ColorPickerFrame:Show()
@@ -1639,2235 +2241,13 @@ function MangAdmin:ApplyStyleChanges()
   if MangAdmin.db.account.style.color.buffer.buttons then
     MangAdmin.db.account.style.color.buttons = MangAdmin.db.account.style.color.buffer.buttons
   end
+  if MangAdmin.db.account.style.color.buffer.linkifier then
+    MangAdmin.db.account.style.color.linkifier = MangAdmin.db.account.style.color.buffer.linkifier
+  end
   if ma_checktransparencybutton:GetChecked() then
     self.db.account.style.transparency.backgrounds = 0.5
   else
     self.db.account.style.transparency.backgrounds = 1.0
   end
   ReloadUI()
-end
-
---===============================================================================================================--
---== Initializing Frames (with LUA) MUCH EASIER THAN WRITING F***ING HUGE XML-code
---== This lua script is like the xml files to create the frames
---===============================================================================================================--
-function MangAdmin:CreateFrames()
-  local transparency = {
-    bg = MangAdmin.db.account.style.transparency.backgrounds,
-    btn = MangAdmin.db.account.style.transparency.buttons,
-    frm = MangAdmin.db.account.style.transparency.frames
-  }
-  local color = {
-    bg = MangAdmin.db.account.style.color.backgrounds,
-    btn = MangAdmin.db.account.style.color.buttons,
-    frm = MangAdmin.db.account.style.color.frames
-  }
-  -- [[ Main Elements ]]
-  FrameLib:BuildFrame({
-    name = "ma_bgframe",
-    group = "bg",
-    parent = UIParent,
-    texture = {
-      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
-    },
-    draggable = true,
-    size = {
-      width = 680,
-      height = 440
-    },
-    setpoint = {
-      pos = "CENTER"
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_menubgframe",
-    group = "bg",
-    parent = ma_bgframe,
-    texture = {
-      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
-    },
-    size = {
-      width = 670,
-      height = 22
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offY = 22,
-      offX = 4
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_topframe",
-    group = "bg",
-    parent = ma_bgframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 675,
-      height = 80
-    },
-    setpoint = {
-      pos = "TOP",
-      offY = -2
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_midframe",
-    group = "bg",
-    parent = ma_bgframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 675,
-      height = 254
-    },
-    setpoint = {
-      pos = "TOP",
-      offY = -83
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_leftframe",
-    group = "bg",
-    parent = ma_bgframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 374,
-      height = 100
-    },
-    setpoint = {
-      pos = "TOP",
-      offX = -150.5,
-      offY = -338
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_rightframe",
-    group = "bg",
-    parent = ma_bgframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 300,
-      height = 100
-    },
-    setpoint = {
-      pos = "TOP",
-      offX = 187.5,
-      offY = -338
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_logoframe",
-    group = "bg",
-    parent = ma_topframe,
-    texture = {
-      file = ROOT_PATH.."Textures\\logo.tga"
-    },
-    size = {
-      width = 512,
-      height = 64
-    },
-    setpoint = {
-      pos = "LEFT",
-      offX = 10
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFontString({
-    name = "ma_loggedtext",
-    group = "bg",
-    parent = ma_topframe,
-    text = Locale["logged"],
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    }
-  })
-
-  FrameLib:BuildFontString({
-    name = "ma_tooltiptext",
-    group = "bg",
-    parent = ma_rightframe,
-    text = Locale["tt_Default"],
-    color = {
-      r = 0,
-      g = 255,
-      b = 0,
-      a = 1.0
-    }
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_languagedropdown",
-    group = "bg",
-    parent = ma_topframe,
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -130,
-      offY = -10
-    },
-    inherits = "UIDropDownMenuTemplate"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_languagebutton",
-    group = "bg",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_languagebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -14
-    },
-    text = Locale["ma_LanguageButton"]
-  })
-  
-  -- [[ Tab Buttons ]]
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_main",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_main_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,1},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_menubgframe",
-      relPos = "TOPLEFT",
-      offX = 4,
-      offY = -4
-    },
-    text = Locale["tabmenu_Main"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_char",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_char_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_main",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Char"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_tele",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_tele_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_char",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Tele"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_ticket",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_ticket_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 130,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_tele",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Ticket"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_misc",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_misc_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_ticket",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Misc"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_server",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_server_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_misc",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Server"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_tabbutton_log",
-    group = "tabbuttons",
-    parent = ma_topframe,
-    texture = {
-      name = "ma_tabbutton_log_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
-      gradient = {
-        orientation = "vertical",
-        min = {102,102,102,0},
-        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-      }
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_tabbutton_server",
-      relPos = "TOPRIGHT",
-      offX = 2
-    },
-    text = Locale["tabmenu_Log"]
-  })
-  
-  --[[Lookup Buttons]]  
-  FrameLib:BuildButton({
-    name = "ma_itembutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_itembutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -4
-    },
-    text = Locale["ma_ItemButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_itemsetbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_itemsetbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 114,
-      offY = -4
-    },
-    text = Locale["ma_ItemSetButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_spellbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_spellbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 218,
-      offY = -4
-    },
-    text = Locale["ma_SpellButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_questbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_questbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -28
-    },
-    text = Locale["ma_QuestButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_objectbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_objectbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 114,
-      offY = -28
-    },
-    text = Locale["ma_ObjectButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_creaturebutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_creaturebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 218,
-      offY = -28
-    },
-    text = Locale["ma_CreatureButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_telesearchbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_telesearchbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -52
-    },
-    text = Locale["ma_TeleSearchButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_sendmailbutton",
-    group = "bg",
-    parent = ma_leftframe,
-    texture = {
-      name = "ma_sendmailbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 114,
-      offY = -52
-    },
-    text = Locale["ma_Mail"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_closebutton",
-    group = "bg",
-    parent = ma_rightframe,
-    texture = {
-      name = "ma_languagebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 10,
-      height = 10
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    text = "X"
-  })
-  
-  -- [[Popup Frame]]
-  FrameLib:BuildFrame({
-    name = "ma_popupframe",
-    group = "popup",
-    parent = UIParent,
-    texture = {
-      color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
-    },
-    draggable = true,
-    size = {
-      width = 440,
-      height = 380
-    },
-    setpoint = {
-      pos = "CENTER"
-    },
-    frameStrata = "HIGH",
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_popuptopframe",
-    group = "popup",
-    parent = ma_popupframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 435,
-      height = 80
-    },
-    setpoint = {
-      pos = "TOP",
-      offY = -2
-    },
-    inherits = nil
-  })
-
-  FrameLib:BuildFrame({
-    name = "ma_popupmidframe",
-    group = "popup",
-    parent = ma_popupframe,
-    texture = {
-      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
-    },
-    size = {
-      width = 435,
-      height = 294
-    },
-    setpoint = {
-      pos = "TOP",
-      offY = -83
-    },
-    inherits = nil
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_popupclosebutton",
-    group = "popup",
-    parent = ma_popuptopframe,
-    texture = {
-      name = "ma_popupclosebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 10,
-      height = 10
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    text = "X"
-  })
-  
-  -- Popup Editbox and Searchbutton
-  FrameLib:BuildFontString({
-    name = "ma_lookuptext",
-    group = "popup",
-    parent = ma_popuptopframe,
-    text = "You should not see this text!",
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -10
-    },
-    font = {
-      size = 20,
-      flags = "THICKOUTLINE"
-    }
-  })
-
-  FrameLib:BuildFontString({
-    name = "ma_lookupresulttext",
-    group = "popup",
-    parent = ma_popuptopframe,
-    text = Locale["searchResults"].."0",
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    }
-  })
-
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_searcheditbox",
-    group = "popup",
-    parent = ma_popuptopframe,
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
-      offY = 28
-    },
-    inherits = "InputBoxTemplate"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_searchbutton",
-    group = "popup",
-    parent = ma_popuptopframe,
-    texture = {
-      name = "ma_searchbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 94,
-      offY = 28
-    },
-    text = Locale["ma_SearchButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_resetsearchbutton",
-    group = "popup",
-    parent = ma_popuptopframe,
-    texture = {
-      name = "ma_resetsearchbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 178,
-      offY = 28
-    },
-    text = Locale["ma_ResetButton"]
-  })
-  
-  FrameLib:BuildFontString({
-    name = "ma_var1text",
-    group = "popup",
-    parent = ma_popuptopframe,
-    text = "You should not see this text!",
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
-      offY = 8
-    }
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_var1editbox",
-    group = "popup",
-    parent = ma_popuptopframe,
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 94,
-      offY = 4
-    },
-    inherits = "InputBoxTemplate"
-  })
-  
-  FrameLib:BuildFontString({
-    name = "ma_var2text",
-    group = "popup",
-    parent = ma_popuptopframe,
-    text = "You should not see this text!",
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 200,
-      offY = 8
-    }
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_var2editbox",
-    group = "popup",
-    parent = ma_popuptopframe,
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 284,
-      offY = 4
-    },
-    inherits = "InputBoxTemplate"
-  })
-  
-  -- Popup Search ScrollFrame
-  FrameLib:BuildFrame({
-    type = "ScrollFrame",
-    name = "ma_PopupScrollBar",
-    group = "popup",
-    parent = ma_popupmidframe,
-    texture = {
-      color = {0,0,0,0.7}
-    },
-    size = {
-      width = 400,
-      height = 274
-    },
-    setpoint = {
-      pos = "CENTER",
-      offX = -10
-    },
-    inherits = "FauxScrollFrameTemplate"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry1",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBar",
-      relPos = "TOPLEFT",
-      offX = 10,
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry1_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry2",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry1",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry2_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })  
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry3",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry2",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry3_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry4",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry3",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry4_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })  
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry5",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry4",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry5_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry6",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry5",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry6_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_PopupScrollBarEntry7",
-    group = "popup",
-    parent = ma_popupmidframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      relTo = "ma_PopupScrollBarEntry6",
-      relPos = "BOTTOMLEFT",
-      offY = -8
-    },
-    texture = {
-      name = "ma_PopupScrollBarEntry7_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 380,
-      height = 30
-    },
-    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
-  })
-  
-  -- [[Mail Popup]]
-  FrameLib:BuildFrame({
-    type = "ScrollFrame",
-    name = "ma_mailscrollframe",
-    group = "popup",
-    parent = ma_popupmidframe,
-    size = {
-      width = 400,
-      height = 274
-    },
-    setpoint = {
-      pos = "CENTER",
-      offX = -10
-    },
-    inherits = "UIPanelScrollFrameTemplate"
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_maileditbox",
-    group = "popup",
-    parent = ma_mailscrollframe,
-    texture = {
-      name = "ma_maileditbox_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 400,
-      --height = 200
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 0,
-      offY = 0
-    },
-    setpoint2 = {
-      pos = "BOTTOMRIGHT",
-      offX = 0,
-      offY = 0
-    },
-    maxletters = 100000,
-    multiline = true,
-    textcolor = {0, 0, 0, 1.0}
-  })
-
-  -- [[ Group Elements ]]
-  -- MAIN
-  FrameLib:BuildButton({
-    name = "ma_gmonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gmonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -10
-    },
-    text = Locale["ma_GMOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_gmoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gmoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -10
-    },
-    text = Locale["ma_OffButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_flyonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_flyonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -34
-    },
-    text = Locale["ma_FlyOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_flyoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_flyoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -34
-    },
-    text = Locale["ma_OffButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_hoveronbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_hoveronbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -58
-    },
-    text = Locale["ma_HoverOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_hoveroffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_hoveroffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -58
-    },
-    text = Locale["ma_OffButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_whisperonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_whisperonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -82
-    },
-    text = Locale["ma_WhisperOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_whisperoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_whisperoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -82
-    },
-    text = Locale["ma_OffButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_invisibleonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_invisibleonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -106
-    },
-    text = Locale["ma_InvisOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_invisibleoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_invisibleoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -106
-    },
-    text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_taxicheatonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_taxicheatonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -130
-    },
-    text = Locale["ma_TaxiOnButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_taxicheatoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_taxicheatoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -130
-    },
-    text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_ticketonbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_ticketonbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -154
-    },
-    text = "Announce tickets"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_ticketoffbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_ticketoffbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 40,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -154
-    },
-    text = Locale["ma_OffButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_screenshotbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_screenshotbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    },
-    text = Locale["ma_ScreenshotButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_bankbutton",
-    group = "main",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_bankbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -34
-    },
-    text = Locale["ma_BankButton"]
-  })
-  
-  -- TELE
-  FrameLib:BuildFontString({
-    name = "ma_gridnavigatortext",
-    group = "tele",
-    parent = ma_midframe,
-    text = Locale["gridnavigator"],
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -2,
-      offY = 86
-    }
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_gridnavieditbox",
-    group = "tele",
-    parent = ma_midframe,
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -32,
-      offY = 34
-    },
-    maxLetters = 2,
-    inherits = "InputBoxTemplate"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_gridnaviaheadbutton",
-    group = "tele",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gridnaviaheadbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -34,
-      offY = 58
-    },
-    text = "^"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_gridnavibackbutton",
-    group = "tele",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gridnavibackbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -34,
-      offY = 10
-    },
-    text = "v"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_gridnavirightbutton",
-    group = "tele",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gridnavirightbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 34
-    },
-    text = ">"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_gridnavileftbutton",
-    group = "tele",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gridnavileftbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -58,
-      offY = 34
-    },
-    text = "<"
-  })
-  
-  -- LOG
-  FrameLib:BuildFrame({
-    type = "ScrollingMessageFrame",
-    name = "ma_logframe",
-    group = "log",
-    parent = ma_midframe,
-    texture = {
-      color = {10,10,10,0.7},
-      gradient = {
-        orientation = "horizontal",
-        min = {10,10,10,0.7},
-        max = {10,10,10,0}
-      }
-    },
-    size = {
-      width = 400,
-      height = 234
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -10
-    },
-    justify = {
-      h = "LEFT",
-      v = "TOP"
-    },
-    fading = false,
-    scrollMouseWheel = true
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_logscrollupbutton",
-    group = "log",
-    parent = ma_midframe,
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    },
-    inherits = "UIPanelScrollUpButtonTemplate",
-    script = function() ma_logframe:ScrollUp() end
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_logscrolldownbutton",
-    group = "log",
-    parent = ma_midframe,
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    inherits = "UIPanelScrollDownButtonTemplate",
-    script = function() ma_logframe:ScrollDown() end
-  })
-
-  --CHARACTER
-  FrameLib:BuildButton({
-    name = "ma_learnallbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_learnallbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -4
-    },
-    text = Locale["ma_LearnAllButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_learncraftsbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_learncraftsbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 180,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 134,
-      offY = -4
-    },
-    text = Locale["ma_LearnCraftsButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_learngmbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_learngmbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 140,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 318,
-      offY = -4
-    },
-    text = Locale["ma_LearnGMButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_learnclassbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_learnclassbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 200,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 462,
-      offY = -4
-    },
-    text = Locale["ma_LearnClassButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_learnlangbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_learnlangbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 120,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -28
-    },
-    text = Locale["ma_LearnLangButton"]
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_levelupeditbox",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 30,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 15,
-      offY = -60
-    },
-    inherits = "InputBoxTemplate"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_levelupbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_levelupbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 50,
-      offY = -60
-    },
-    text = Locale["ma_LevelUpButton"]
-  })
-
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_speedslider",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 80
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
-      offY = 60
-    },
-    inherits = "OptionsSliderTemplate"
-  })
-
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_scaleslider",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 80
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
-      offY = 20
-    },
-    inherits = "OptionsSliderTemplate"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_killbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_killbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    text = Locale["ma_KillButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_kickbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_kickbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -94,
-      offY = 10
-    },
-    text = Locale["ma_KickButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_dismountbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_dismountbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -178,
-      offY = 10
-    },
-    text = Locale["ma_DismountButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_revivebutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_revivebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -262,
-      offY = 10
-    },
-    text = Locale["ma_ReviveButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_savebutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_savebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -346,
-      offY = 10
-    },
-    text = Locale["ma_SaveButton"]
-  })
-
-  --TICKET  
-  FrameLib:BuildButton({
-    name = "ma_showticketsbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_loadticketsbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 150,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -10
-    },
-    text = Locale["ma_LoadTicketsButton"]
-  })
-  
-    
-  FrameLib:BuildFontString({
-    name = "ma_tpinfo_text",
-    group = "ticket",
-    parent = ma_midframe,
-    text = "You should not see this text!",
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -40
-    }
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_whisperticketbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_whisperticketbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -346,
-      offY = 10
-    },
-    text = "Whisper" --Locale["ma_WhisperButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_getcharticketbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_getcharticketbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -262,
-      offY = 10
-    },
-    text = Locale["ma_GetCharTicketButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_gocharticketbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_gocharticketbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -178,
-      offY = 10
-    },
-    text = Locale["ma_GoCharTicketButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_answerticketbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_answerticketbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -94,
-      offY = 10
-    },
-    text = Locale["ma_AnswerButton"]
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_deleteticketbutton",
-    group = "ticket",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_deleteticketbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    text = Locale["ma_DeleteButton"]
-  })
-  
-  FrameLib:BuildFrame({
-    type = "ScrollFrame",
-    name = "ma_ticketscrollframe",
-    group = "ticket",
-    parent = ma_midframe,
-    size = {
-      width = 450,
-      --height = 200
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -30,
-      offY = -10
-    },
-    setpoint2 = {
-      pos = "BOTTOMRIGHT",
-      offX = -30,
-      offY = 34
-    },
-    inherits = "UIPanelScrollFrameTemplate"
-  })
-  
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_ticketeditbox",
-    group = "ticket",
-    parent = ma_ticketscrollframe,
-    texture = {
-      name = "ma_ticketeditbox_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 450,
-      height = 200
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 0,
-      offY = 0
-    },
-    setpoint2 = {
-      pos = "BOTTOMRIGHT",
-      offX = 0,
-      offY = 0
-    },
-    maxletters = 100000,
-    multiline = true,
-    textcolor = {0, 0, 0, 1.0}
-  })
-  
-  --MISC
-  FrameLib:BuildButton({
-    type = "CheckButton",
-    name = "ma_checktransparencybutton",
-    group = "misc",
-    parent = ma_midframe,
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 6,
-      offY = -4
-    },
-    text = "Transparency",
-    inherits = "OptionsCheckButtonTemplate"
-  })
-  
-  --merker = function()
-  
-  FrameLib:BuildButton({
-    name = "ma_bgcolorshowbutton",
-    group = "misc",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_bgcolorshowbutton_texture",
-      color = {color.bg.r, color.bg.g, color.bg.b, 1.0}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -34
-    }
-  })
-  
-  FrameLib:BuildFontString({
-    name = "ma_bgcolorshowtext",
-    group = "misc",
-    parent = ma_midframe,
-    text = "Backgroundcolor",
-    setpoint = {
-      pos = "LEFT",
-      relTo = ma_bgcolorshowbutton,
-      offX = 25
-    }
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_frmcolorshowbutton",
-    group = "misc",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_frmcolorshowbutton_texture",
-      color = {color.frm.r, color.frm.g, color.frm.b, 1.0}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -58
-    }
-  })
-  
-  FrameLib:BuildFontString({
-    name = "ma_frmcolorshowtext",
-    group = "misc",
-    parent = ma_midframe,
-    text = "Framecolor",
-    setpoint = {
-      pos = "LEFT",
-      relTo = ma_frmcolorshowbutton,
-      offX = 25
-    }
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_btncolorshowbutton",
-    group = "misc",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_btncolorshowbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, 1.0}
-    },
-    size = {
-      width = 20,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -82
-    }
-  })
-  
-  FrameLib:BuildFontString({
-    name = "ma_btncolorshowtext",
-    group = "misc",
-    parent = ma_midframe,
-    text = "Buttoncolor",
-    setpoint = {
-      pos = "LEFT",
-      relTo = ma_btncolorshowbutton,
-      offX = 25
-    }
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_applystylebutton",
-    group = "misc",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_applystylebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 100,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -106
-    },
-    text = "Apply changes"
-  })
-  
-  --SERVER
-  FrameLib:BuildFrame({
-    name = "ma_netgraphframe",
-    group = "server",
-    parent = ma_midframe,
-    texture = {
-      color = {0,0,0,0.7}
-    },
-    size = {
-      width = 152,
-      height = 152
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -10
-    },
-    inherits = nil
-  })
-  
-  RealGraph=Graph:CreateGraphRealtime("ma_netgraph_lag",ma_netgraphframe,"CENTER","CENTER",0,0,150,150)
-  local g=RealGraph
-  g:SetAutoScale(true)
-  g:SetGridSpacing(1.0,10.0)
-  g:SetYMax(120)
-  g:SetXAxis(-10,0)
-  g:SetMode("RAW")
-  g:SetBarColors({0.2,0.0,0.0,0.4},{1.0,0.0,0.0,1.0})
-  local f = CreateFrame("Frame",name,parent)
-  f.frames=0
-  f.NextUpdate=GetTime()
-  f:SetScript("OnUpdate",function() 
-      if f.NextUpdate>GetTime() then
-        return
-      end
-      local down, up, lag = GetNetStats();
-      g:AddBar(lag)
-      f.NextUpdate=f.NextUpdate+g.BarWidth
-    end)
-  f:Show()
-
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_announceeditbox",
-    group = "server",
-    parent = ma_midframe,
-    size = {
-      width = 480,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 15,
-      offY = 10
-    },
-    inherits = "InputBoxTemplate"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_announcebutton",
-    group = "server",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_announcebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -94,
-      offY = 10
-    },
-    text = Locale["ma_AnnounceButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_resetannouncebutton",
-    group = "server",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_resetannouncebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
-    },
-    text = Locale["ma_ResetButton"]
-  })
-
-  FrameLib:BuildFrame({
-    type = "EditBox",
-    name = "ma_shutdowneditbox",
-    group = "server",
-    parent = ma_midframe,
-    size = {
-      width = 30,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -98,
-      offY = -10
-    },
-    inherits = "InputBoxTemplate"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_shutdownbutton",
-    group = "server",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_shutdownbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    },
-    text = Locale["ma_ShutdownButton"]
-  })
-
-  --FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
-  --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
-  FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
-  
 end
