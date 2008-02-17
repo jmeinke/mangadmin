@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -33,7 +33,7 @@ function MangAdmin:CreateCharSection()
     frm = MangAdmin.db.account.style.color.frames
   }
   
-  FrameLib:BuildButton({
+  --[[FrameLib:BuildButton({
     name = "ma_learnallbutton",
     group = "char",
     parent = ma_midframe,
@@ -131,6 +131,42 @@ function MangAdmin:CreateCharSection()
       offY = -28
     },
     text = Locale["ma_LearnLangButton"]
+  })]]
+  
+  FrameLib:BuildFrame({
+    name = "ma_learnlangdropdown",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = -10,
+      offY = -10
+    },
+    inherits = "UIDropDownMenuTemplate"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_learnlangbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_learnlangbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 130,
+      offY = -15
+    },
+    text = "Learn"
   })
   
   FrameLib:BuildFrame({
@@ -144,7 +180,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = -10,
-      offY = -55
+      offY = -40
     },
     inherits = "UIDropDownMenuTemplate"
   })
@@ -161,7 +197,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 135,
-      offY = -60
+      offY = -45
     },
     inherits = "InputBoxTemplate"
   })
@@ -181,9 +217,45 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 170,
-      offY = -60
+      offY = -45
     },
     text = "Modify"
+  })
+  
+  FrameLib:BuildFrame({
+    name = "ma_resetdropdown",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = -10,
+      offY = -70
+    },
+    inherits = "UIDropDownMenuTemplate"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_resetbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_resetbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 130,
+      offY = -75
+    },
+    text = "Reset"
   })
 
   FrameLib:BuildFrame({
@@ -231,9 +303,9 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 10
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -10
     },
     text = Locale["ma_KillButton"]
   })
@@ -251,9 +323,9 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -94,
-      offY = 10
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -34
     },
     text = Locale["ma_KickButton"]
   })
@@ -271,9 +343,9 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -178,
-      offY = 10
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -58
     },
     text = Locale["ma_DismountButton"]
   })
@@ -291,11 +363,31 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -262,
-      offY = 10
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -82
     },
     text = Locale["ma_ReviveButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_respawnbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_respawnbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -106
+    },
+    text = "Respawn"
   })
 
   FrameLib:BuildButton({
@@ -311,10 +403,67 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -346,
-      offY = 10
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -130
     },
     text = Locale["ma_SaveButton"]
+  })
+  
+  FrameLib:BuildFrame({
+    type = "PlayerModel",
+    name = "ma_modelframe",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 233,
+      height = 300
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = 70,
+      offY = 10
+    },
+    inherits = nil
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_modelrotaterbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotaterbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },
+    text = "=>>"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_modelrotatelbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotatelbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -44,
+      offY = -10
+    },
+    text = "<<="
   })
 end

@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -44,8 +44,40 @@ function MangAdmin:CreateMiscSection()
       offX = 6,
       offY = -4
     },
-    text = "Transparency",
+    text = "Enable Transparency",
     inherits = "OptionsCheckButtonTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_frmtrslider",
+    group = "misc",
+    parent = ma_midframe,
+    size = {
+      width = 80
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -50
+    },
+    inherits = "OptionsSliderTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_btntrslider",
+    group = "misc",
+    parent = ma_midframe,
+    size = {
+      width = 80
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -85
+    },
+    inherits = "OptionsSliderTemplate"
   })
   
   FrameLib:BuildButton({
@@ -63,7 +95,7 @@ function MangAdmin:CreateMiscSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -34
+      offY = -114
     }
   })
   
@@ -94,7 +126,7 @@ function MangAdmin:CreateMiscSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -58
+      offY = -138
     }
   })
   
@@ -125,7 +157,7 @@ function MangAdmin:CreateMiscSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -82
+      offY = -162
     }
   })
   
@@ -156,7 +188,7 @@ function MangAdmin:CreateMiscSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -106
+      offY = -186
     }
   })
   
@@ -187,7 +219,7 @@ function MangAdmin:CreateMiscSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -130
+      offY = -210
     },
     text = "Apply changes"
   })

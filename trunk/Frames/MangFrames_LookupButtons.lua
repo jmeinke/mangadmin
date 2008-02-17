@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -95,6 +95,26 @@ function MangAdmin:CreateLookupButtons()
   })
   
   FrameLib:BuildButton({
+    name = "ma_skillbutton",
+    group = "bg",
+    parent = ma_leftframe,
+    texture = {
+      name = "ma_skillbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 100,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -28
+    },
+    text = Locale["ma_SkillButton"]
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_questbutton",
     group = "bg",
     parent = ma_leftframe,
@@ -108,7 +128,7 @@ function MangAdmin:CreateLookupButtons()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 10,
+      offX = 114,
       offY = -28
     },
     text = Locale["ma_QuestButton"]
@@ -128,7 +148,7 @@ function MangAdmin:CreateLookupButtons()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 114,
+      offX = 218,
       offY = -28
     },
     text = Locale["ma_ObjectButton"]
@@ -148,8 +168,8 @@ function MangAdmin:CreateLookupButtons()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 218,
-      offY = -28
+      offX = 10,
+      offY = -52
     },
     text = Locale["ma_CreatureButton"]
   })
@@ -168,7 +188,7 @@ function MangAdmin:CreateLookupButtons()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 10,
+      offX = 114,
       offY = -52
     },
     text = Locale["ma_TeleSearchButton"]
@@ -188,7 +208,7 @@ function MangAdmin:CreateLookupButtons()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 114,
+      offX = 218,
       offY = -52
     },
     text = Locale["ma_Mail"]

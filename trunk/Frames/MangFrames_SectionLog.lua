@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -73,7 +73,7 @@ function MangAdmin:CreateLogSection()
       offY = -10
     },
     inherits = "UIPanelScrollUpButtonTemplate",
-    script = function() ma_logframe:ScrollUp() end
+    --script = function() ma_logframe:ScrollUp() end
   })
 
   FrameLib:BuildButton({
@@ -86,6 +86,6 @@ function MangAdmin:CreateLogSection()
       offY = 10
     },
     inherits = "UIPanelScrollDownButtonTemplate",
-    script = function() ma_logframe:ScrollDown() end
+    --script = function() ma_logframe:ScrollDown() end
   })
 end

@@ -11,15 +11,38 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 **
-**      Official Forums  : http://www.manground.de/forums/
-**    GoogleCode Website : http://code.google.com/p/mangadmin/
-** Subversion Repository : http://mangadmin.googlecode.com/svn/
+** Official Forums: http://www.manground.de/forum/
+** GoogleCode Website: http://code.google.com/p/mangadmin/
+** Subversion Repository: http://mangadmin.googlecode.com/svn/
 **
-**    Please report bugs :  http://code.google.com/p/mangadmin/issues/list
+**    Please report bugs:  http://code.google.com/p/mangadmin/issues/list
 **
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 75:
+  * fixed: typo in file headers
+  * fixed: you must click the inputbox to be able to type something into it, press ESC to remove the focus
+  * fixed: log scrollbuttons now work when they are pushed, also increased scroll speed
+  * fixed: show correct link color of MangLinkifier in all circumstances (better RGB2Hex function)
+  * fixed: some corrupted locale files (also english localizations which were lost)
+  * added teleport, predefined lists(english only, sorry for that)
+  * added model window of selected char, this helps to see what you are actually targetting (Player or NPC)
+  * added skill lookup, onclick you set the skill points, attention: if you don't set them they 
+    will be automatically set to 375. Setting skill only works if the selected player does already know the
+    skill wheter by learning it with the .learn command or having it by default
+  * added server information in right bottom (includes all informations provided by .info)
+  * tooltips are now appearing directly near the hovered button
+  * added transparency sliders for frames and buttons, idea by bLuma
+  * replaced .learn all_lang button by dropdown, this allows selecting specific languages also
+  * tempotarily removed other learnall buttons they will be replaced by dropdowns
+  * there will be also proffession and gm spell dropdowns and so on...
+  * added option to change server latency-meter update time
+  * added dropdown allowing to reset talents, stats, spells, honor and level
+  * added some new localizations, this was only a part of all
+  * mass-tele, morph- and extensible graph functionality are now first on my priority list
+  
+
 Rev. 74:
   * implemented favorites for items, itemsets, teleport-locations, quests, creatures, objects, spells
   * applied hungarian language update, thanks to cyberdragon777
