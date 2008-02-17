@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -161,8 +161,8 @@ function FrameLib:BuildFrame(def)
   if def.type == "EditBox" then
     frame:SetAutoFocus(false)
     frame:ClearFocus()
-    frame:SetScript("OnEnter", function() frame:SetFocus() end)
-    frame:SetScript("OnLeave", function() frame:ClearFocus() end)
+    --frame:SetScript("OnEnter", function() frame:SetFocus() end)
+    --frame:SetScript("OnLeave", function() frame:ClearFocus() end)
     frame:SetFontObject(def.fontObj or "ChatFontNormal")
     if def.multiline then frame:SetMultiLine(def.multiline) end
     if def.maxletters then frame:SetMaxLetters(def.maxletters) end
@@ -226,7 +226,7 @@ function FrameLib:BuildButton(def)
       local min = t.gradient.min
       local max = t.gradient.max
       texture:SetGradientAlpha(t.gradient.orientation, min.r or min[1], min.g or min[2], min.b or min[3], min.a or min[4] or 1, max.r or max[2], max.g or max[2], max.b or max[3], max.a or max[4] or 1)
-    end	
+    end
   end
   if def.disabled then button:Disable() end
   t = def.script

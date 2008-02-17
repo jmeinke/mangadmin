@@ -11,11 +11,18 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
 -------------------------------------------------------------------------------------------------------------
+
+function RGBToHex(r, g, b)
+	r = r <= 255 and r >= 0 and r or 0
+	g = g <= 255 and g >= 0 and g or 0
+	b = b <= 255 and b >= 0 and b or 0
+	return string.format("%02x%02x%02x", r, g, b)
+end
 
 function MangLinkifier_Decompose(chatstring)
   if chatstring ~= nil then
@@ -78,7 +85,7 @@ end
 
 function MangLinkifier_Link(orgtxt, id, type)
   local color = MangAdmin.db.account.style.color.linkifier
-  local urlcolor = string.format("%02x%02x%02x", color.r*255, color.g*255, color.b*255)
+  local urlcolor = RGBToHex(color.r,color.g,color.b)
   --local urlcolor = (string.rep("0",6-string.len((string.upper(string.format("%x", dec)))))..(string.upper(string.format("%x", dec))))
   if(type == "targid") then
     link = orgtxt .." - |cff" .. urlcolor .. "|Htargidadd:" .. id .. "|h[Spawn]|h|r "

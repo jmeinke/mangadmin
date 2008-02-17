@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -34,6 +34,26 @@ function MangAdmin:CreateMainSection()
   }
   
   FrameLib:BuildButton({
+    name = "ma_displaylevelbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_displaylevelbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 164,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
+    text = "Display Account Level"
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_gmonbutton",
     group = "main",
     parent = ma_midframe,
@@ -48,7 +68,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -10
+      offY = -34
     },
     text = Locale["ma_GMOnButton"]
   })
@@ -68,7 +88,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -10
+      offY = -34
     },
     text = Locale["ma_OffButton"]
   })
@@ -88,7 +108,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -34
+      offY = -58
     },
     text = Locale["ma_FlyOnButton"]
   })
@@ -108,7 +128,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -34
+      offY = -58
     },
     text = Locale["ma_OffButton"]
   })
@@ -128,7 +148,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -58
+      offY = -82
     },
     text = Locale["ma_HoverOnButton"]
   })
@@ -148,7 +168,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -58
+      offY = -82
     },
     text = Locale["ma_OffButton"]
   })
@@ -168,7 +188,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -82
+      offY = -106
     },
     text = Locale["ma_WhisperOnButton"]
   })
@@ -188,7 +208,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -82
+      offY = -106
     },
     text = Locale["ma_OffButton"]
   })
@@ -208,7 +228,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -106
+      offY = -130
     },
     text = Locale["ma_InvisOnButton"]
   })
@@ -228,7 +248,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -106
+      offY = -130
     },
     text = Locale["ma_OffButton"]
   })
@@ -248,7 +268,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -130
+      offY = -154
     },
     text = Locale["ma_TaxiOnButton"]
   })
@@ -268,7 +288,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -130
+      offY = -154
     },
     text = Locale["ma_OffButton"]
   })
@@ -288,7 +308,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -154
+      offY = -178
     },
     text = "Announce tickets"
   })
@@ -308,7 +328,7 @@ function MangAdmin:CreateMainSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 134,
-      offY = -154
+      offY = -178
     },
     text = Locale["ma_OffButton"]
   })

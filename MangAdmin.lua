@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -29,6 +29,7 @@ if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 --[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
 --[[local]] Graph      = AceLibrary("Graph-1.0")
 local Tablet     = AceLibrary("Tablet-2.0")
+local BabbleZone = AceLibrary("Babble-Zone-2.2");
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
@@ -48,12 +49,14 @@ MangAdmin:RegisterDefaults("char",
       favitem = false,
       itemset = false,
       spell = false,
+      skill = false,
       quest = false,
       creature = false,
       object = false,
       tele = false
     },
     nextGridWay = "ahead",
+    selectedZone = nil,
     newTicketQueue = {}
   }
 )
@@ -64,6 +67,7 @@ MangAdmin:RegisterDefaults("account",
       items = {},
       itemsets = {},
       spells = {},
+      skills = {},
       quests = {},
       creatures = {},
       objects = {},
@@ -74,6 +78,7 @@ MangAdmin:RegisterDefaults("account",
       items = {},
       itemsets = {},
       spells = {},
+      skills = {},
       quests = {},
       creatures = {},
       objects = {},
@@ -88,6 +93,7 @@ MangAdmin:RegisterDefaults("account",
       loading = false
     },
     style = {
+      showtooltips = true,
       transparency = {
         buttons = 1.0,
         frames = 0.7,
@@ -145,15 +151,21 @@ MangAdmin.consoleOpts = {
   args = {
     toggle = {
       name = "toggle",
-      desc = "Toggles the main window",
+      desc = Locale["cmd_toggle"],
       type = 'execute',
       func = function() MangAdmin:OnClick() end
     },
     transparency = {
       name = "transparency",
-      desc = "Toggles the transparency (0.5 or 1.0)",
+      desc = Locale["cmd_transparency"],
       type = 'execute',
       func = function() MangAdmin:ToggleTransparency() end
+    },
+    tooltips = {
+      name = "tooltips",
+      desc = Locale["cmd_tooltip"],
+      type = 'execute',
+      func = function() MangAdmin:ToggleTooltips() end
     }
   }
 }
@@ -182,13 +194,11 @@ function MangAdmin:OnInitialize()
     self:Hook(cf, "AddMessage", true)
   end
   -- initializing Frames, like DropDowns, Sliders, aso
-  self:InitLangDropDown()
-  self:InitWeatherDropDown()
-  self:InitReloadTableDropDown()
-  self:InitModifyDropDown()
+  self:InitDropDowns()
   self:InitSliders()
   self:InitScrollFrames()
   self:InitTransparencyButton()
+  self:InitModelFrame()
   --clear color buffer
   self.db.account.style.color.buffer = {}
   --altering the function setitemref, to make it possible to click links
@@ -201,8 +211,32 @@ function MangAdmin:OnEnable()
   -- init guid for callhandler, not implemented yet, comes in next revision
   self.GetGuid()
   self:SearchReset()
+  -- refresh server information
+  self:ChatMsg(".info")
   -- register events
   --self:RegisterEvent("ZONE_CHANGED") -- for teleport list update
+  self:RegisterEvent("PLAYER_TARGET_CHANGED")
+  self:RegisterEvent("UNIT_MODEL_CHANGED")
+end
+
+--events
+function MangAdmin:ZONE_CHANGED()
+  --[[if hastranslationlocale then
+    if not MangAdmin.db.char.selectedZone or MangAdmin.db.char.selectedZone ~= translate(GetZoneText()) then
+      if translationfor(GetZoneText()) then
+        MangAdmin.db.char.selectedZone = translate(GetZoneText())
+        TeleportScrollUpdate()
+      end
+    end
+  end]]
+end
+
+function MangAdmin:UNIT_MODEL_CHANGED()
+  self:ModelChanged()
+end
+
+function MangAdmin:PLAYER_TARGET_CHANGED()
+  self:ModelChanged()
 end
 
 function MangAdmin:OnDisable()
@@ -322,7 +356,7 @@ function MangAdmin:TogglePopup(value, param)
     ma_selectallbutton:SetScript("OnClick", function() self:Favorites("select", param.type) end)
     ma_deselectallbutton:SetScript("OnClick", function() self:Favorites("deselect", param.type) end)
     ma_modfavsbutton:SetScript("OnClick", function() self:Favorites("add", param.type) end)
-    ma_modfavsbutton:SetText("Add selected")
+    ma_modfavsbutton:SetText(Locale["ma_FavAdd"])
     ma_modfavsbutton:Enable()
     self:SearchReset()
     if param.type == "item" then
@@ -334,6 +368,14 @@ function MangAdmin:TogglePopup(value, param)
       ma_ptabbutton_1:SetText(Locale["ma_ItemSetButton"])
     elseif param.type == "spell" then
       ma_ptabbutton_1:SetText(Locale["ma_SpellButton"])
+    elseif param.type == "skill" then
+      ma_ptabbutton_1:SetText(Locale["ma_SkillButton"])
+      ma_var1editbox:Show()
+      ma_var2editbox:Show()
+      ma_var1text:Show()
+      ma_var2text:Show()
+      ma_var1text:SetText(Locale["ma_SkillVar1Button"])
+      ma_var2text:SetText(Locale["ma_SkillVar2Button"])
     elseif param.type == "quest" then
       ma_ptabbutton_1:SetText(Locale["ma_QuestButton"])
     elseif param.type == "creature" then
@@ -365,7 +407,7 @@ function MangAdmin:TogglePopup(value, param)
     getglobal("ma_ptabbutton_2_texture"):SetGradientAlpha("vertical", 102, 102, 102, 1, 102, 102, 102, 0.7)
     getglobal("ma_ptabbutton_1_texture"):SetGradientAlpha("vertical", 102, 102, 102, 0, 102, 102, 102, 0.7)
     ma_modfavsbutton:SetScript("OnClick", function() self:Favorites("remove", param.type) end)
-    ma_modfavsbutton:SetText("Remove selected")
+    ma_modfavsbutton:SetText(Locale["ma_FavRemove"])
     ma_modfavsbutton:Enable()
     self:Favorites("show", param.type)
   elseif value == "mail" then
@@ -375,7 +417,7 @@ function MangAdmin:TogglePopup(value, param)
     for n = 1,7 do
       getglobal("ma_PopupScrollBarEntry"..n):Hide()
     end
-    ma_lookupresulttext:SetText("Bytes left: 246")
+    ma_lookupresulttext:SetText(Locale["ma_MailBytesLeft"].."246")
     ma_lookupresulttext:Show()
     ma_resetsearchbutton:Hide()
     ma_PopupScrollBar:Hide()
@@ -470,6 +512,16 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
       if self.db.char.requests.spell then
         table.insert(self.db.account.buffer.spells, {spId = id, spName = name, checked = false})
+        PopupScrollUpdate()
+        catchedSth = true
+        output = false
+      end
+    end
+    
+    -- hook all skill lookups
+    for id, name in string.gmatch(text, "|cffffffff|Hskill:(%d+)|h%[(.-)%]|h|r") do
+      if self.db.char.requests.skill then
+        table.insert(self.db.account.buffer.skills, {skId = id, skName = name, checked = false})
         PopupScrollUpdate()
         catchedSth = true
         output = false
@@ -573,6 +625,24 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
     end
     
+    --check for info command to update informations in right bottom
+    for version, revision in string.gmatch(text, "(.*)/(.*) %(Win32%)") do
+      ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
+      ma_infoplatformtext:SetText(Locale["info_platform"].."Win32")
+    end
+    for version, revision in string.gmatch(text, "(.*)/(.*) %(Unix%)") do
+      ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
+      ma_infoplatformtext:SetText(Locale["info_platform"].."Unix")
+    end
+    for users, maxusers in string.gmatch(text, "Number of users connected: (%d+) %(max since last restart: (%d+)%)") do
+      ma_infoonlinetext:SetText(Locale["info_online"]..users)
+      ma_infomaxonlinetext:SetText(Locale["info_maxonline"]..maxusers)
+    end
+    for uptime in string.gmatch(text, "Server uptime: (.*)") do
+      ma_infouptimetext:SetText(Locale["info_uptime"]..uptime)
+    end
+    
+    
     -- Check for possible UrlModification
     if catchedSth then
       if output then
@@ -656,7 +726,7 @@ function MangAdmin:Selection(selection)
       return true
     end
   else
-    error("Argument 'selection' can be 'player',''self', or 'none'!")
+    error("Argument 'selection' can be 'player','self', or 'none'!")
     return false
   end
 end
@@ -798,9 +868,36 @@ function MangAdmin:LearnSpell(value, state)
         self:ChatMsg(command.." "..v)
         self:LogAction(logcmd.." spell "..v.." to "..player..".")
       end
-    elseif type(value) == "number" then
-      self:ChatMsg(command.." "..value)
-      self:LogAction(logcmd.." spell "..value.." to "..player..".")
+    end
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:SetSkill(value, skill, maxskill)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    local class = UnitClass("target") or UnitClass("player")
+    if not skill then
+      skill = ma_var1editbox:GetText()
+      if ma_var1editbox:GetText() == "" then
+        skill = 375
+      end
+    end
+    if not maxskill then
+      maxskill = ma_var2editbox:GetText()
+      if ma_var2editbox:GetText() == "" then
+        maxskill = 375
+      end
+    end
+    if type(value) == "string" then
+      self:ChatMsg(".setskill "..value.." "..skill.." "..maxskill)
+      self:LogAction("Set skill "..value.." of "..player.." to "..skill.." with a maximum of "..maxskill..".")
+    elseif type(value) == "table" then
+      for k,v in ipairs(value) do
+        self:ChatMsg(".setskill "..v.." "..skill.." "..maxskill)
+        self:LogAction("Set skill "..v.." of "..player.." to "..skill.." with a maximum of "..maxskill..".")
+      end
     end
   else
     self:Print(Locale["selectionerror1"])
@@ -965,6 +1062,11 @@ function MangAdmin:KillSomething()
   self:LogAction("Killed "..target..".")
 end
 
+function MangAdmin:Respawn()
+  self:ChatMsg(".respawn")
+  self:LogAction("Respawned creatures near you.")
+end
+
 function MangAdmin:Modify(case, value) 
   -- to dxers: I think it's better to do switch case with names (so other devs can see quicker what it is for) 
   -- and level down is possible: pass negative amount with .levelup
@@ -997,6 +1099,16 @@ function MangAdmin:Modify(case, value)
   end
 end
 
+function MangAdmin:Reset(value)
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".reset "..value)
+    self:LogAction("Reset "..value.."' for player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
 function MangAdmin:GridNavigate(x, y)
   local way = self.db.char.nextGridWay
   if not x and not y then
@@ -1021,7 +1133,7 @@ function MangAdmin:GridNavigate(x, y)
         newx = x
       end
       self:ChatMsg(".goxy "..newx.." "..newy)
-      self:LogAction("Navigated to grid position: X: "..newx.." Y: "..newy)
+      self:LogAction("Teleported to grid position: X: "..newx.." Y: "..newy)
     else
       self:Print("Value must be a number!")
     end
@@ -1086,9 +1198,9 @@ end
 function MangAdmin:UpdateMailBytesLeft()
   local bleft = 246 - strlen(ma_searcheditbox:GetText()) - strlen(ma_var1editbox:GetText()) - strlen(ma_maileditbox:GetText())
   if bleft >= 0 then
-    ma_lookupresulttext:SetText("Bytes left: |cff00ff00"..bleft.."|r")
+    ma_lookupresulttext:SetText(Locale["ma_MailBytesLeft"].."|cff00ff00"..bleft.."|r")
   else
-    ma_lookupresulttext:SetText("Bytes left: |cffff0000"..bleft.."|r")
+    ma_lookupresulttext:SetText(Locale["ma_MailBytesLeft"].."|cffff0000"..bleft.."|r")
   end
 end
 
@@ -1178,6 +1290,8 @@ function MangAdmin:Favorites(value, searchtype)
       table.foreachi(self.db.account.buffer.itemsets, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.itemsets, {isId = v["isId"], isName = v["isName"], checked = false}) end end)
     elseif searchtype == "spell" then
       table.foreachi(self.db.account.buffer.spells, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.spells, {spId = v["spId"], spName = v["spName"], checked = false}) end end)
+    elseif searchtype == "skill" then
+      table.foreachi(self.db.account.buffer.skills, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.skills, {skId = v["skId"], skName = v["skName"], checked = false}) end end)
     elseif searchtype == "quest" then
       table.foreachi(self.db.account.buffer.quests, function(k,v) if v["checked"] then table.insert(self.db.account.favorites.quests, {qsId = v["qsId"], qsName = v["qsName"], checked = false}) end end)
     elseif searchtype == "creature" then
@@ -1200,6 +1314,10 @@ function MangAdmin:Favorites(value, searchtype)
     elseif searchtype == "spell" then
       for k,v in pairs(self.db.account.favorites.spells) do
         if v["checked"] then table.remove(self.db.account.favorites.spells, k) end 
+      end
+    elseif searchtype == "skill" then
+      for k,v in pairs(self.db.account.favorites.skills) do
+        if v["checked"] then table.remove(self.db.account.favorites.skills, k) end 
       end
     elseif searchtype == "quest" then
       for k,v in pairs(self.db.account.favorites.quests) do
@@ -1227,6 +1345,8 @@ function MangAdmin:Favorites(value, searchtype)
       self.db.char.requests.favitemset = true
     elseif searchtype == "spell" then
       self.db.char.requests.favspell = true
+    elseif searchtype == "skill" then
+      self.db.char.requests.favskill = true
     elseif searchtype == "quest" then
       self.db.char.requests.favquest = true
     elseif searchtype == "creature" then
@@ -1259,6 +1379,12 @@ function MangAdmin:Favorites(value, searchtype)
         table.foreachi(self.db.account.buffer.spells, function(k,v) self.db.account.buffer.spells[k].checked = selected end)
       elseif MangAdmin.db.char.requests.favspell then
         table.foreachi(self.db.account.favorites.spells, function(k,v) self.db.account.favorites.spells[k].checked = selected end)
+      end
+    elseif searchtype == "skill" then
+      if MangAdmin.db.char.requests.skill then
+        table.foreachi(self.db.account.buffer.skills, function(k,v) self.db.account.buffer.skills[k].checked = selected end)
+      elseif MangAdmin.db.char.requests.favskill then
+        table.foreachi(self.db.account.favorites.skills, function(k,v) self.db.account.favorites.skills[k].checked = selected end)
       end
     elseif searchtype == "quest" then
       if MangAdmin.db.char.requests.quest then
@@ -1302,6 +1428,10 @@ function MangAdmin:SearchStart(var, value)
     self.db.char.requests.spell = true
     self.db.account.buffer.spells = {}
     self:ChatMsg(".lookup spell "..value)
+  elseif var == "skill" then
+    self.db.char.requests.skill = true
+    self.db.account.buffer.skills = {}
+    self:ChatMsg(".lookup skill "..value)
   elseif var == "quest" then
     self.db.char.requests.quest = true
     self.db.account.buffer.quests = {}
@@ -1336,6 +1466,8 @@ function MangAdmin:SearchReset()
   self.db.char.requests.favitemset = false
   self.db.char.requests.spell = false
   self.db.char.requests.favspell = false
+  self.db.char.requests.skill = false
+  self.db.char.requests.favskill = false
   self.db.char.requests.quest = false
   self.db.char.requests.favquest = false
   self.db.char.requests.creature = false
@@ -1348,6 +1480,7 @@ function MangAdmin:SearchReset()
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
+  self.db.account.buffer.skills = {}
   self.db.account.buffer.quests = {}
   self.db.account.buffer.creatures = {}
   self.db.account.buffer.objects = {}
@@ -1359,8 +1492,10 @@ end
 function MangAdmin:PrepareScript(object, text, script)
   --if object then
     if text then
-      object:SetScript("OnEnter", function() ma_tooltiptext:SetText(text) end)
-      object:SetScript("OnLeave", function() ma_tooltiptext:SetText(Locale["tt_Default"]) end)
+      if self.db.account.style.showtooltips then
+        object:SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:SetText(text); GameTooltip:Show() end)
+        object:SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
+      end
     end
     if type(script) == "function" then
       object:SetScript("OnClick", script)
@@ -1389,12 +1524,14 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_itembutton           , Locale["tt_ItemButton"]         , function() MangAdmin:TogglePopup("search", {type = "item"}) end)
   self:PrepareScript(ma_itemsetbutton        , Locale["tt_ItemSetButton"]      , function() MangAdmin:TogglePopup("search", {type = "itemset"}) end)
   self:PrepareScript(ma_spellbutton          , Locale["tt_SpellButton"]        , function() MangAdmin:TogglePopup("search", {type = "spell"}) end)
+  self:PrepareScript(ma_skillbutton          , Locale["tt_SkillButton"]        , function() MangAdmin:TogglePopup("search", {type = "skill"}) end)
   self:PrepareScript(ma_questbutton          , Locale["tt_QuestButton"]        , function() MangAdmin:TogglePopup("search", {type = "quest"}) end)
   self:PrepareScript(ma_creaturebutton       , Locale["tt_CreatureButton"]     , function() MangAdmin:TogglePopup("search", {type = "creature"}) end)
   self:PrepareScript(ma_objectbutton         , Locale["tt_ObjectButton"]       , function() MangAdmin:TogglePopup("search", {type = "object"}) end)
   self:PrepareScript(ma_telesearchbutton     , Locale["ma_TeleSearchButton"]   , function() MangAdmin:TogglePopup("search", {type = "tele"}) end)
-  self:PrepareScript(ma_sendmailbutton       , "Tooltip not yet implemented."  , function() MangAdmin:TogglePopup("mail", {}) end)
+  self:PrepareScript(ma_sendmailbutton       , Locale["ma_Mail"]               , function() MangAdmin:TogglePopup("mail", {}) end)
   self:PrepareScript(ma_screenshotbutton     , Locale["tt_ScreenButton"]       , function() MangAdmin:Screenshot() end)
+  self:PrepareScript(ma_displaylevelbutton   , Locale["tt_DisplayAccountLvl"]  , function() MangAdmin:ChatMsg(".acct") end)
   self:PrepareScript(ma_gmonbutton           , Locale["tt_GMOnButton"]         , function() MangAdmin:ToggleGMMode("on") end)
   self:PrepareScript(ma_gmoffbutton          , Locale["tt_GMOffButton"]        , function() MangAdmin:ToggleGMMode("off") end)
   self:PrepareScript(ma_flyonbutton          , Locale["tt_FlyOnButton"]        , function() MangAdmin:ToggleFlyMode("on") end)
@@ -1403,52 +1540,60 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_hoveroffbutton       , Locale["tt_HoverOffButton"]     , function() MangAdmin:ToggleHoverMode(0) end)
   self:PrepareScript(ma_whisperonbutton      , Locale["tt_WhispOnButton"]      , function() MangAdmin:ToggleWhisper("on") end)
   self:PrepareScript(ma_whisperoffbutton     , Locale["tt_WhispOffButton"]     , function() MangAdmin:ToggleWhisper("off") end)
-  self:PrepareScript(ma_invisibleonbutton    , Locale["tt_InvisOnButton"]      ,  function() MangAdmin:ToggleVisible("off") end)
+  self:PrepareScript(ma_invisibleonbutton    , Locale["tt_InvisOnButton"]      , function() MangAdmin:ToggleVisible("off") end)
   self:PrepareScript(ma_invisibleoffbutton   , Locale["tt_InvisOffButton"]     , function() MangAdmin:ToggleVisible("on") end)
   self:PrepareScript(ma_taxicheatonbutton    , Locale["tt_TaxiOnButton"]       , function() MangAdmin:ToggleTaxicheat("on") end)
   self:PrepareScript(ma_taxicheatoffbutton   , Locale["tt_TaxiOffButton"]      , function() MangAdmin:ToggleTaxicheat("off") end)
-  self:PrepareScript(ma_ticketonbutton       , "Tooltip not yet implemented."  , function() MangAdmin:ToggleTickets("on") end)
-  self:PrepareScript(ma_ticketoffbutton      , "Tooltip not yet implemented."  , function() MangAdmin:ToggleTickets("off") end)
+  self:PrepareScript(ma_ticketonbutton       , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleTickets("on") end)
+  self:PrepareScript(ma_ticketoffbutton      , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleTickets("off") end)
   self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
-  self:PrepareScript(ma_learnallbutton       , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all") end)
-  self:PrepareScript(ma_learncraftsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_crafts") end)
-  self:PrepareScript(ma_learngmbutton        , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_gm") end)
-  self:PrepareScript(ma_learnlangbutton      , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_lang") end)
-  self:PrepareScript(ma_learnclassbutton     , "Tooltip not yet implemented."  , function() MangAdmin:LearnSpell("all_myclass") end)
-  self:PrepareScript(ma_modifybutton         , "Tooltip not yet implemented."  , function() MangAdmin:Modify(UIDropDownMenu_GetSelectedValue(ma_modifydropdown),ma_modifyeditbox:GetText()) end)
-  self:PrepareScript(ma_searchbutton         , "Tooltip not yet implemented."  , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
-  self:PrepareScript(ma_resetsearchbutton    , "Tooltip not yet implemented."  , function() MangAdmin:SearchReset() end)
-  self:PrepareScript(ma_revivebutton         , "Tooltip not yet implemented."  , function() MangAdmin:RevivePlayer() end)
-  self:PrepareScript(ma_killbutton           , "Tooltip not yet implemented."  , function() MangAdmin:KillSomething() end)
-  self:PrepareScript(ma_savebutton           , "Tooltip not yet implemented."  , function() MangAdmin:SavePlayer() end)
-  self:PrepareScript(ma_dismountbutton       , "Tooltip not yet implemented."  , function() MangAdmin:DismountPlayer() end)
+  --self:PrepareScript(ma_learnallbutton       , nil                             , function() MangAdmin:LearnSpell("all") end)
+  --self:PrepareScript(ma_learncraftsbutton    , nil                             , function() MangAdmin:LearnSpell("all_crafts") end)
+  --self:PrepareScript(ma_learngmbutton        , nil                             , function() MangAdmin:LearnSpell("all_gm") end)
+  --self:PrepareScript(ma_learnlangbutton      , nil                             , function() MangAdmin:LearnSpell("all_lang") end)
+  --self:PrepareScript(ma_learnclassbutton     , nil                             , function() MangAdmin:LearnSpell("all_myclass") end)
+  self:PrepareScript(ma_modifybutton         , nil                             , function() MangAdmin:Modify(UIDropDownMenu_GetSelectedValue(ma_modifydropdown),ma_modifyeditbox:GetText()) end)
+  self:PrepareScript(ma_searchbutton         , nil                             , function() MangAdmin:SearchStart("item", ma_searcheditbox:GetText()) end)
+  self:PrepareScript(ma_resetsearchbutton    , nil                             , function() MangAdmin:SearchReset() end)
+  self:PrepareScript(ma_revivebutton         , nil                             , function() MangAdmin:RevivePlayer() end)
+  self:PrepareScript(ma_killbutton           , nil                             , function() MangAdmin:KillSomething() end)
+  self:PrepareScript(ma_savebutton           , nil                             , function() MangAdmin:SavePlayer() end)
+  self:PrepareScript(ma_dismountbutton       , nil                             , function() MangAdmin:DismountPlayer() end)
   self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
-  self:PrepareScript(ma_gridnaviaheadbutton  , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
-  self:PrepareScript(ma_gridnavibackbutton   , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
-  self:PrepareScript(ma_gridnavirightbutton  , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
-  self:PrepareScript(ma_gridnavileftbutton   , "Tooltip not yet implemented."  , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
+  self:PrepareScript(ma_respawnbutton        , nil                             , function() MangAdmin:Respawn() end)
+  self:PrepareScript(ma_gridnaviaheadbutton  , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
+  self:PrepareScript(ma_gridnavibackbutton   , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
+  self:PrepareScript(ma_gridnavirightbutton  , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "right" end)
+  self:PrepareScript(ma_gridnavileftbutton   , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "left" end)
   self:PrepareScript(ma_announcebutton       , Locale["tt_AnnounceButton"]     , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
-  self:PrepareScript(ma_resetannouncebutton  , "Tooltip not yet implemented."  , function() ma_announceeditbox:SetText("") end)
+  self:PrepareScript(ma_resetannouncebutton  , nil                             , function() ma_announceeditbox:SetText("") end)
   self:PrepareScript(ma_shutdownbutton       , Locale["tt_ShutdownButton"]     , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
-  self:PrepareScript(ma_closebutton          , "Tooltip not yet implemented."  , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
-  self:PrepareScript(ma_popupclosebutton     , "Tooltip not yet implemented."  , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
-  self:PrepareScript(ma_showticketsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
-  self:PrepareScript(ma_deleteticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("delete") end)
-  self:PrepareScript(ma_answerticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("answer") end)
-  self:PrepareScript(ma_getcharticketbutton  , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("getchar") end)
-  self:PrepareScript(ma_gocharticketbutton   , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("gochar") end)
-  self:PrepareScript(ma_whisperticketbutton  , "Tooltip not yet implemented."  , function() MangAdmin:Ticket("whisper") end)
-  self:PrepareScript(ma_bgcolorshowbutton    , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("bg") end)
-  self:PrepareScript(ma_frmcolorshowbutton   , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("frm") end)
-  self:PrepareScript(ma_btncolorshowbutton   , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("btn") end)
-  self:PrepareScript(ma_linkifiercolorbutton , "Tooltip not yet implemented."  , function() MangAdmin:ShowColorPicker("linkifier") end)
-  self:PrepareScript(ma_applystylebutton     , "Tooltip not yet implemented."  , function() MangAdmin:ApplyStyleChanges() end)
-  self:PrepareScript(ma_loadtablebutton      , "Tooltip not yet implemented."  , function() MangAdmin:ReloadTable(UIDropDownMenu_GetSelectedValue(ma_reloadtabledropdown)) end)
-  self:PrepareScript(ma_loadscriptsbutton    , "Tooltip not yet implemented."  , function() MangAdmin:ReloadScripts() end)
-  self:PrepareScript(ma_changeweatherbutton  , "Tooltip not yet implemented."  , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weathertabledropdown)) end)
+  self:PrepareScript(ma_closebutton          , nil                             , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
+  self:PrepareScript(ma_popupclosebutton     , nil                             , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
+  self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
+  self:PrepareScript(ma_deleteticketbutton   , nil                             , function() MangAdmin:Ticket("delete") end)
+  self:PrepareScript(ma_answerticketbutton   , nil                             , function() MangAdmin:Ticket("answer") end)
+  self:PrepareScript(ma_getcharticketbutton  , nil                             , function() MangAdmin:Ticket("getchar") end)
+  self:PrepareScript(ma_gocharticketbutton   , nil                             , function() MangAdmin:Ticket("gochar") end)
+  self:PrepareScript(ma_whisperticketbutton  , nil                             , function() MangAdmin:Ticket("whisper") end)
+  self:PrepareScript(ma_bgcolorshowbutton    , nil                             , function() MangAdmin:ShowColorPicker("bg") end)
+  self:PrepareScript(ma_frmcolorshowbutton   , nil                             , function() MangAdmin:ShowColorPicker("frm") end)
+  self:PrepareScript(ma_btncolorshowbutton   , nil                             , function() MangAdmin:ShowColorPicker("btn") end)
+  self:PrepareScript(ma_linkifiercolorbutton , nil                             , function() MangAdmin:ShowColorPicker("linkifier") end)
+  self:PrepareScript(ma_applystylebutton     , nil                             , function() MangAdmin:ApplyStyleChanges() end)
+  self:PrepareScript(ma_loadtablebutton      , nil                             , function() MangAdmin:ReloadTable(UIDropDownMenu_GetSelectedValue(ma_reloadtabledropdown)) end)
+  self:PrepareScript(ma_loadscriptsbutton    , nil                             , function() MangAdmin:ReloadScripts() end)
+  self:PrepareScript(ma_changeweatherbutton  , nil                             , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weathertabledropdown)) end)
+  self:PrepareScript(ma_resetbutton          , nil                             , function() MangAdmin:Reset(UIDropDownMenu_GetSelectedValue(ma_resetdropdown)) end)
+  self:PrepareScript(ma_learnlangbutton      , nil                             , function() MangAdmin:LearnSpell(UIDropDownMenu_GetSelectedValue(ma_learnlangdropdown)) end)
+  self:PrepareScript(ma_inforefreshbutton    , nil                             , function() MangAdmin:ChatMsg(".info") end)
+  self:PrepareScript(ma_modelrotatelbutton   , Locale["tt_RotateLeft"]         , function() MangAdmin:ModelRotateLeft() end)
+  self:PrepareScript(ma_modelrotaterbutton   , Locale["tt_RotateRight"]        , function() MangAdmin:ModelRotateRight() end)
+  self:PrepareScript(ma_frmtrslider          , Locale["tt_FrmTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("frames") end},{"OnValueChanged", function() ma_frmtrsliderText:SetText(string.format("%.2f", ma_frmtrslider:GetValue())) end}})  
+  self:PrepareScript(ma_btntrslider          , Locale["tt_BtnTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("buttons") end},{"OnValueChanged", function() ma_btntrsliderText:SetText(string.format("%.2f", ma_btntrslider:GetValue())) end}})  
 end
 
-function MangAdmin:InitLangDropDown()
+function MangAdmin:InitDropDowns()
   local function LangDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
@@ -1485,18 +1630,16 @@ function MangAdmin:InitLangDropDown()
   UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_languagedropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
-end
-
-function MangAdmin:InitWeatherDropDown()
+  -- WEATHER
   local function WeatherDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
     local buttons = {
-      {"Fine","0 0"},
-      {"Fog ","0 1"},
-      {"Rain","1 1"},
-      {"Snow","2 1"},
-      {"Sand","3 1"}
+      {Locale["ma_WeatherFine"],"0 0"},
+      {Locale["ma_WeatherFog"],"0 1"},
+      {Locale["ma_WeatherRain"],"1 1"},
+      {Locale["ma_WeatherSnow"],"2 1"},
+      {Locale["ma_WeatherSand"],"3 1"}
     }
     for k,v in ipairs(buttons) do
       info.text = v[1]
@@ -1511,13 +1654,11 @@ function MangAdmin:InitWeatherDropDown()
   UIDropDownMenu_Initialize(ma_weathertabledropdown, WeatherDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_weathertabledropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_weathertabledropdown)
-end
-
-function MangAdmin:InitReloadTableDropDown()
+  -- RELOAD TABLES
   local function ReloadTableDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
-    local buttons = {
+    local buttons = { -- data taken from source code
       {"all","all"},
       {"all_area","all_area"},
       {"all_loot","all_loot"},
@@ -1569,20 +1710,18 @@ function MangAdmin:InitReloadTableDropDown()
   UIDropDownMenu_Initialize(ma_reloadtabledropdown, ReloadTableDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_reloadtabledropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_reloadtabledropdown)
-end
-
-function MangAdmin:InitModifyDropDown()
+  -- MODIFY
   local function ModifyDropDownInitialize()
     local level = 1
     local info = UIDropDownMenu_CreateInfo()
     local buttons = {
-      {"Level up","levelup"},
-      {"Level down ","leveldown"},
-      {"Money","money"},
-      {"Energy","energy"},
-      {"Rage","rage"},
-      {"Mana","mana"},
-      {"Healthpoints","health"}
+      {Locale["ma_LevelUp"],"levelup"},
+      {Locale["ma_LevelDown"],"leveldown"},
+      {Locale["ma_Money"],"money"},
+      {Locale["ma_Energy"],"energy"},
+      {Locale["ma_Rage"],"rage"},
+      {Locale["ma_Mana"],"mana"},
+      {Locale["ma_Healthpoints"],"health"}
     }
     for k,v in ipairs(buttons) do
       info.text = v[1]
@@ -1597,6 +1736,64 @@ function MangAdmin:InitModifyDropDown()
   UIDropDownMenu_Initialize(ma_modifydropdown, ModifyDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_modifydropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_modifydropdown)
+  -- RESET
+  local function ResetDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {Locale["ma_Talents"],"talents"},
+      {Locale["ma_Stats"],"stats"},
+      {Locale["ma_Spells"],"spells"},
+      {Locale["ma_Honor"],"honor"},
+      {Locale["ma_Level"],"level"}
+    }
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_resetdropdown, this.value) end
+      info.checked = nil
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_resetdropdown, ResetDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_resetdropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_resetdropdown)
+  -- LEARN LANG
+  local function LearnLangDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {Locale["ma_AllLang"],"all_lang"},
+      {Locale["Common"],"668"},
+      {Locale["Orcish"],"669"},
+      {Locale["Taurahe"],"670"},
+      {Locale["Darnassian"],"671"},
+      {Locale["Dwarvish"],"672"},
+      {Locale["Thalassian"],"813"},
+      {Locale["Demonic"],"815"},
+      {Locale["Draconic"],"814"},
+      {Locale["Titan"],"816"},
+      {Locale["Kalimag"],"817"},
+      {Locale["Gnomish"],"7340"},
+      {Locale["Troll"],"7341"},
+      {Locale["Gutterspeak"],"17737"},
+      {Locale["Draenei"],"29932"}
+    }
+    for k,v in ipairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_learnlangdropdown, this.value) end
+      info.checked = nil
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+  end  
+  UIDropDownMenu_Initialize(ma_learnlangdropdown, LearnLangDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_learnlangdropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_learnlangdropdown)
 end
 
 function MangAdmin:InitSliders()
@@ -1612,11 +1809,27 @@ function MangAdmin:InitSliders()
   ma_scaleslider:SetValueStep(0.1)
   ma_scaleslider:SetValue(1)
   ma_scalesliderText:SetText("1.0")
+  -- Frame Transparency Slider
+  ma_frmtrslider:SetOrientation("HORIZONTAL")
+  ma_frmtrslider:SetMinMaxValues(0.1, 1.0)
+  ma_frmtrslider:SetValueStep(0.05)
+  ma_frmtrslider:SetValue(MangAdmin.db.account.style.transparency.frames)
+  ma_frmtrsliderText:SetText(string.format("%.2f", MangAdmin.db.account.style.transparency.frames))
+  -- Button Transparency Slider
+  ma_btntrslider:SetOrientation("HORIZONTAL")
+  ma_btntrslider:SetMinMaxValues(0.1, 1.0)
+  ma_btntrslider:SetValueStep(0.05)
+  ma_btntrslider:SetValue(MangAdmin.db.account.style.transparency.buttons)
+  ma_btntrsliderText:SetText(string.format("%.2f", MangAdmin.db.account.style.transparency.buttons))
 end
 
 function MangAdmin:InitScrollFrames()
   ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, TeleportScrollUpdate) end)
+  ma_ZoneScrollBar:SetScript("OnShow", function() TeleportScrollUpdate() end)
+  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, SubzoneScrollUpdate) end)
+  ma_SubzoneScrollBar:SetScript("OnShow", function() SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
@@ -1625,6 +1838,61 @@ function MangAdmin:InitScrollFrames()
   self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(); MangAdmin:UpdateMailBytesLeft() end},
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
     {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
+  ma_logframe:SetScript("OnUpdate", function() MangAdminLogOnUpdate(arg1) end)
+end
+
+function MangAdmin:InitModelFrame()
+  ma_modelframe:SetScript("OnUpdate", function() MangAdminModelOnUpdate(arg1) end)
+  ma_modelframe.rotation = 0.61;
+  ma_modelframe:SetRotation(ma_modelframe.rotation)
+  ma_modelframe:SetUnit("player")
+end
+
+function MangAdmin:ModelChanged()
+  if not self:Selection("none") then
+    ma_modelframe:SetUnit("target")
+  else
+    ma_modelframe:SetUnit("player")
+  end
+  ma_modelframe:RefreshUnit()
+end
+
+function MangAdminModelOnUpdate(elapsedTime)
+  if ( ma_modelrotatelbutton:GetButtonState() == "PUSHED" ) then
+    this.rotation = this.rotation + (elapsedTime * 2 * PI * ROTATIONS_PER_SECOND)
+    if ( this.rotation < 0 ) then
+      this.rotation = this.rotation + (2 * PI)
+    end
+    this:SetRotation(this.rotation);
+  end
+  if ( ma_modelrotaterbutton:GetButtonState() == "PUSHED" ) then
+    this.rotation = this.rotation - (elapsedTime * 2 * PI * ROTATIONS_PER_SECOND)
+    if ( this.rotation > (2 * PI) ) then
+      this.rotation = this.rotation - (2 * PI)
+    end
+    this:SetRotation(this.rotation);
+  end
+end
+
+function MangAdminLogOnUpdate(elapsedTime)
+  if ( ma_logscrollupbutton:GetButtonState() == "PUSHED" ) then
+    ma_logframe:ScrollUp()
+  end
+  if ( ma_logscrolldownbutton:GetButtonState() == "PUSHED" ) then
+    ma_logframe:ScrollDown()
+  end
+end
+
+function MangAdmin:ModelRotateLeft()
+  ma_modelframe.rotation = ma_modelframe.rotation - 0.03
+  ma_modelframe:SetRotation(ma_modelframe.rotation)
+  PlaySound("igInventoryRotateCharacter")
+end
+
+function MangAdmin:ModelRotateRight()
+  ma_modelframe.rotation = ma_modelframe.rotation + 0.03
+  ma_modelframe:SetRotation(ma_modelframe.rotation)
+  PlaySound("igInventoryRotateCharacter")
 end
 
 function MangAdmin:NoResults(var)
@@ -1659,17 +1927,39 @@ function MangAdmin:NoResults(var)
       end
     end
   elseif var == "favorites" then
-    ma_lookupresulttext:SetText("Favorites: ".."0")
+    ma_lookupresulttext:SetText(Locale["favoriteResults"].."0")
     FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
     for line = 1,7 do
       getglobal("ma_PopupScrollBarEntry"..line):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
       if line == 1 then
-        getglobal("ma_PopupScrollBarEntry"..line):SetText("There are currently no saved favorites!")
+        getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["ma_NoFavorites"])
         getglobal("ma_PopupScrollBarEntry"..line):Show()
       else
         getglobal("ma_PopupScrollBarEntry"..line):Hide()
+      end
+    end
+  elseif var == "zones" then
+    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,16)
+    for line = 1,12 do
+      getglobal("ma_ZoneScrollBarEntry"..line):Disable()
+      if line == 1 then
+        getglobal("ma_ZoneScrollBarEntry"..line):SetText(Locale["ma_NoZones"])
+        getglobal("ma_ZoneScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+      end
+    end
+  elseif var == "subzones" then
+    FauxScrollFrame_Update(ma_SubzoneScrollBar,12,12,16)
+    for line = 1,12 do
+      getglobal("ma_SubzoneScrollBarEntry"..line):Disable()
+      if line == 1 then
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetText(Locale["ma_NoSubZones"])
+        getglobal("ma_SubzoneScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_SubzoneScrollBarEntry"..line):Hide()
       end
     end
   end
@@ -1954,6 +2244,61 @@ function PopupScrollUpdate()
       end
     end
     
+  elseif MangAdmin.db.char.requests.skill or MangAdmin.db.char.requests.favskill then --get skills
+    local count = 0
+    if MangAdmin.db.char.requests.skill then
+      table.foreachi(MangAdmin.db.account.buffer.skills, function() count = count + 1 end)
+    elseif MangAdmin.db.char.requests.favskill then
+      table.foreachi(MangAdmin.db.account.favorites.skills, function() count = count + 1 end)
+    end
+    if count > 0 then
+      ma_lookupresulttext:SetText(Locale["searchResults"]..count)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      for line = 1,7 do
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+        if lineplusoffset <= count then
+          local skill
+          if MangAdmin.db.char.requests.skill then
+            skill = MangAdmin.db.account.buffer.skills[lineplusoffset]
+          elseif MangAdmin.db.char.requests.favskill then
+            skill = MangAdmin.db.account.favorites.skills[lineplusoffset]
+          end
+          local key = lineplusoffset
+          getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..skill["skId"].."|r Name: |cffffffff"..skill["skName"].."|r")
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:SetSkill(skill["skId"], nil, nil) end)  
+          getglobal("ma_PopupScrollBarEntry"..line):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line):Show()
+          if MangAdmin.db.char.requests.skill then
+            if skill["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.skills[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.buffer.skills[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          elseif MangAdmin.db.char.requests.favskill then
+            if skill["checked"] then
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.skills[key]["checked"] = false; PopupScrollUpdate() end)
+            else
+              getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetScript("OnClick", function() MangAdmin.db.account.favorites.skills[key]["checked"] = true; PopupScrollUpdate() end)
+            end
+          end
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):SetChecked(skill["checked"])
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
+        else
+          getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
+          getglobal("ma_PopupScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      if MangAdmin.db.char.requests.skill then
+        MangAdmin:NoResults("search")
+      elseif MangAdmin.db.char.requests.favskill then
+        MangAdmin:NoResults("favorites")
+      end
+    end
+    
   elseif MangAdmin.db.char.requests.object or MangAdmin.db.char.requests.favobject then --get objects
     local count = 0
     if MangAdmin.db.char.requests.object then
@@ -2107,12 +2452,107 @@ function PopupScrollUpdate()
   end
 end
 
+function TeleportScrollUpdate()
+  local TeleTable = {}
+  local zoneCount = 0
+  for index, value in pairs(ReturnTeleportLocations()) do
+    if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
+      SubzoneScrollUpdate(index)
+    end
+    table.insert(TeleTable, {name = index, subzones = value})
+    zoneCount = zoneCount + 1
+  end
+  if zoneCount > 0 then
+    FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
+    for line = 1,12 do
+      --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
+      lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
+      if lineplusoffset <= zoneCount then
+        local teleobj = TeleTable[lineplusoffset]
+        if MangAdmin.db.char.selectedZone == teleobj.name then
+          getglobal("ma_ZoneScrollBarEntry"..line):SetText("|cffff0000"..teleobj.name.."|r")
+        else
+          getglobal("ma_ZoneScrollBarEntry"..line):SetText(teleobj.name)
+        end
+        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
+          MangAdmin.db.char.selectedZone = teleobj.name
+          TeleportScrollUpdate()
+          SubzoneScrollUpdate()
+        end)
+        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+        getglobal("ma_ZoneScrollBarEntry"..line):Enable()
+        getglobal("ma_ZoneScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+      end
+    end
+  else
+    MangAdmin:NoResults("zones")
+  end
+end
+
+function SubzoneScrollUpdate()
+  local TeleTable = {}
+  local subzoneCount = 0
+  local shownZone = "Alterac Mountains"
+  if MangAdmin.db.char.selectedZone then
+    shownZone = MangAdmin.db.char.selectedZone
+  end
+  ma_telesubzonetext:SetText(Locale["Zone"]..shownZone)
+  for index, value in pairs(ReturnTeleportLocations()) do
+    if index == shownZone then
+      for i, v in pairs(value) do
+        table.insert(TeleTable, {name = i, command = v})
+        subzoneCount = subzoneCount + 1
+      end
+    end
+  end
+  if subzoneCount > 0 then
+    FauxScrollFrame_Update(ma_SubzoneScrollBar,subzoneCount,12,16)
+    for line = 1,12 do
+      --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
+      lineplusoffset = line + FauxScrollFrame_GetOffset(ma_SubzoneScrollBar)
+      if lineplusoffset <= subzoneCount then
+        local teleobj = TeleTable[lineplusoffset]
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetText(teleobj.name)
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:ChatMsg(teleobj.command) end)
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+        getglobal("ma_SubzoneScrollBarEntry"..line):Enable()
+        getglobal("ma_SubzoneScrollBarEntry"..line):Show()
+      else
+        getglobal("ma_SubzoneScrollBarEntry"..line):Hide()
+      end
+    end
+  else
+    MangAdmin:NoResults("subzones")
+  end
+end
+
 -- STYLE FUNCTIONS
 function MangAdmin:ToggleTransparency()
   if self.db.account.style.transparency.backgrounds < 1.0 then
     self.db.account.style.transparency.backgrounds = 1.0
   else
     self.db.account.style.transparency.backgrounds = 0.5
+  end
+  ReloadUI()
+end
+
+function MangAdmin:ChangeTransparency(element)
+  if element == "frames" then
+    MangAdmin.db.account.style.transparency.frames = string.format("%.2f", ma_frmtrslider:GetValue())
+  elseif element == "buttons" then
+    MangAdmin.db.account.style.transparency.buttons = string.format("%.2f", ma_btntrslider:GetValue())
+  end
+end
+
+function MangAdmin:ToggleTooltips()
+  if self.db.account.style.showtooltips then
+    self.db.account.style.showtooltips = false
+  else
+    self.db.account.style.showtooltips = true
   end
   ReloadUI()
 end

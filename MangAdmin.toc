@@ -8,7 +8,7 @@
 ## License: GPLv3
 ## X-Date: 02.January 2008
 ## X-eMail: josh.developer@gmail.com
-## X-Webiste: http://mangadmin.all-mag.de
+## X-Website: http://www.manground.de/forum/
 ## SavedVariables: MangAdminDb
 ## SavedVariablesPerCharacter: MangAdminDbPerChar
 
@@ -28,6 +28,7 @@ Libraries\Tablet-2.0\Tablet-2.0.lua
 Libraries\DewDrop-2.0\DewDrop-2.0.lua
 Libraries\FrameLib-1.0\FrameLib-1.0.lua
 Libraries\FuBarPlugin-2.0\FuBarPlugin-2.0.lua
+Libraries\Babble-Zone-2.2\Babble-Zone-2.2.lua
 Libraries\Graph-1.0\Graph-1.0.lua
 
 Locales\enUS.lua
@@ -45,6 +46,7 @@ Locales\esES.lua
 Locales\zhCN.lua
 Locales\ptPT.lua
 
+TeleportTable.lua
 MangAdmin.lua
 MangLinkifier.lua
 ## Frame Generation ;-)

@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -665,7 +665,7 @@ function MangAdmin:CreatePopupFrames()
       offX = -114,
       offY = -10
     },
-    text = "Select all"
+    text = Locale["ma_SelectAllButton"]
   })
   
   FrameLib:BuildButton({
@@ -685,6 +685,6 @@ function MangAdmin:CreatePopupFrames()
       offX = -198,
       offY = -10
     },
-    text = "Deselect all"
+    text = Locale["ma_DeselectAllButton"]
   })
 end

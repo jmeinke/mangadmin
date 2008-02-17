@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forums/
+-- Official Forums: http://www.manground.de/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -174,18 +174,85 @@ function MangAdmin:CreateStartFrames()
       offY = 10
     }
   })
-
+  
   FrameLib:BuildFontString({
-    name = "ma_tooltiptext",
+    name = "ma_infoonlinetext",
     group = "bg",
     parent = ma_rightframe,
-    text = Locale["tt_Default"],
-    color = {
-      r = 0,
-      g = 255,
-      b = 0,
-      a = 1.0
+    text = "Players Online: ...",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
     }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_infomaxonlinetext",
+    group = "bg",
+    parent = ma_rightframe,
+    text = "Maximum Online: ...",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -25
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_infouptimetext",
+    group = "bg",
+    parent = ma_rightframe,
+    text = "Server Uptime: ...",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -40
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_inforevisiontext",
+    group = "bg",
+    parent = ma_rightframe,
+    text = "MaNGOS Revision: ...",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -55
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_infoplatformtext",
+    group = "bg",
+    parent = ma_rightframe,
+    text = "Server Platform: ...",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -70
+    }
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_inforefreshbutton",
+    group = "bg",
+    parent = ma_rightframe,
+    texture = {
+      name = "ma_inforefreshbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 60,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -10
+    },
+    text = "Refresh"
   })
 
   FrameLib:BuildFrame({
