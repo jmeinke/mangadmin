@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -133,6 +133,7 @@ function Return_zhCN()
     ["ma_TicketsInfoPlayedTime"] = "|cFF00FF00Played time:|r ",
     ["ma_TicketsInfoLevel"] = "|cFF00FF00Level:|r ",
     ["ma_TicketsInfoMoney"] = "|cFF00FF00Money:|r ",
+    ["ma_TicketsInfoLatency"] = "|cFF00FF00Latency:|r ",
     ["ma_TicketsNoInfo"] = "No ticket info available...",
     ["ma_TicketsNotLoaded"] = "No ticket loaded...",
     ["ma_TicketsNoTickets"] = "There are no tickets available!",

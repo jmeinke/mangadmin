@@ -11,7 +11,7 @@
 ** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 **
-** Official Forums: http://www.manground.de/forum/
+** Official Forums: http://www.manground.org/forum/
 ** GoogleCode Website: http://code.google.com/p/mangadmin/
 ** Subversion Repository: http://mangadmin.googlecode.com/svn/
 **
@@ -20,6 +20,16 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 76:
+  BUGFIX PART 1
+  * fixed: correct address in file headers
+  * fixed: TOC interface version
+  * fixed: infobox right (adjusted hook strings), part of patch by panaut0lordv
+  * fixed: all UIDropDown selectboxes
+  * changed design of the character section, 
+  now when changing your target the buttons will get disabled/enabled to show what you can do
+
+
 Rev. 75:
   * fixed: typo in file headers
   * fixed: you must click the inputbox to be able to type something into it, press ESC to remove the focus

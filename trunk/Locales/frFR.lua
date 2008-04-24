@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -133,6 +133,7 @@ function Return_frFR()
     ["ma_TicketsInfoPlayedTime"] = "|cFF00FF00Temps de Jeu:|r ",
     ["ma_TicketsInfoLevel"] = "|cFF00FF00Niveau:|r ",
     ["ma_TicketsInfoMoney"] = "|cFF00FF00Or:|r ",
+    ["ma_TicketsInfoLatency"] = "|cFF00FF00Latency:|r ",
     ["ma_TicketsNoInfo"] = "Pas d'information sur le billet...",
     ["ma_TicketsNotLoaded"] = "Aucun billet charg\195\169...",
     ["ma_TicketsNoTickets"] = "Il n'y a pas de billet disponible",

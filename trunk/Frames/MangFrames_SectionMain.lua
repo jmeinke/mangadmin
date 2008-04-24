@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -371,5 +371,25 @@ function MangAdmin:CreateMainSection()
       offY = -34
     },
     text = Locale["ma_BankButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_dismountbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_dismountbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -58
+    },
+    text = Locale["ma_DismountButton"]
   })
 end
