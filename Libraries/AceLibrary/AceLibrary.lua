@@ -1,10 +1,10 @@
 --[[
 Name: AceLibrary
-Revision: $Rev: 49421 $
+Revision: $Rev: 58127 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Iriel (iriel@vigilance-committee.org)
              Tekkub (tekkub@gmail.com)
-             Revision: $Rev: 49421 $
+             Revision: $Rev: 58127 $
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceLibrary
 SVN: http://svn.wowace.com/root/trunk/Ace2/AceLibrary
@@ -18,7 +18,7 @@ License: LGPL v2.1
 ]]
 
 local ACELIBRARY_MAJOR = "AceLibrary"
-local ACELIBRARY_MINOR = "$Revision: 49421 $"
+local ACELIBRARY_MINOR = "$Revision: 58127 $"
 
 local _G = getfenv(0)
 local previous = _G[ACELIBRARY_MAJOR]
@@ -64,17 +64,6 @@ local DONT_ENABLE_LIBRARIES = nil
 local function safecall(func,...)
     local success, err = pcall(func,...)
     if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("\n(.-: )in.-\n") or "") .. err) end
-end
-
-local WoW22 = false
-if type(GetBuildInfo) == "function" then
-	local success, buildinfo = pcall(GetBuildInfo)
-	if success and type(buildinfo) == "string" then
-		local num = tonumber(buildinfo:match("^(%d+%.%d+)"))
-		if num and num >= 2.2 then
-			WoW22 = true
-		end
-	end
 end
 
 -- @table AceLibrary
@@ -134,21 +123,6 @@ local function error(self, message, ...)
 		end
 	end
 	return _G.error(message, 2)
-end
-
-local assert
-if not WoW22 then
-	function assert(self, condition, message, ...)
-		if not condition then
-			if not message then
-				local stack = debugstack()
-				local second = stack:match("\n(.-)\n")
-				message = "assertion failed! " .. second
-			end
-			return error(self, message, ...)
-		end
-		return condition
-	end
 end
 
 local type = type
@@ -614,9 +588,6 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 		if not rawget(instance, 'error') then
 			rawset(instance, 'error', error)
 		end
-		if not WoW22 and not rawget(instance, 'assert') then
-			rawset(instance, 'assert', assert)
-		end
 		if not rawget(instance, 'argCheck') then
 			rawset(instance, 'argCheck', argCheck)
 		end
@@ -626,14 +597,6 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 		addToPositions(instance, major)
 		if activateFunc then
 			safecall(activateFunc, instance, nil, nil) -- no old version, so explicit nil
-			
---[[			if major ~= ACELIBRARY_MAJOR then
-				for k,v in pairs(_G) do
-					if v == instance then
-						geterrorhandler()((debugstack():match("(.-: )in.-\n") or "") .. ("Cannot register library %q. It is part of the global table in _G[%q]."):format(major, k))
-					end
-				end
-			end]]
 		end
 		
 		if externalFunc then
@@ -685,22 +648,16 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 	
 	addToPositions(newInstance, major)
 	local isAceLibrary = (AceLibrary == newInstance)
-	local old_error, old_assert, old_argCheck, old_pcall
+	local old_error, old_argCheck, old_pcall
 	if isAceLibrary then
 		self = instance
 		AceLibrary = instance
 		
 		old_error = instance.error
-		if not WoW22 then
-			old_assert = instance.assert
-		end
 		old_argCheck = instance.argCheck
 		old_pcall = instance.pcall
 		
 		self.error = error
-		if not WoW22 then
-			self.assert = assert
-		end
 		self.argCheck = argCheck
 		self.pcall = pcall
 	end
@@ -716,9 +673,6 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 	if not rawget(instance, 'error') then
 		rawset(instance, 'error', error)
 	end
-	if not WoW22 and not rawget(instance, 'assert') then
-		rawset(instance, 'assert', assert)
-	end
 	if not rawget(instance, 'argCheck') then
 		rawset(instance, 'argCheck', argCheck)
 	end
@@ -732,9 +686,6 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 				if not rawget(i, 'error') or i.error == old_error then
 					rawset(i, 'error', error)
 				end
-				if not WoW22 and (not rawget(i, 'assert') or i.assert == old_assert) then
-					rawset(i, 'assert', assert)
-				end
 				if not rawget(i, 'argCheck') or i.argCheck == old_argCheck then
 					rawset(i, 'argCheck', argCheck)
 				end
@@ -745,15 +696,7 @@ function AceLibrary:Register(newInstance, major, minor, activateFunc, deactivate
 		end
 	end
 	if activateFunc then
-		safecall(activateFunc, instance, oldInstance, oldDeactivateFunc)	
-				
---[[		if major ~= ACELIBRARY_MAJOR then
-			for k,v in pairs(_G) do
-				if v == instance then
-					geterrorhandler()((debugstack():match("(.-: )in.-\n") or "") .. ("Cannot register library %q. It is part of the global table in _G[%q]."):format(major, k))
-				end
-			end
-		end]]
+		safecall(activateFunc, instance, oldInstance, oldDeactivateFunc)
 	else
 		safecall(oldDeactivateFunc, oldInstance)
 	end

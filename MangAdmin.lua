@@ -29,7 +29,6 @@ if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 --[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
 --[[local]] Graph      = AceLibrary("Graph-1.0")
 local Tablet     = AceLibrary("Tablet-2.0")
-local BabbleZone = AceLibrary("Babble-Zone-2.2")
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
@@ -57,7 +56,8 @@ MangAdmin:RegisterDefaults("char",
     },
     nextGridWay = "ahead",
     selectedZone = nil,
-    newTicketQueue = {}
+    newTicketQueue = {},
+    instantKillMode = false
   }
 )
 MangAdmin:RegisterDefaults("account", 
@@ -197,7 +197,7 @@ function MangAdmin:OnInitialize()
   self:InitDropDowns()
   self:InitSliders()
   self:InitScrollFrames()
-  self:InitTransparencyButton()
+  self:InitCheckButtons()
   self:InitModelFrame()
   --clear color buffer
   self.db.account.style.color.buffer = {}
@@ -224,11 +224,11 @@ end
 
 --events
 function MangAdmin:PLAYER_DEAD()
-  self:LogAction("OMG I died!!")
+  ma_mm_revivebutton:Show()
 end
 
 function MangAdmin:PLAYER_ALIVE()
-  self:LogAction("OMG I live!! HAHA")
+  ma_mm_revivebutton:Hide()
 end
 
 function MangAdmin:ZONE_CHANGED()
@@ -277,6 +277,11 @@ function MangAdmin:PLAYER_TARGET_CHANGED()
       ma_respawnbutton:Enable()
       ma_killbutton:Disable()
     else
+      if self.db.char.instantKillMode then
+        if not UnitIsFriend("player", "target") then
+          self:KillSomething()
+        end
+      end
       ma_respawnbutton:Disable()
       ma_killbutton:Enable()
     end
@@ -641,12 +646,12 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
         self:RequestTickets()
         catchedSth = true
         output = false
-        MangAdmin:ChatMsg("DEBUG YEAH")
+        --MangAdmin:ChatMsg("DEBUG YEAH")
       end
     end
     
     -- hook player account info
-    for status, char, guid, account, id, level, ip, latency in string.gmatch(text, "Player(.*) (.*) %(guid: (%d+)%) Account: (.*) %(id: (%d+)%) GMLevel: (%d+) Last IP: (.*) Latency: (%d+)ms") do
+    for status, char, guid, account, id, level, ip, login, latency in string.gmatch(text, "Player(.*) (.*) %(guid: (%d+)%) Account: (.*) %(id: (%d+)%) GMLevel: (%d+) Last IP: (.*) Last login: (.*) Latency: (%d+)ms") do
       if self.db.char.requests.tpinfo then
         if status == "" then
           status = Locale["ma_Online"]
@@ -1559,10 +1564,20 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_tabbutton_char       , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
   self:PrepareScript(ma_tabbutton_tele       , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele") end)
   self:PrepareScript(ma_tabbutton_ticket     , Locale["tt_TicketButton"]       , function() MangAdmin:ShowTicketTab() end)
-  self:PrepareScript(ma_tabbutton_server     , Locale["tt_ServerButton"]       , function() MangAdmin:InstantGroupToggle("server") end)
   self:PrepareScript(ma_tabbutton_misc       , Locale["tt_MiscButton"]         , function() MangAdmin:InstantGroupToggle("misc") end)
+  self:PrepareScript(ma_tabbutton_server     , Locale["tt_ServerButton"]       , function() MangAdmin:InstantGroupToggle("server") end)
   self:PrepareScript(ma_tabbutton_log        , Locale["tt_LogButton"]          , function() MangAdmin:InstantGroupToggle("log") end)
   --end tab buttons
+  -- start mini buttons
+  self:PrepareScript(ma_mm_logoframe         , nil                             , function() MangAdmin:OnClick() end)
+  self:PrepareScript(ma_mm_mainbutton        , Locale["tt_MainButton"]         , function() MangAdmin:InstantGroupToggle("main") end)
+  self:PrepareScript(ma_mm_charbutton        , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
+  self:PrepareScript(ma_mm_telebutton        , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele") end)
+  self:PrepareScript(ma_mm_ticketbutton      , Locale["tt_TicketButton"]       , function() MangAdmin:ShowTicketTab() end)
+  self:PrepareScript(ma_mm_miscbutton        , Locale["tt_MiscButton"]         , function() MangAdmin:InstantGroupToggle("misc") end)
+  self:PrepareScript(ma_mm_serverbutton      , Locale["tt_ServerButton"]       , function() MangAdmin:InstantGroupToggle("server") end)
+  self:PrepareScript(ma_mm_logbutton         , Locale["tt_LogButton"]          , function() MangAdmin:InstantGroupToggle("log") end)
+  --end mini buttons
   self:PrepareScript(ma_languagebutton       , Locale["tt_LanguageButton"]     , function() MangAdmin:ChangeLanguage(UIDropDownMenu_GetSelectedValue(ma_languagedropdown)) end)
   self:PrepareScript(ma_speedslider          , Locale["tt_SpeedSlider"]        , {{"OnMouseUp", function() MangAdmin:SetSpeed() end},{"OnValueChanged", function() ma_speedsliderText:SetText(string.format("%.1f", ma_speedslider:GetValue())) end}})
   self:PrepareScript(ma_scaleslider          , Locale["tt_ScaleSlider"]        , {{"OnMouseUp", function() MangAdmin:SetScale() end},{"OnValueChanged", function() ma_scalesliderText:SetText(string.format("%.1f", ma_scaleslider:GetValue())) end}})  
@@ -1636,6 +1651,8 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_modelrotaterbutton   , Locale["tt_RotateRight"]        , function() MangAdmin:ModelRotateRight() end)
   self:PrepareScript(ma_frmtrslider          , Locale["tt_FrmTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("frames") end},{"OnValueChanged", function() ma_frmtrsliderText:SetText(string.format("%.2f", ma_frmtrslider:GetValue())) end}})  
   self:PrepareScript(ma_btntrslider          , Locale["tt_BtnTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("buttons") end},{"OnValueChanged", function() ma_btntrsliderText:SetText(string.format("%.2f", ma_btntrslider:GetValue())) end}})  
+  self:PrepareScript(ma_instantkillbutton    , nil                             , function() self.db.char.instantKillMode = ma_instantkillbutton:GetChecked() end)
+  self:PrepareScript(ma_mm_revivebutton      , nil                             , function() SendChatMessage(".revive", "GUILD", nil, nil) end)
 end
 
 function MangAdmin:InitDropDowns()
@@ -2606,11 +2623,17 @@ function MangAdmin:ToggleTooltips()
   ReloadUI()
 end
 
-function MangAdmin:InitTransparencyButton()
+function MangAdmin:InitCheckButtons()
   if self.db.account.style.transparency.backgrounds < 1.0 then
     ma_checktransparencybutton:SetChecked(true)
   else
     ma_checktransparencybutton:SetChecked(false)
+  end
+  
+  if self.db.char.instantKillMode then
+    ma_instantkillbutton:SetChecked(true)
+  else
+    ma_instantkillbutton:SetChecked(false)
   end
 end
 

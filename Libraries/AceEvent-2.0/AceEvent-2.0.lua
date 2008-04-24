@@ -1,6 +1,6 @@
 --[[
 Name: AceEvent-2.0
-Revision: $Rev: 56171 $
+Revision: $Rev: 66043 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceEvent-2.0"
-local MINOR_VERSION = "$Revision: 56171 $"
+local MINOR_VERSION = "$Revision: 66043 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -231,9 +231,6 @@ Arguments:
 	tuple - list of arguments to pass along
 ------------------------------------------------------------------------------------]]
 function AceEvent:TriggerEvent(event, ...)
-	if type(event) ~= "string" then
-		DEFAULT_CHAT_FRAME:AddMessage(debugstack())
-	end
 	AceEvent:argCheck(event, 2, "string")
 	local AceEvent_registry = AceEvent.registry
 	if (not AceEvent_registry[event] or not next(AceEvent_registry[event])) and (not AceEvent_registry[ALL_EVENTS] or not next(AceEvent_registry[ALL_EVENTS])) then
@@ -280,8 +277,7 @@ function AceEvent:TriggerEvent(event, ...)
 		end
 		local obj = next(tmp)
 		while obj do
-			local method = tmp[obj]
-			local continue = false
+			local continue = nil
 			if throttleTable and throttleTable[obj] then
 				local a1 = ...
 				if a1 == nil then
@@ -294,15 +290,19 @@ function AceEvent:TriggerEvent(event, ...)
 				end
 			end
 			if not continue then
-				if type(method) == "string" then
+				local method = tmp[obj]
+				local t = type(method)
+				if t == "string" then
 					local obj_method = obj[method]
 					if obj_method then
 						local success, err = pcall(obj_method, obj, ...)
 						if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
 					end
-				elseif method then -- function
+				elseif t == "function" then -- function
 					local success, err = pcall(method, ...)
 					if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
+				else
+					AceEvent:error("Cannot trigger event %q. %q's handler, %q, is not a method or function (%s).", event, obj, method, t)
 				end
 			end
 			tmp[obj] = nil
@@ -316,15 +316,18 @@ function AceEvent:TriggerEvent(event, ...)
 		local obj = next(tmp)
 		while obj do
 			local method = tmp[obj]
-			if type(method) == "string" then
+			local t = type(method)
+			if t == "string" then
 				local obj_method = obj[method]
 				if obj_method then
 					local success, err = pcall(obj_method, obj, ...)
 					if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
 				end
-			elseif method then -- function
+			elseif t == "function" then
 				local success, err = pcall(method, ...)
 				if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
+			else
+				AceEvent:error("Cannot trigger event %q. %q's handler, %q, is not a method or function (%s).", event, obj, method, t)
 			end
 			tmp[obj] = nil
 			obj = next(tmp)
@@ -357,15 +360,18 @@ do
 						v.time = v_time + v_repeatDelay
 					end
 					local event = v.event
-					if type(event) == "function" then
+					local t = type(event)
+					if t == "function" then
 						local uid = AceEvent.UID_NUM + 1
 						AceEvent.UID_NUM = uid
 						AceEvent.currentEventUID = uid
 						local success, err = pcall(event, unpack(v, 1, v.n))
 						if not success then geterrorhandler()(err:find("%.lua:%d+:") and err or (debugstack():match("(.-: )in.-\n") or "") .. err) end
 						AceEvent.currentEventUID = nil
-					else
+					elseif t == "string" then
 						AceEvent:TriggerEvent(event, unpack(v, 1, v.n))
+					else
+						AceEvent:error("Cannot trigger event %q, it's not a method or function (%s).", event, t)
 					end
 					if not v_repeatDelay then
 						local x = delayRegistry[k]
@@ -632,8 +638,8 @@ function AceEvent:RegisterBucketEvent(event, delay, method, ...)
 		buckets[event] = new()
 	end
 	if not buckets[event][self] then
-		local t = new()
-		t.current = new()
+		local t = {}
+		t.current = {}
 		t.self = self
 		buckets[event][self] = t
 	else
@@ -641,7 +647,7 @@ function AceEvent:RegisterBucketEvent(event, delay, method, ...)
 	end
 	local bucket = buckets[event][self]
 	bucket.method = method
-	
+
 	local n = select('#', ...)
 	if n > 0 then
 		for i = 1, n do
@@ -661,23 +667,23 @@ function AceEvent:RegisterBucketEvent(event, delay, method, ...)
 	if type(event) == "string" then
 		AceEvent.RegisterEvent(self, event, func)
 		if not event:find("^UNIT_") then
-			isUnitBucket = false
+			isUnitBucket = nil
 		end
 	else
 		for _,v in ipairs(event) do
 			AceEvent.RegisterEvent(self, v, func)
 			if isUnitBucket and not v:find("^UNIT_") then
-				isUnitBucket = false
+				isUnitBucket = nil
 			end
 		end
 	end
 	bucket.unit = isUnitBucket
 	if not bucketfunc then
 		bucketfunc = function(bucket)
-			local current = bucket.current
-			local method = bucket.method
-			local self = bucket.self
 			if bucket.run then
+				local current = bucket.current
+				local method = bucket.method
+				local self = bucket.self
 				if bucket.unit then
 					for unit in pairs(current) do
 						if not UnitExists(unit) then
@@ -694,7 +700,7 @@ function AceEvent:RegisterBucketEvent(event, delay, method, ...)
 					current[k] = nil
 					k = nil
 				end
-				bucket.run = false
+				bucket.run = nil
 			end
 		end
 	end
@@ -724,8 +730,8 @@ function AceEvent:UnregisterBucketEvent(event)
 	end
 	AceEvent:CancelScheduledEvent(bucket.id)
 
-	bucket.current = del(bucket.current)
-	AceEvent.buckets[event][self] = del(bucket)
+	bucket.current = nil
+	AceEvent.buckets[event][self] = nil
 	if not next(AceEvent.buckets[event]) then
 		AceEvent.buckets[event] = del(AceEvent.buckets[event])
 	end
@@ -858,7 +864,7 @@ function AceEvent:OnEmbedDisable(target)
 	self.CancelAllScheduledEvents(target)
 
 	self.UnregisterAllBucketEvents(target)
-	
+
 	self.CancelAllCombatSchedules(target)
 end
 
@@ -882,16 +888,6 @@ local function activate(self, oldLib, oldDeactivate)
 	self.RATE = oldLib and oldLib.RATE or _G.newproxy()
 	self.combatSchedules = oldLib and oldLib.combatSchedules or {}
 	self.UID_NUM = oldLib and oldLib.UID_NUM or 0
-	
-	-- Delete this down the road.  Makes sure that the addonframes from revisions 33121 - 36174 get their events unregistered.
-	-- I think we should remove this post 2.4, when most addons are forced to
-	-- update because of the combat log changes.
-	local addonframes = oldLib and oldLib.addonframes
-	if addonframes then
-		for _, v in pairs(addonframes) do
-			v:UnregisterAllEvents()
-		end
-	end
 	
 	combatSchedules = self.combatSchedules
 	ALL_EVENTS = self.ALL_EVENTS
@@ -992,15 +988,6 @@ local function activate(self, oldLib, oldDeactivate)
 	end)
 	inCombat = InCombatLockdown()
 	registeringFromAceEvent = nil
-	
-	-- another hack to make sure that we clean up properly from rev 33121 - 36174
-	if self.registry[ALL_EVENTS] then
-		self.frame:RegisterAllEvents()
-	else
-		for event in pairs(self.registry) do
-			self.frame:RegisterEvent(event)
-		end
-	end
 	
 	self:activate(oldLib, oldDeactivate)
 	if oldLib then

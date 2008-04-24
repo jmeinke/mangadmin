@@ -392,4 +392,18 @@ function MangAdmin:CreateMainSection()
     },
     text = Locale["ma_DismountButton"]
   })
+  
+  FrameLib:BuildButton({
+    type = "CheckButton",
+    name = "ma_instantkillbutton",
+    group = "main",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -180,
+      offY = 10
+    },
+    text = "Instantly kill enemy creatures",
+    inherits = "OptionsCheckButtonTemplate"
+  })
 end
