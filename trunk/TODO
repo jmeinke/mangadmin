@@ -50,15 +50,32 @@
   - move up/down/left/right gameobject
   - more
   
-- FIXES: many
-  
-=Suggestions by Yas (Quote)=
+=Suggestions/Requests by Yas (Quote)=
   - Field for morph command, combined with bookmarks can be usefull too (at least for me :-)
   - New window with informations about targetted object (by .targetobject) and with button to delete/move..
   - Window like Who List but with simplier filtering of players, teleporting, (mass teleporting?), mailing...
   - Minimalize option with shortcuts to sections like mangadmin for 1.12
-      
-==What is coming next:==
+  
+=Suggestions/Requests by litlmutt=
+  -ability to teleport to a player
+  -teleport a player to you
+  -addvendoritem
+  -del vendor item
+  -Addspw
+  -group tele
+  -morph
+  -demorph
+  
+=Suggestions/Request by Markb=
+  -button to delete npc
+  -button to delete game object
+  
+=Suggestions/Request by Fozzy325 (Quote)=
+  It would be great to have a remove res sickness button (.unaura 15007)
+
+==What should come next:==
   * add a function to exchange favorites with each other (synchronization) or simply send own
     favorites to other player, favorites can also be exported or imported
-  * 
+  * fix: correct some coordinates in MangFrames_Start.lua, this prevents layout boxes to
+    float between right and wrong positions when using /rl often
+  * add: waypoint action buttons

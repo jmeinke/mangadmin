@@ -20,6 +20,19 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 77:
+  BUGFIX PART 2
+  * updated some libraries and the TODO list
+  * fixed: TOC informations
+  * fixed: ticket system should work, please test and report, I don't have problems with it!
+  * added: instant kill enemy creature on click mode
+  * added: revive button when player dies
+  * added: MangAdmin.wowproj and MangAdmin.wowsln, these are project files for the 
+    Addon Studio for World of Warcraft, found here: http://www.codeplex.com/WarcraftAddOnStudio/
+    TODO: Add some remaining files to the file tree
+  * added: really simple MiniMenu (little window/taskbar for MangAdmin), I need your feedback on this
+  * if your have problems/bugs try to delete MangAdmin related files from your WTF folder
+
 Rev. 76:
   BUGFIX PART 1
   * fixed: correct address in file headers
@@ -28,7 +41,6 @@ Rev. 76:
   * fixed: all UIDropDown selectboxes
   * changed design of the character section, 
   now when changing your target the buttons will get disabled/enabled to show what you can do
-
 
 Rev. 75:
   * fixed: typo in file headers
@@ -51,7 +63,6 @@ Rev. 75:
   * added dropdown allowing to reset talents, stats, spells, honor and level
   * added some new localizations, this was only a part of all
   * mass-tele, morph- and extensible graph functionality are now first on my priority list
-  
 
 Rev. 74:
   * implemented favorites for items, itemsets, teleport-locations, quests, creatures, objects, spells

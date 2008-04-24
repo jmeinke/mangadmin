@@ -22,6 +22,7 @@
 -- Also some variables are globally taken from MangAdmin.lua
 
 function MangAdmin:CreateFrames()
+  self:CreateMiniMenu()
   self:CreateStartFrames()
   self:CreateTabs()
   self:CreateLookupButtons()
@@ -43,4 +44,5 @@ function MangAdmin:CreateFrames()
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("popup", function(frame) frame:Hide() end)
+  ma_mm_revivebutton:Hide()
 end
