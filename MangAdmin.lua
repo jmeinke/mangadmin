@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -29,7 +29,7 @@ if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 --[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
 --[[local]] Graph      = AceLibrary("Graph-1.0")
 local Tablet     = AceLibrary("Tablet-2.0")
-local BabbleZone = AceLibrary("Babble-Zone-2.2");
+local BabbleZone = AceLibrary("Babble-Zone-2.2")
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
@@ -209,7 +209,7 @@ end
 function MangAdmin:OnEnable()
   self:SetDebugging(true) -- to have debugging through the whole app.    
   -- init guid for callhandler, not implemented yet, comes in next revision
-  self.GetGuid()
+  ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..UnitGUID("player"))
   self:SearchReset()
   -- refresh server information
   self:ChatMsg(".info")
@@ -217,9 +217,20 @@ function MangAdmin:OnEnable()
   --self:RegisterEvent("ZONE_CHANGED") -- for teleport list update
   self:RegisterEvent("PLAYER_TARGET_CHANGED")
   self:RegisterEvent("UNIT_MODEL_CHANGED")
+  self:RegisterEvent("PLAYER_DEAD")
+  self:RegisterEvent("PLAYER_ALIVE")
+  self:PLAYER_TARGET_CHANGED() --init
 end
 
 --events
+function MangAdmin:PLAYER_DEAD()
+  self:LogAction("OMG I died!!")
+end
+
+function MangAdmin:PLAYER_ALIVE()
+  self:LogAction("OMG I live!! HAHA")
+end
+
 function MangAdmin:ZONE_CHANGED()
   --[[if hastranslationlocale then
     if not MangAdmin.db.char.selectedZone or MangAdmin.db.char.selectedZone ~= translate(GetZoneText()) then
@@ -237,6 +248,39 @@ end
 
 function MangAdmin:PLAYER_TARGET_CHANGED()
   self:ModelChanged()
+  if UnitIsPlayer("target") then
+    ma_savebutton:Enable()
+    if UnitIsDead("target") then
+      ma_revivebutton:Enable()
+      ma_killbutton:Disable()
+    else
+      ma_revivebutton:Disable()
+      ma_killbutton:Enable()
+    end
+    if not UnitIsUnit("target", "player") then
+      ma_kickbutton:Enable()
+    else
+      ma_kickbutton:Disable()
+    end
+    ma_respawnbutton:Disable()
+  elseif not UnitName("target") then
+    ma_savebutton:Enable()
+    ma_revivebutton:Disable()
+    ma_killbutton:Disable()
+    ma_kickbutton:Disable()
+    ma_respawnbutton:Disable()
+  else
+    ma_savebutton:Disable()
+    ma_revivebutton:Disable()
+    ma_kickbutton:Disable()
+    if UnitIsDead("target") then
+      ma_respawnbutton:Enable()
+      ma_killbutton:Disable()
+    else
+      ma_respawnbutton:Disable()
+      ma_killbutton:Enable()
+    end
+  end
 end
 
 function MangAdmin:OnDisable()
@@ -463,7 +507,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
 
-  if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
+  --if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
     -- hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
@@ -587,21 +631,22 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- get tickets
-    for char, category, message in string.gmatch(text, "Ticket of (.*) %(Category: (%d+)%):\n(.*)\n") do
+    for char, update, category, message in string.gmatch(text, "Ticket of (.*) %(Last updated: (.*)%) %(Category: (%d+)%):\n(.*)\n") do
       if self.db.char.requests.ticket then
         local ticketCount = 0
         table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
         local number = self.db.account.tickets.count - ticketCount
-        table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tCat = category, tMsg = message})
+        table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tLUpdate = update, tCat = category, tMsg = message})
         PopupScrollUpdate()
         self:RequestTickets()
         catchedSth = true
         output = false
+        MangAdmin:ChatMsg("DEBUG YEAH")
       end
     end
     
     -- hook player account info
-    for status, char, guid, account, id, level, ip in string.gmatch(text, "Player(.*) (.*) %(guid: (%d+)%) Account: (.*) %(id: (%d+)%) GMLevel: (%d+) Last IP: (.*)") do
+    for status, char, guid, account, id, level, ip, latency in string.gmatch(text, "Player(.*) (.*) %(guid: (%d+)%) Account: (.*) %(id: (%d+)%) GMLevel: (%d+) Last IP: (.*) Latency: (%d+)ms") do
       if self.db.char.requests.tpinfo then
         if status == "" then
           status = Locale["ma_Online"]
@@ -609,7 +654,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
           status = Locale["ma_Offline"]
         end
         --table.insert(self.db.account.buffer.tpinfo, {char = {pStatus = status, pGuid = guid, pAcc = account, pId = id, pLevel = level, pIp = ip}})
-        ma_tpinfo_text:SetText(ma_tpinfo_text:GetText()..Locale["ma_TicketsInfoPlayer"]..char.." ("..guid..")\n"..Locale["ma_TicketsInfoStatus"]..status.."\n"..Locale["ma_TicketsInfoAccount"]..account.." ("..id..")\n"..Locale["ma_TicketsInfoAccLevel"]..level.."\n"..Locale["ma_TicketsInfoLastIP"]..ip)
+        ma_tpinfo_text:SetText(ma_tpinfo_text:GetText()..Locale["ma_TicketsInfoPlayer"]..char.." ("..guid..")\n"..Locale["ma_TicketsInfoStatus"]..status.."\n"..Locale["ma_TicketsInfoAccount"]..account.." ("..id..")\n"..Locale["ma_TicketsInfoAccLevel"]..level.."\n"..Locale["ma_TicketsInfoLastIP"]..ip.."\n"..Locale["ma_TicketsInfoLatency"]..latency)
         catchedSth = true
         output = false
       end
@@ -626,15 +671,15 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     --check for info command to update informations in right bottom
-    for version, revision in string.gmatch(text, "(.*)/(.*) %(Win32%)") do
+    for revision in string.gmatch(text, "%(Revision (.*)%) %(Win32%)") do
       ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
       ma_infoplatformtext:SetText(Locale["info_platform"].."Win32")
     end
-    for version, revision in string.gmatch(text, "(.*)/(.*) %(Unix%)") do
+    for revision in string.gmatch(text, "%(Revision (.*)%) %(Unix%)") do
       ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
       ma_infoplatformtext:SetText(Locale["info_platform"].."Unix")
     end
-    for users, maxusers in string.gmatch(text, "Number of users connected: (%d+) %(max since last restart: (%d+)%)") do
+    for users, maxusers in string.gmatch(text, "Online players: (%d+) %(max: (%d+)%)") do
       ma_infoonlinetext:SetText(Locale["info_online"]..users)
       ma_infomaxonlinetext:SetText(Locale["info_maxonline"]..maxusers)
     end
@@ -652,9 +697,9 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       catchedSth = true
       output = MangLinkifier_Decompose(text)
     end
-  else
+  --else
     -- message is not from server
-  end
+  --end
   
   if not catchedSth then
     -- output
@@ -672,7 +717,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
   end
 end
 
-function MangAdmin:GetValueCallHandler(guid, field, value)
+--[[ function MangAdmin:GetValueCallHandler(guid, field, value)
   -- checks for specific actions and calls functions by checking the function-order
   local called = self.db.char.getValueCallHandler.calledGetGuid
   local realGuid = self.db.char.getValueCallHandler.realGuid
@@ -681,7 +726,7 @@ function MangAdmin:GetValueCallHandler(guid, field, value)
     -- getting GUID and setting db variables and logged text
     self.db.char.getValueCallHandler.calledGetGuid = true
     self.db.char.getValueCallHandler.realGuid = value
-    ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..guid)
+    ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..UnitGUID())
     return false    
   elseif guid == realGuid then
     return true
@@ -689,26 +734,26 @@ function MangAdmin:GetValueCallHandler(guid, field, value)
     MangAdmin:LogAction("DEBUG: Getvalues are: GUID = "..guid.."; field = "..field.."; value = "..value..";")
     return true
   end
-end
+end ]]
 
 function MangAdmin:LogAction(msg)
   ma_logframe:AddMessage("|cFF00FF00["..date("%H:%M:%S").."]|r "..msg, 1.0, 1.0, 0.0)
 end
 
-function MangAdmin:ChatMsg(msg)
-  if not type then local type = "say" end
-  SendChatMessage(msg, type, nil, nil)
-end
-
-function MangAdmin:GetGuid()
-  local called = MangAdmin.db.char.getValueCallHandler.calledGetGuid
-  local realGuid = MangAdmin.db.char.getValueCallHandler.realGuid
-  if not called then
-    if MangAdmin:Selection("self") or MangAdmin:Selection("none") then
-      MangAdmin:ChatMsg(".getvalue 0")
+function MangAdmin:ChatMsg(msg, msgt, recipient)
+  if not msgt then local msgt = "say" end
+  if msgt == "addon" then
+    if recipient then
+      SendAddonMessage("", msg, "WHISPER", recipient)
+    else
+      SendAddonMessage("", msg, "GUILD")
     end
   else
-    ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..realGuid)
+    if recipient then 
+      SendChatMessage(msg, "WHISPER", nil, recipient)
+    else
+      SendChatMessage(msg, msgt, nil, nil)
+    end
   end
 end
 
@@ -1583,7 +1628,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_applystylebutton     , nil                             , function() MangAdmin:ApplyStyleChanges() end)
   self:PrepareScript(ma_loadtablebutton      , nil                             , function() MangAdmin:ReloadTable(UIDropDownMenu_GetSelectedValue(ma_reloadtabledropdown)) end)
   self:PrepareScript(ma_loadscriptsbutton    , nil                             , function() MangAdmin:ReloadScripts() end)
-  self:PrepareScript(ma_changeweatherbutton  , nil                             , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weathertabledropdown)) end)
+  self:PrepareScript(ma_changeweatherbutton  , nil                             , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weatherdropdown)) end)
   self:PrepareScript(ma_resetbutton          , nil                             , function() MangAdmin:Reset(UIDropDownMenu_GetSelectedValue(ma_resetdropdown)) end)
   self:PrepareScript(ma_learnlangbutton      , nil                             , function() MangAdmin:LearnSpell(UIDropDownMenu_GetSelectedValue(ma_learnlangdropdown)) end)
   self:PrepareScript(ma_inforefreshbutton    , nil                             , function() MangAdmin:ChatMsg(".info") end)
@@ -1617,16 +1662,14 @@ function MangAdmin:InitDropDowns()
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value) end
-      if v[2] == Locale:GetLocale() then
-        info.checked = true
-      else
-        info.checked = nil
-      end
+      info.checked = nil
+      --info.notCheckable = true
       info.icon = nil
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
-  end  
+    UIDropDownMenu_SetSelectedValue(ma_languagedropdown, Locale:GetLocale())
+  end
   UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_languagedropdown)
   UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
@@ -1644,16 +1687,18 @@ function MangAdmin:InitDropDowns()
     for k,v in ipairs(buttons) do
       info.text = v[1]
       info.value = v[2]
-      info.func = function() UIDropDownMenu_SetSelectedValue(ma_weathertabledropdown, this.value) end
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, this.value) end
       info.checked = nil
+      --info.notCheckable = true
       info.icon = nil
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
+    UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, "0 0")
   end  
-  UIDropDownMenu_Initialize(ma_weathertabledropdown, WeatherDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_weathertabledropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_weathertabledropdown)
+  UIDropDownMenu_Initialize(ma_weatherdropdown, WeatherDropDownInitialize)
+  UIDropDownMenu_SetWidth(100, ma_weatherdropdown)
+  UIDropDownMenu_SetButtonWidth(20, ma_weatherdropdown)
   -- RELOAD TABLES
   local function ReloadTableDropDownInitialize()
     local level = 1
@@ -1706,6 +1751,7 @@ function MangAdmin:InitDropDowns()
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
+    UIDropDownMenu_SetSelectedValue(ma_reloadtabledropdown, "all")
   end  
   UIDropDownMenu_Initialize(ma_reloadtabledropdown, ReloadTableDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_reloadtabledropdown)
@@ -1732,6 +1778,7 @@ function MangAdmin:InitDropDowns()
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
+    UIDropDownMenu_SetSelectedValue(ma_modifydropdown, "levelup")
   end  
   UIDropDownMenu_Initialize(ma_modifydropdown, ModifyDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_modifydropdown)
@@ -1756,6 +1803,7 @@ function MangAdmin:InitDropDowns()
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
+    UIDropDownMenu_SetSelectedValue(ma_resetdropdown, "talents")
   end  
   UIDropDownMenu_Initialize(ma_resetdropdown, ResetDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_resetdropdown)
@@ -1790,6 +1838,7 @@ function MangAdmin:InitDropDowns()
       info.keepShownOnClick = nil
       UIDropDownMenu_AddButton(info, level)
     end
+    UIDropDownMenu_SetSelectedValue(ma_learnlangdropdown, "all_lang")
   end  
   UIDropDownMenu_Initialize(ma_learnlangdropdown, LearnLangDropDownInitialize)
   UIDropDownMenu_SetWidth(100, ma_learnlangdropdown)

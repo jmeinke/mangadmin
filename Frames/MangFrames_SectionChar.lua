@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -134,6 +134,163 @@ function MangAdmin:CreateCharSection()
   })]]
   
   FrameLib:BuildFrame({
+    type = "PlayerModel",
+    name = "ma_modelframe",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 233,
+      height = 300
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = -70,
+      offY = 10
+    },
+    inherits = nil
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_modelrotatelbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotatelbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -10
+    },
+    text = "<<="
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_modelrotaterbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotaterbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 44,
+      offY = -10
+    },
+    text = "=>>"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_killbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_killbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -10
+    },
+    text = Locale["ma_KillButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_respawnbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_respawnbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -34
+    },
+    text = "Respawn"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_revivebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_revivebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -58
+    },
+    text = Locale["ma_ReviveButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_savebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_savebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -82
+    },
+    text = Locale["ma_SaveButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_kickbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_kickbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -106
+    },
+    text = Locale["ma_KickButton"]
+  })
+  
+  FrameLib:BuildFrame({
     name = "ma_learnlangdropdown",
     group = "char",
     parent = ma_midframe,
@@ -142,8 +299,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = -10,
+      pos = "TOPRIGHT",
+      offX = -90,
       offY = -10
     },
     inherits = "UIDropDownMenuTemplate"
@@ -162,8 +319,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = 130,
+      pos = "TOPRIGHT",
+      offX = -10,
       offY = -15
     },
     text = "Learn"
@@ -178,8 +335,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = -10,
+      pos = "TOPRIGHT",
+      offX = -130,
       offY = -40
     },
     inherits = "UIDropDownMenuTemplate"
@@ -195,8 +352,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = 135,
+      pos = "TOPRIGHT",
+      offX = -100,
       offY = -45
     },
     inherits = "InputBoxTemplate"
@@ -215,8 +372,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = 170,
+      pos = "TOPRIGHT",
+      offX = -10,
       offY = -45
     },
     text = "Modify"
@@ -231,8 +388,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = -10,
+      pos = "TOPRIGHT",
+      offX = -90,
       offY = -70
     },
     inherits = "UIDropDownMenuTemplate"
@@ -251,8 +408,8 @@ function MangAdmin:CreateCharSection()
       height = 20
     },
     setpoint = {
-      pos = "TOPLEFT",
-      offX = 130,
+      pos = "TOPRIGHT",
+      offX = -10,
       offY = -75
     },
     text = "Reset"
@@ -267,8 +424,8 @@ function MangAdmin:CreateCharSection()
       width = 80
     },
     setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
+      pos = "BOTTOMRIGHT",
+      offX = -10,
       offY = 60
     },
     inherits = "OptionsSliderTemplate"
@@ -283,187 +440,11 @@ function MangAdmin:CreateCharSection()
       width = 80
     },
     setpoint = {
-      pos = "BOTTOMLEFT",
-      offX = 10,
+      pos = "BOTTOMRIGHT",
+      offX = -10,
       offY = 20
     },
     inherits = "OptionsSliderTemplate"
   })
-
-  FrameLib:BuildButton({
-    name = "ma_killbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_killbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -10
-    },
-    text = Locale["ma_KillButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_kickbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_kickbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -34
-    },
-    text = Locale["ma_KickButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_dismountbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_dismountbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -58
-    },
-    text = Locale["ma_DismountButton"]
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_revivebutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_revivebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -82
-    },
-    text = Locale["ma_ReviveButton"]
-  })
   
-  FrameLib:BuildButton({
-    name = "ma_respawnbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_respawnbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -106
-    },
-    text = "Respawn"
-  })
-
-  FrameLib:BuildButton({
-    name = "ma_savebutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_savebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -167,
-      offY = -130
-    },
-    text = Locale["ma_SaveButton"]
-  })
-  
-  FrameLib:BuildFrame({
-    type = "PlayerModel",
-    name = "ma_modelframe",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 233,
-      height = 300
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = 70,
-      offY = 10
-    },
-    inherits = nil
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_modelrotaterbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_modelrotaterbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 30,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -10,
-      offY = -10
-    },
-    text = "=>>"
-  })
-  
-  FrameLib:BuildButton({
-    name = "ma_modelrotatelbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_modelrotatelbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 30,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPRIGHT",
-      offX = -44,
-      offY = -10
-    },
-    text = "<<="
-  })
 end

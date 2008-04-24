@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -133,6 +133,7 @@ function Return_itIT()
     ["ma_TicketsInfoPlayedTime"] = "|cFF00FF00Tempo giocato:|r ",
     ["ma_TicketsInfoLevel"] = "|cFF00FF00Livello:|r ",
     ["ma_TicketsInfoMoney"] = "|cFF00FF00Denaro:|r ",
+    ["ma_TicketsInfoLatency"] = "|cFF00FF00Latency:|r ",
     ["ma_TicketsNoInfo"] = "Nessuna informazione ticket disponibile...",
     ["ma_TicketsNotLoaded"] = "Nessun ticket caricato...",
     ["ma_TicketsNoTickets"] = "Non ci sonon ticket disponibili!",

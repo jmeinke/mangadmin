@@ -11,7 +11,7 @@
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 --
--- Official Forums: http://www.manground.de/forum/
+-- Official Forums: http://www.manground.org/forum/
 -- GoogleCode Website: http://code.google.com/p/mangadmin/
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
@@ -133,6 +133,7 @@ function Return_huHU()
     ["ma_TicketsInfoPlayedTime"] = "|cFF00FF00Játszott idö:|r ",
     ["ma_TicketsInfoLevel"] = "|cFF00FF00Szint:|r ",
     ["ma_TicketsInfoMoney"] = "|cFF00FF00Pénz:|r ",
+    ["ma_TicketsInfoLatency"] = "|cFF00FF00Latency:|r ",
     ["ma_TicketsNoInfo"] = "Nem érhetö el ticket infó...",
     ["ma_TicketsNotLoaded"] = "Nincs betöltve ticket...",
     ["ma_TicketsNoTickets"] = "Nincs ticket!",
