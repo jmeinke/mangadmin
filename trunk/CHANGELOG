@@ -20,6 +20,9 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 78:
+  * fix: readded AceOO
+
 Rev. 77:
   BUGFIX PART 2
   * updated some libraries and the TODO list
