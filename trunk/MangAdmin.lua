@@ -513,11 +513,11 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
   local catchedSth = false
 
   --if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
-    -- hook all uint32 .getvalue requests
+    --[[ hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
       output = self:GetValueCallHandler(guid, field, value)
-    end
+    end]]
     
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
