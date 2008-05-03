@@ -20,6 +20,11 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 79:
+  * fixed: bug with code which was accidently uncommented
+  * fixed: error with translations
+  * updated: spanish language file, patch provided by gorrister
+  
 Rev. 78:
   * fix: readded AceOO
 
