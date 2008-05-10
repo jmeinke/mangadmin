@@ -808,13 +808,13 @@ function MangAdmin:ToggleGMMode(value)
 end
 
 function MangAdmin:ToggleFlyMode(value)
-  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+  --if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
-    MangAdmin:ChatMsg(".flymode "..value)
+    MangAdmin:ChatMsg(".gm fly "..value)
     MangAdmin:LogAction("Turned Fly-mode "..value.." for "..player..".")
-  else
+  --[[else
     self:Print(Locale["selectionerror1"])
-  end
+  end]]
 end
 
 function MangAdmin:ToggleHoverMode(value)
@@ -834,7 +834,7 @@ function MangAdmin:ToggleWhisper(value)
 end
 
 function MangAdmin:ToggleVisible(value)
-  MangAdmin:ChatMsg(".visible "..value)
+  MangAdmin:ChatMsg(".gm visible "..value)
   if value == "on" then
     MangAdmin:LogAction("Turned you visible.")
   else
@@ -984,7 +984,7 @@ function MangAdmin:Quest(value, state)
 end
 
 function MangAdmin:Creature(value, state)
-    local command = ".addspw"
+    local command = ".npc add"
     local logcmd = "Spawned"
     if state == "RightButton" then
       command = ".listcreature"
@@ -1010,7 +1010,7 @@ function MangAdmin:AddItem(value, state)
     local player = UnitName("target") or UnitName("player")
     local amount = ma_var1editbox:GetText()
     if state == "RightButton" then
-      self:ChatMsg(".listitem "..value)
+      self:ChatMsg(".list item "..value)
       self:LogAction("Listed item with id "..value..".")
     else
       if amount == "" then
@@ -1040,17 +1040,17 @@ function MangAdmin:AddObject(value, state)
   local loot = ma_var1editbox:GetText()
   local _time = ma_var2editbox:GetText()
   if state == "RightButton" then
-    self:ChatMsg(".addgo "..value.." "..value)
+    self:ChatMsg(".gobject add "..value.." "..value)
     self:LogAction("Added object id "..value.." with loot template.")
   else
     if loot ~= "" and _time == "" then
-      self:ChatMsg(".addgo "..value.. " "..loot)
+      self:ChatMsg(".gobject add "..value.. " "..loot)
       self:LogAction("Added object id "..value.." with loot "..loot..".")
     elseif loot ~= "" and _time ~= "" then
-      self:ChatMsg(".addgo "..value.. " "..loot.." ".._time)
+      self:ChatMsg(".gobject add "..value.. " "..loot.." ".._time)
       self:LogAction("Added object id "..value.." with loot "..loot.." and spawntime ".._time..".")
     else
-      self:ChatMsg(".addgo "..value)
+      self:ChatMsg(".gobject add "..value)
       self:LogAction("Added object id "..value..".")
     end
   end

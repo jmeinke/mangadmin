@@ -175,6 +175,7 @@ function Return_svSV()
     ["Gnomish"] = "Gnomish",
     ["Troll"] = "Troll",
     ["Gutterspeak"] = "Gutterspeak",
+    ["Draenei"] = "Draenei",
     ["ma_NoFavorites"] = "There are currently no saved favorites!",
     ["ma_NoZones"] = "No zones!",
     ["ma_NoSubZones"] = "No subzones!",

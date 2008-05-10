@@ -153,38 +153,38 @@ end
 function MangLinkifier_SetItemRef(link, text, button)
   ----------====~~Target Command Functions ~~====----------
   if ( strsub(link, 1, 9) == "targidadd" ) then
-    SendChatMessage(".addgo "..strsub(link, 11), say, nil, nil)
+    SendChatMessage(".gobject add "..strsub(link, 11), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 10) == "targidlist" ) then
-    SendChatMessage(".listobject "..strsub(link, 12), say, nil, nil)
+    SendChatMessage(".list object "..strsub(link, 12), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 10) == "targguidgo" ) then
-    SendChatMessage(".goobject "..strsub(link, 12), say, nil, nil)
+    SendChatMessage(".go object "..strsub(link, 12), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 12) == "targguidmove" ) then
-    SendChatMessage(".moveobject "..strsub(link, 14), say, nil, nil)
+    SendChatMessage(".gobject move "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 12) == "targguidturn" ) then
-    SendChatMessage(".turnobject "..strsub(link, 14), say, nil, nil)
+    SendChatMessage(".gobject turn "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 11) == "targguiddel" ) then
-    SendChatMessage(".delobject "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".gobject delete "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 7) == "targxyz" ) then
     SendChatMessage(".goxyz "..strsub(link, 9), say, nil, nil)
     return;
   ----------====~~ NPC Info Command Functions ~~====----------
   elseif ( strsub(link, 1, 9) == "npcguidgo" ) then
-    SendChatMessage(".gocreature "..strsub(link, 11), say, nil, nil)
+    SendChatMessage(".go creature "..strsub(link, 11), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 11) == "npcguidmove" ) then
-    SendChatMessage(".gocreature "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".go creature "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 11) == "npcentryadd" ) then
-    SendChatMessage(".addspw "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".npc add "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 12) == "npcentrylist" ) then
-    SendChatMessage(".listcreature "..strsub(link, 14), say, nil, nil)
+    SendChatMessage(".list creature "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 10) == "npcdisplay" ) then
     SendChatMessage(".morph "..strsub(link, 12), say, nil, nil)
@@ -194,19 +194,19 @@ function MangLinkifier_SetItemRef(link, text, button)
     return;
   ----------====~~ ADD GO Command Functions ~~====----------
   elseif ( strsub(link, 1, 11) == "addgoguidgo" ) then
-    SendChatMessage(".goobject "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".go object "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 13) == "addgoguidmove" ) then
-    SendChatMessage(".moveobject "..strsub(link, 15), say, nil, nil)
+    SendChatMessage(".gobject move "..strsub(link, 15), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 13) == "addgoguidturn" ) then
-    SendChatMessage(".turnobject "..strsub(link, 15), say, nil, nil)
+    SendChatMessage(".gobject turn "..strsub(link, 15), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 12) == "addgoguiddel" ) then
-    SendChatMessage(".delobject "..strsub(link, 14), say, nil, nil)
+    SendChatMessage(".gobject delete "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 7) == "addgoid" ) then
-    SendChatMessage(".addgo "..strsub(link, 9), say, nil, nil)
+    SendChatMessage(".gobject add "..strsub(link, 9), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 8) == "addgoxyz" ) then
     SendChatMessage(".goxyz "..strsub(link, 10), say, nil, nil)
@@ -229,31 +229,31 @@ function MangLinkifier_SetItemRef(link, text, button)
     SendChatMessage(".additem "..strsub(link, 15), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 14) == "lookupitemlist" ) then
-    SendChatMessage(".listitem "..strsub(link, 16), say, nil, nil)
+    SendChatMessage(".list item "..strsub(link, 16), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 16) == "gameobject_entry" ) then
-    SendChatMessage(".addgo "..strsub(link, 18), say, nil, nil)
+    SendChatMessage(".gobject add "..strsub(link, 18), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 11) == "lookupgoadd" ) then
-    SendChatMessage(".addgo "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".gobject add "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 12) == "lookupgolist" ) then
-    SendChatMessage(".listobject "..strsub(link, 14), say, nil, nil)
+    SendChatMessage(".list object "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 14) == "creature_entry" ) then
-    SendChatMessage(".addspw "..strsub(link, 16), say, nil, nil)
+    SendChatMessage(".npc add "..strsub(link, 16), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 17) == "lookupcreatureadd" ) then
-    SendChatMessage(".addspw "..strsub(link, 19), say, nil, nil)
+    SendChatMessage(".npc add "..strsub(link, 19), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 18) == "lookupcreaturelist" ) then
-    SendChatMessage(".listcreature "..strsub(link, 20), say, nil, nil)
+    SendChatMessage(".list creature "..strsub(link, 20), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 10) == "gameobject" ) then
-    SendChatMessage(".goobject "..strsub(link, 12), say, nil, nil)
+    SendChatMessage(".go object "..strsub(link, 12), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 8) == "creature" ) then
-    SendChatMessage(".gocreature "..strsub(link, 10), say, nil, nil)
+    SendChatMessage(".go creature "..strsub(link, 10), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 5) == "spell" ) then
     SendChatMessage(".learn "..strsub(link, 7), say, nil, nil)
