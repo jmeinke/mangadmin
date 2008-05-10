@@ -20,6 +20,11 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 80:
+  * fixed: another error with translations
+  * fixed: commands after MaNGOS command table changes
+  * fixed: MangLinkifier, file provided by Atreus420
+
 Rev. 79:
   * fixed: bug with code which was accidently uncommented
   * fixed: error with translations

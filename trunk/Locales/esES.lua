@@ -175,6 +175,7 @@ function Return_esES()
     ["Gnomish"] = "Gnomish",
     ["Troll"] = "Troll",
     ["Gutterspeak"] = "Gutterspeak",
+    ["Draenei"] = "Draenei",
     ["ma_NoFavorites"] = "¡Actualmente no hay favoritos guardados!",
     ["ma_NoZones"] = "¡Sin zonas!",
     ["ma_NoSubZones"] = "Sin subzonas!",
