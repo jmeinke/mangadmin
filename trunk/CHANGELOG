@@ -20,6 +20,9 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 81:
+  * fixed: some forgotten commands in r80, patch provided by elegos87
+  
 Rev. 80:
   * fixed: another error with translations
   * fixed: commands after MaNGOS command table changes
