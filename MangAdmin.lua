@@ -962,7 +962,7 @@ function MangAdmin:Quest(value, state)
     local logcmd = "Added"
     local logcmd2 = "to"
     if state == "RightButton" then
-      command = ".removequest"
+      command = ".quest remove"
       logcmd = "Removed"
       logcmd2 = "from"
     end
@@ -987,7 +987,7 @@ function MangAdmin:Creature(value, state)
     local command = ".npc add"
     local logcmd = "Spawned"
     if state == "RightButton" then
-      command = ".listcreature"
+      command = ".list creature"
       logcmd = "Listed"
     end
     if type(value) == "string" then
@@ -1182,7 +1182,7 @@ function MangAdmin:GridNavigate(x, y)
         newy = y + step
         newx = x
       end
-      self:ChatMsg(".goxy "..newx.." "..newy)
+      self:ChatMsg(".go xy "..newx.." "..newy)
       self:LogAction("Teleported to grid position: X: "..newx.." Y: "..newy)
     else
       self:Print("Value must be a number!")
@@ -1191,7 +1191,7 @@ function MangAdmin:GridNavigate(x, y)
 end
 
 function MangAdmin:CreateGuild(leader, name)
-  self:ChatMsg(".createguild "..leader.." "..name)
+  self:ChatMsg(".guild create "..leader.." "..name)
   self:LogAction("Created guild '"..name.."' with leader "..leader..".")
 end
 
@@ -1262,7 +1262,7 @@ function MangAdmin:Ticket(value)
     self:ShowTicketTab()
     self:LoadTickets()
   elseif value == "gochar" then
-    self:ChatMsg(".goname "..ticket["tChar"])
+    self:ChatMsg(".go name "..ticket["tChar"])
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
