@@ -171,7 +171,7 @@ function MangLinkifier_SetItemRef(link, text, button)
     SendChatMessage(".gobject delete "..strsub(link, 13), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 7) == "targxyz" ) then
-    SendChatMessage(".goxyz "..strsub(link, 9), say, nil, nil)
+    SendChatMessage(".go xyz "..strsub(link, 9), say, nil, nil)
     return;
   ----------====~~ NPC Info Command Functions ~~====----------
   elseif ( strsub(link, 1, 9) == "npcguidgo" ) then
@@ -187,10 +187,10 @@ function MangLinkifier_SetItemRef(link, text, button)
     SendChatMessage(".list creature "..strsub(link, 14), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 10) == "npcdisplay" ) then
-    SendChatMessage(".morph "..strsub(link, 12), say, nil, nil)
+    SendChatMessage(".modify morph "..strsub(link, 12), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 11) == "npcdisplay2" ) then
-    SendChatMessage(".morph "..strsub(link, 13), say, nil, nil)
+    SendChatMessage(".modify morph "..strsub(link, 13), say, nil, nil)
     return;
   ----------====~~ ADD GO Command Functions ~~====----------
   elseif ( strsub(link, 1, 11) == "addgoguidgo" ) then
@@ -209,7 +209,7 @@ function MangLinkifier_SetItemRef(link, text, button)
     SendChatMessage(".gobject add "..strsub(link, 9), say, nil, nil)
     return;
   elseif ( strsub(link, 1, 8) == "addgoxyz" ) then
-    SendChatMessage(".goxyz "..strsub(link, 10), say, nil, nil)
+    SendChatMessage(".go xyz "..strsub(link, 10), say, nil, nil)
     return;
   ----------====~~ GPS Command Functions ~~====----------
   elseif ( strsub(link, 1, 6) == "gpsxyz" ) then
