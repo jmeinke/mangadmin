@@ -414,37 +414,5 @@ function MangAdmin:CreateCharSection()
     },
     text = "Reset"
   })
-
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_speedslider",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 80
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 60
-    },
-    inherits = "OptionsSliderTemplate"
-  })
-
-  FrameLib:BuildFrame({
-    type = "Slider",
-    name = "ma_scaleslider",
-    group = "char",
-    parent = ma_midframe,
-    size = {
-      width = 80
-    },
-    setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -10,
-      offY = 20
-    },
-    inherits = "OptionsSliderTemplate"
-  })
   
 end

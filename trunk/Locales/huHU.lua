@@ -21,8 +21,9 @@ function Return_huHU()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Magyar",
-    ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Karakter:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Karakter:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigátor",
     ["selectionerror1"] = "Válaszd ki magad, egy másik player-t vagy semmit!",
     ["selectionerror2"] = "Válaszd ki magad vagy semmit!",

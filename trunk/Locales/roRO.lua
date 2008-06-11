@@ -21,8 +21,9 @@ function Return_roRO()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Romanian",
-    ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Selecteaza-te pe tine sau alt jucator sau nimic!",
     ["selectionerror2"] = "Selecteaza-te pe tine sau nimic!",

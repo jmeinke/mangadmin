@@ -164,10 +164,22 @@ function MangAdmin:CreateStartFrames()
   })
 
   FrameLib:BuildFontString({
-    name = "ma_loggedtext",
+    name = "ma_toptext",
     group = "bg",
     parent = ma_topframe,
-    text = Locale["logged"],
+    text = "toptext, you should not see this!",
+    setpoint = {
+      pos = "BOTTOMRIGHT",
+      offX = -10,
+      offY = 24
+    }
+  })
+  
+  FrameLib:BuildFontString({
+    name = "ma_top2text",
+    group = "bg",
+    parent = ma_topframe,
+    text = "toptext, you should not see this!",
     setpoint = {
       pos = "BOTTOMRIGHT",
       offX = -10,

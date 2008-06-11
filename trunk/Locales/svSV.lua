@@ -21,8 +21,9 @@ function Return_svSV()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Svenska",
-    ["logged"] = "|cFF00FF00Kungarike:|r "..GetCVar("realmName").." |cFF00FF00Karakt\195\164r:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Kungarike:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Karakt\195\164r:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Galler-Navigator",
     ["selectionerror1"] = "Var god välj dig själv, en annan spelare eller ingenting!",
     ["selectionerror2"] = "Var god välj endast dig själv eller ingenting!",

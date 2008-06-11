@@ -34,7 +34,6 @@
   - idea provided by killerdead
  
 - buttons:
-  - reset level/spells/stats/talents
   - create guild leader name
   - learn profession* with skill
   - modify money/energy/rage/hp/mana
@@ -42,7 +41,7 @@
   - add creature guid
   - respawn
   - distance
-  - info
+  - pinfo and npcinfo
   - modify level/spawn distance/spawn time/model id/faction/flags
   - add gameobject id
   - delete gameobject
@@ -54,7 +53,6 @@
   - Field for morph command, combined with bookmarks can be usefull too (at least for me :-)
   - New window with informations about targetted object (by .targetobject) and with button to delete/move..
   - Window like Who List but with simplier filtering of players, teleporting, (mass teleporting?), mailing...
-  - Minimalize option with shortcuts to sections like mangadmin for 1.12
   
 =Suggestions/Requests by litlmutt=
   -ability to teleport to a player
@@ -77,5 +75,8 @@
   * add a function to exchange favorites with each other (synchronization) or simply send own
     favorites to other player, favorites can also be exported or imported
   * fix: correct some coordinates in MangFrames_Start.lua, this prevents layout boxes to
-    float between right and wrong positions when using /rl often
+    float between good and bod positions when using /rl often
   * add: waypoint action buttons
+  * move unlocalizable strings from core or frame code to locale files
+  * add icon preview for item search (this can be implemented since item icon informations
+    are stored by client)

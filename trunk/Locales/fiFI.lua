@@ -21,8 +21,9 @@ function Return_fiFI()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Suomi",
-    ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Valitse itsesi, toinen pelaaja tai ei mit\195\177\195\177n!",
     ["selectionerror2"] = "Please select only yourself or nothing!",

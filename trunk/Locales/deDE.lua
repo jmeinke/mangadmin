@@ -21,8 +21,9 @@ function Return_deDE()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "German",
-    ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Bitte selektiere nur dich selbst, einen anderen Spieler, oder gar nichts!",
     ["selectionerror2"] = "Bitte selektiere nur gar nichts bzw. nur dich selbst!",
