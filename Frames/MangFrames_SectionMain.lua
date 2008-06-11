@@ -334,6 +334,46 @@ function MangAdmin:CreateMainSection()
   })
   
   FrameLib:BuildButton({
+    name = "ma_mapsonbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_mapsonbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 10,
+      offY = -202
+    },
+    text = "View all maps"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_mapsoffbutton",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_mapsoffbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 40,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 134,
+      offY = -202
+    },
+    text = Locale["ma_OffButton"]
+  })
+  
+  FrameLib:BuildButton({
     name = "ma_screenshotbutton",
     group = "main",
     parent = ma_midframe,
@@ -399,11 +439,43 @@ function MangAdmin:CreateMainSection()
     group = "main",
     parent = ma_midframe,
     setpoint = {
-      pos = "BOTTOMRIGHT",
-      offX = -180,
-      offY = 10
+      pos = "TOPLEFT",
+      offX = 180,
+      offY = -10
     },
     text = "Instantly kill enemy creatures",
     inherits = "OptionsCheckButtonTemplate"
+  })
+  
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_speedslider",
+    group = "main",
+    parent = ma_midframe,
+    size = {
+      width = 80
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 180,
+      offY = -50
+    },
+    inherits = "OptionsSliderTemplate"
+  })
+
+  FrameLib:BuildFrame({
+    type = "Slider",
+    name = "ma_scaleslider",
+    group = "main",
+    parent = ma_midframe,
+    size = {
+      width = 80
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 180,
+      offY = -80
+    },
+    inherits = "OptionsSliderTemplate"
   })
 end

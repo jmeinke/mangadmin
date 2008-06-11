@@ -21,8 +21,9 @@ function Return_frFR()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "French",
-    ["logged"] = "|cFF00FF00Royaume:|r "..GetCVar("realmName").." |cFF00FF00Personnage:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Royaume:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Personnage:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "S\195\169lectionnez quelqu'un ou rien !",
     ["selectionerror2"] = "S\195\169lectionnez-vous ou rien!",

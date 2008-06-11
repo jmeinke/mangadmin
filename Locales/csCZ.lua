@@ -21,8 +21,9 @@ function Return_csCZ()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Czech",
-    ["logged"] = "|cFF00FF00Realm:|r "..GetCVar("realmName").." |cFF00FF00Char:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Prosim vyber sebe, jinou postavu, nebo nic!",
     ["selectionerror2"] = "Prosim vyber sebe, nebo nic!",

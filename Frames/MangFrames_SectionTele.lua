@@ -339,7 +339,7 @@ function MangAdmin:CreateTeleSection()
       color = {0,0,0,0.7}
     },
     size = {
-      width = 154,
+      width = 204,
       height = 225
     },
     setpoint = {
@@ -366,7 +366,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -387,7 +387,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -408,7 +408,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -429,7 +429,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -450,7 +450,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -471,7 +471,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -492,7 +492,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -513,7 +513,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -534,7 +534,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -555,7 +555,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -576,7 +576,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -597,7 +597,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 200,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}

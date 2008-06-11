@@ -21,8 +21,9 @@ function Return_liLI()
   return {
     ["slashcmds"] = { "/mangadmin", "/ma" },
     ["lang"] = "Lietuviu",
-    ["logged"] = "|cFF00FF00Karalyste:|r "..GetCVar("realmName").." |cFF00FF00Veikejas:|r "..UnitName("player").." ",
-    ["charguid"] = "|cFF00FF00Guid:|r ",
+    ["realm"] = "|cFF00FF00Karalyste:|r "..GetCVar("realmName"),
+    ["char"] = "|cFF00FF00Veikejas:|r "..UnitName("player"),
+    ["guid"] = "|cFF00FF00Guid:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Please select yourself or another player or nothing!",
     ["selectionerror2"] = "Please select only yourself or nothing!",

@@ -42,28 +42,15 @@ function MangAdmin:CreateTicketSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
-      height = 20
+      width = 100,
+      height = 15
     },
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
-      offY = -10
+      offY = -5
     },
     text = Locale["ma_LoadTicketsButton"]
-  })
-  
-    
-  FrameLib:BuildFontString({
-    name = "ma_tpinfo_text",
-    group = "ticket",
-    parent = ma_midframe,
-    text = "You should not see this text!",
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 10,
-      offY = -40
-    }
   })
   
   FrameLib:BuildButton({

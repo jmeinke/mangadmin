@@ -33,17 +33,15 @@ local Tablet     = AceLibrary("Tablet-2.0")
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
   {
-    getValueCallHandler = {
+    --[[getValueCallHandler = {
       calledGetGuid = false,
       realGuid = nil
-    },
+    },]]
     functionQueue = {},
-    workaroundValues = {
-      flymode = nil
-    },
     requests = {
       tpinfo = false,
       ticket = false,
+      ticketbody = 0,
       item = false,
       favitem = false,
       itemset = false,
@@ -57,7 +55,9 @@ MangAdmin:RegisterDefaults("char",
     nextGridWay = "ahead",
     selectedZone = nil,
     newTicketQueue = {},
-    instantKillMode = false
+    instantKillMode = false,
+    msgDeltaTime = time(),
+    
   }
 )
 MangAdmin:RegisterDefaults("account", 
@@ -204,12 +204,13 @@ function MangAdmin:OnInitialize()
   --altering the function setitemref, to make it possible to click links
   MangLinkifier_SetItemRef_Original = SetItemRef
   SetItemRef = MangLinkifier_SetItemRef
+  self.db.char.msgDeltaTime = time()
 end
 
 function MangAdmin:OnEnable()
   self:SetDebugging(true) -- to have debugging through the whole app.    
-  -- init guid for callhandler, not implemented yet, comes in next revision
-  ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..UnitGUID("player"))
+  ma_toptext:SetText(Locale["char"].." "..Locale["guid"]..tonumber(UnitGUID("player"),16))
+  ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"].."0")
   self:SearchReset()
   -- refresh server information
   self:ChatMsg(".info")
@@ -236,7 +237,7 @@ function MangAdmin:ZONE_CHANGED()
     if not MangAdmin.db.char.selectedZone or MangAdmin.db.char.selectedZone ~= translate(GetZoneText()) then
       if translationfor(GetZoneText()) then
         MangAdmin.db.char.selectedZone = translate(GetZoneText())
-        TeleportScrollUpdate()
+        InlineScrollUpdate()
       end
     end
   end]]
@@ -374,6 +375,9 @@ function MangAdmin:ToggleContentGroup(group)
 end
 
 function MangAdmin:InstantGroupToggle(group)
+  if group ~= "ticket" then
+    self.db.char.requests.ticket = false
+  end
   FrameLib:HandleGroup("bg", function(frame) frame:Show() end)
   MangAdmin:ToggleTabButton(group)
   MangAdmin:ToggleContentGroup(group)
@@ -440,7 +444,7 @@ function MangAdmin:TogglePopup(value, param)
     elseif param.type == "tele" then
       ma_ptabbutton_1:SetText(Locale["ma_TeleSearchButton"])
     elseif param.type == "ticket" then
-      ma_modfavsbutton:Hide()
+      --[[ma_modfavsbutton:Hide()
       ma_selectallbutton:Hide()
       ma_deselectallbutton:Hide()
       ma_ptabbutton_2:Hide()
@@ -449,7 +453,7 @@ function MangAdmin:TogglePopup(value, param)
       ma_searchbutton:SetText(Locale["ma_Reload"])
       ma_searchbutton:SetScript("OnClick", function() self:LoadTickets() end)
       ma_resetsearchbutton:SetText(Locale["ma_LoadMore"])
-      ma_resetsearchbutton:SetScript("OnClick", function() MangAdmin.db.account.tickets.loading = true; self:LoadTickets(MangAdmin.db.account.tickets.count) end)
+      ma_resetsearchbutton:SetScript("OnClick", function() MangAdmin.db.account.tickets.loading = true; self:LoadTickets(MangAdmin.db.account.tickets.count) end)]]--
     end
   elseif value == "favorites" then
     self:SearchReset()
@@ -511,13 +515,16 @@ end
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
-
   --if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
     --[[ hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
       output = self:GetValueCallHandler(guid, field, value)
     end]]
+    if (time() - self.db.char.msgDeltaTime) > 0 then
+      self.db.char.requests.ticketbody = 0
+    end
+    self.db.char.msgDeltaTime = time()
     
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
@@ -627,26 +634,11 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook ticket count
-    for count, status in string.gmatch(text, "Tickets count: (%d+) show new tickets: (%w+)\n") do
+    for count, status in string.gmatch(text, "Tickets count: (%d+) show new tickets: (%w+)") do
       if self.db.char.requests.ticket then
-        catchedSth = true
+        catchedSth = false
         output = false
         self:LoadTickets(count)
-      end
-    end
-    
-    -- get tickets
-    for char, update, category, message in string.gmatch(text, "Ticket of (.*) %(Last updated: (.*)%) %(Category: (%d+)%):\n(.*)\n") do
-      if self.db.char.requests.ticket then
-        local ticketCount = 0
-        table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
-        local number = self.db.account.tickets.count - ticketCount
-        table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tLUpdate = update, tCat = category, tMsg = message})
-        PopupScrollUpdate()
-        self:RequestTickets()
-        catchedSth = true
-        output = false
-        --MangAdmin:ChatMsg("DEBUG YEAH")
       end
     end
     
@@ -692,34 +684,54 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       ma_infouptimetext:SetText(Locale["info_uptime"]..uptime)
     end
     
+    -- get tickets
+    for char, update, category, message in string.gmatch(text, "Ticket of (.*) %(Last updated: (.*)%) %(Category: (%d+)%):(.*)") do
+      if self.db.char.requests.ticket then
+        local ticketCount = 0
+        table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+        local number = self.db.account.tickets.count - ticketCount
+        table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tLUpdate = update, tCat = category, tMsg = ""})
+        --self:RequestTickets()
+        InlineScrollUpdate()
+        catchedSth = false
+        output = false
+        self.db.char.requests.ticketbody = number
+        --MangAdmin:ChatMsg("DEBUG YEAH")
+      end
+    end
+    
+    -- get ticket content
+    if self.db.char.requests.ticketbody > 0 then
+      if not catchedSth then
+        local number = self.db.char.requests.ticketbody
+        local oldmsg = self.db.account.buffer.tickets[number].tMsg
+        self.db.account.buffer.tickets[number].tMsg = oldmsg..text.."\n"
+        --ma_ticketeditbox:SetText(text)
+        catchedSth = true
+        output = false
+      else
+        self:RequestTickets() --??
+        self.db.char.requests.ticketbody = 0
+      end
+    end
     
     -- Check for possible UrlModification
     if catchedSth then
-      if output then
-        output = MangLinkifier_Decompose(text)
+      if output == false then
+        -- don't output anything
+      elseif output == true then
+        self.hooks[frame].AddMessage(frame, text, r, g, b, id)
+      else
+        output = MangLinkifier_Decompose(output)
+        self.hooks[frame].AddMessage(frame, output, r, g, b, id)
       end
     else
-      catchedSth = true
       output = MangLinkifier_Decompose(text)
+      self.hooks[frame].AddMessage(frame, text, r, g, b, id)
     end
   --else
     -- message is not from server
   --end
-  
-  if not catchedSth then
-    -- output
-    self.hooks[frame].AddMessage(frame, text, r, g, b, id)
-  else
-    if output == false then
-      -- so far nothing to do here
-      -- don't output anything
-    elseif output == true then
-      self.hooks[frame].AddMessage(frame, text, r, g, b, id)
-    else
-      -- output
-      self.hooks[frame].AddMessage(frame, output, r, g, b, id)
-    end
-  end
 end
 
 --[[ function MangAdmin:GetValueCallHandler(guid, field, value)
@@ -731,7 +743,7 @@ end
     -- getting GUID and setting db variables and logged text
     self.db.char.getValueCallHandler.calledGetGuid = true
     self.db.char.getValueCallHandler.realGuid = value
-    ma_loggedtext:SetText(Locale["logged"]..Locale["charguid"]..UnitGUID())
+    ma_toptext:SetText(Locale["char"]..Locale["guid"]..UnitGUID())
     return false    
   elseif guid == realGuid then
     return true
@@ -1217,6 +1229,9 @@ function MangAdmin:Shutdown(value)
 end
 
 function MangAdmin:SendMail(recipient, subject, body)
+  recipient = string.gsub(recipient, " ", "")
+  subject = string.gsub(subject, " ", "")
+  body = string.gsub(body, "\n", " ")
   self:ChatMsg(".sendm "..recipient.." "..subject.." "..body)
   self:LogAction("Sent a mail to "..recipient..". Subject was: "..subject)
 end
@@ -1240,8 +1255,7 @@ end
 function MangAdmin:ChangeWeather(status)
   if not (status == "") then
     self:ChatMsg(".wchange "..status)
-    self:LogAction(".wchange "..status)
-    self:LogAction("Changed weather.")
+    self:LogAction("Changed weather ("..status..").")
   end
 end
 
@@ -1260,9 +1274,9 @@ function MangAdmin:Ticket(value)
     self:ChatMsg(".delticket "..ticket["tNumber"])
     self:LogAction("Deleted ticket with number: "..ticket["tNumber"])
     self:ShowTicketTab()
-    self:LoadTickets()
+    --InlineScrollUpdate()
   elseif value == "gochar" then
-    self:ChatMsg(".go name "..ticket["tChar"])
+    self:ChatMsg(".goname "..ticket["tChar"])
   elseif value == "getchar" then
     self:ChatMsg(".namego "..ticket["tChar"])
   elseif value == "answer" then
@@ -1278,6 +1292,16 @@ function MangAdmin:ToggleTickets(value)
   MangAdmin:LogAction("Turned receiving new tickets "..value..".")
 end
 
+function MangAdmin:ToggleMaps(value)
+  MangAdmin:ChatMsg(".explorecheat "..value)
+  if value == 1 then
+    MangAdmin:LogAction("Revealed all maps for selected player.")
+  else
+    MangAdmin:LogAction("Hide all unexplored maps for selected player.")
+  end
+  
+end
+
 function MangAdmin:ShowTicketTab()
   ma_tpinfo_text:SetText(Locale["ma_TicketsNoInfo"])
   ma_ticketeditbox:SetText(Locale["ma_TicketsNotLoaded"])
@@ -1287,11 +1311,13 @@ function MangAdmin:ShowTicketTab()
   ma_gocharticketbutton:Disable()
   ma_whisperticketbutton:Disable()
   MangAdmin:InstantGroupToggle("ticket")
+  ma_ZoneScrollBar:Show()
+  self:LoadTickets(nil)
 end
 
 function MangAdmin:LoadTickets(number)
   self.db.char.newTicketQueue = {}
-  self.db.account.tickets.requested = 0
+  --self.db.account.tickets.requested = 0
   if number then
     if tonumber(number) > 0 then
       self.db.account.tickets.count = tonumber(number)
@@ -1299,10 +1325,10 @@ function MangAdmin:LoadTickets(number)
         self:LogAction("Load of tickets requested. Found "..number.." tickets!")
         self:RequestTickets()
         self:SetIcon(ROOT_PATH.."Textures\\icon.tga")
-        ma_resetsearchbutton:Enable()
+        --ma_resetsearchbutton:Enable()
       end
     else
-      ma_resetsearchbutton:Disable()
+      --ma_resetsearchbutton:Disable()
       self:NoResults("ticket")
     end
   else
@@ -1312,6 +1338,7 @@ function MangAdmin:LoadTickets(number)
     self:ChatMsg(".ticket")
     self:LogAction("Requesting ticket number!")
   end
+  --InlineScrollUpdate()
 end
 
 function MangAdmin:RequestTickets()
@@ -1319,15 +1346,18 @@ function MangAdmin:RequestTickets()
   local count = self.db.account.tickets.count
   local ticketCount = 0
   table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
-  ma_lookupresulttext:SetText(Locale["ma_TicketCount"]..count)
+  --ma_lookupresulttext:SetText(Locale["ma_TicketCount"]..count)
+  ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"]..count)
   local tnumber = count - ticketCount
   if tnumber == 0 then
     self:LogAction("Loaded all available tickets! No more to load...")
     ma_resetsearchbutton:Disable()
     --self.db.char.requests.ticket = false -- BUG check in next rev: while MA is activated you won't be able to request tickets in chat!!
-  elseif self.db.account.tickets.requested < 7 then
+  --elseif self.db.account.tickets.requested < 12 then
+  else
     self:ChatMsg(".ticket "..tnumber)
-    MangAdmin.db.account.tickets.requested = MangAdmin.db.account.tickets.requested + 1;
+    --self:LogAction(".ticket "..tnumber)
+    --MangAdmin.db.account.tickets.requested = MangAdmin.db.account.tickets.requested + 1;
     self:LogAction("Loading ticket "..tnumber.."...")
   end
 end
@@ -1526,7 +1556,6 @@ function MangAdmin:SearchReset()
   self.db.char.requests.favobject = false
   self.db.char.requests.tele = false
   self.db.char.requests.favtele = false
-  self.db.char.requests.ticket = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
@@ -1562,7 +1591,7 @@ function MangAdmin:InitButtons()
   -- start tab buttons
   self:PrepareScript(ma_tabbutton_main       , Locale["tt_MainButton"]         , function() MangAdmin:InstantGroupToggle("main") end)
   self:PrepareScript(ma_tabbutton_char       , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
-  self:PrepareScript(ma_tabbutton_tele       , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele") end)
+  self:PrepareScript(ma_tabbutton_tele       , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele"); end)
   self:PrepareScript(ma_tabbutton_ticket     , Locale["tt_TicketButton"]       , function() MangAdmin:ShowTicketTab() end)
   self:PrepareScript(ma_tabbutton_misc       , Locale["tt_MiscButton"]         , function() MangAdmin:InstantGroupToggle("misc") end)
   self:PrepareScript(ma_tabbutton_server     , Locale["tt_ServerButton"]       , function() MangAdmin:InstantGroupToggle("server") end)
@@ -1606,6 +1635,8 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_taxicheatoffbutton   , Locale["tt_TaxiOffButton"]      , function() MangAdmin:ToggleTaxicheat("off") end)
   self:PrepareScript(ma_ticketonbutton       , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleTickets("on") end)
   self:PrepareScript(ma_ticketoffbutton      , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleTickets("off") end)
+  self:PrepareScript(ma_mapsonbutton         , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleMaps(1) end)
+  self:PrepareScript(ma_mapsoffbutton        , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
   --self:PrepareScript(ma_learnallbutton       , nil                             , function() MangAdmin:LearnSpell("all") end)
   --self:PrepareScript(ma_learncraftsbutton    , nil                             , function() MangAdmin:LearnSpell("all_crafts") end)
@@ -1630,7 +1661,9 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_shutdownbutton       , Locale["tt_ShutdownButton"]     , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
   self:PrepareScript(ma_closebutton          , nil                             , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
   self:PrepareScript(ma_popupclosebutton     , nil                             , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
-  self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
+  self:PrepareScript(ma_popup2closebutton    , nil                             , function() FrameLib:HandleGroup("popup2", function(frame) frame:Hide()  end) end)
+  --self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
+  self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:LoadTickets() end)
   self:PrepareScript(ma_deleteticketbutton   , nil                             , function() MangAdmin:Ticket("delete") end)
   self:PrepareScript(ma_answerticketbutton   , nil                             , function() MangAdmin:Ticket("answer") end)
   self:PrepareScript(ma_getcharticketbutton  , nil                             , function() MangAdmin:Ticket("getchar") end)
@@ -1892,8 +1925,8 @@ end
 function MangAdmin:InitScrollFrames()
   ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, TeleportScrollUpdate) end)
-  ma_ZoneScrollBar:SetScript("OnShow", function() TeleportScrollUpdate() end)
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, InlineScrollUpdate) end)
+  ma_ZoneScrollBar:SetScript("OnShow", function() InlineScrollUpdate() end)
   ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, SubzoneScrollUpdate) end)
   ma_SubzoneScrollBar:SetScript("OnShow", function() SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
@@ -1966,16 +1999,14 @@ function MangAdmin:NoResults(var)
     -- Reset list and make an entry "No Tickets"
     self:LogAction(Locale["ma_TicketsNoTickets"])
     ma_ticketeditbox:SetText(Locale["ma_TicketsNoTickets"])
-    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
-    for line = 1,7 do
-      getglobal("ma_PopupScrollBarEntry"..line):Disable()
-      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
-      getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
+    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,30)
+    for line = 1,12 do
+      getglobal("ma_ZoneScrollBarEntry"..line):Disable()
       if line == 1 then
-        getglobal("ma_PopupScrollBarEntry"..line):SetText(Locale["ma_TicketsNoTickets"])
-        getglobal("ma_PopupScrollBarEntry"..line):Show()
+        getglobal("ma_ZoneScrollBarEntry"..line):SetText(Locale["ma_TicketsNoTickets"])
+        getglobal("ma_ZoneScrollBarEntry"..line):Show()
       else
-        getglobal("ma_PopupScrollBarEntry"..line):Hide()
+        getglobal("ma_ZoneScrollBarEntry"..line):Hide()
       end
     end
   elseif var == "search" then
@@ -2475,86 +2506,88 @@ function PopupScrollUpdate()
       end
     end
     
-  elseif MangAdmin.db.char.requests.ticket then --get tickets
+  else
+    MangAdmin:NoResults("search")
+  end
+end
+
+function InlineScrollUpdate()
+  if MangAdmin.db.char.requests.ticket then --get tickets
     local ticketCount = 0
     table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
     if ticketCount > 0 then
       --FauxScrollFrame_Update(ma_PopupScrollBar,4,7,30) --for paged mode, only load 4 at a time
-      FauxScrollFrame_Update(ma_PopupScrollBar,ticketCount,7,30)
-      for line = 1,7 do
+      FauxScrollFrame_Update(ma_ZoneScrollBar,ticketCount,12,16)
+      for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
-        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
         if lineplusoffset <= ticketCount then
           local object = MangAdmin.db.account.buffer.tickets[lineplusoffset]
-          getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..object["tNumber"].."|r Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() 
+          getglobal("ma_ZoneScrollBarEntry"..line):SetText("Id: |cffffffff"..object["tNumber"].."|r Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function() 
             ma_ticketeditbox:SetText(object["tMsg"])
             ma_tpinfo_text:SetText(string.format(Locale["ma_TicketTicketLoaded"], object["tNumber"]))
             MangAdmin.db.char.requests.tpinfo = true
             MangAdmin:ChatMsg(".pinfo "..object["tChar"])
-            MangAdmin:LogAction("Loading player info of "..object["tChar"])
+            MangAdmin:LogAction("Displaying ticket number "..object["tNumber"].." from player "..object["tChar"])
+            MangAdmin:LogAction("Loading player info of ticket creator ("..object["tChar"]..")")
+            FrameLib:HandleGroup("popup2", function(frame) frame:Show() end)
             MangAdmin.db.account.tickets.selected = object
             ma_deleteticketbutton:Enable()
             ma_answerticketbutton:Enable()
             ma_getcharticketbutton:Enable()
             ma_gocharticketbutton:Enable()
             ma_whisperticketbutton:Enable()
-            MangAdmin:InstantGroupToggle("ticket")
           end)
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-          getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
-          getglobal("ma_PopupScrollBarEntry"..line):Enable()
-          getglobal("ma_PopupScrollBarEntry"..line):Show()
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_ZoneScrollBarEntry"..line):Enable()
+          getglobal("ma_ZoneScrollBarEntry"..line):Show()
         else
-          getglobal("ma_PopupScrollBarEntry"..line):Hide()
+          getglobal("ma_ZoneScrollBarEntry"..line):Hide()
         end
       end
     else
-      MangAdmin:NoResults("ticket")
+      --MangAdmin:NoResults("ticket")
     end
-    
   else
-    MangAdmin:NoResults("search")
-  end
-end
-
-function TeleportScrollUpdate()
-  local TeleTable = {}
-  local zoneCount = 0
-  for index, value in pairs(ReturnTeleportLocations()) do
-    if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
-      SubzoneScrollUpdate(index)
-    end
-    table.insert(TeleTable, {name = index, subzones = value})
-    zoneCount = zoneCount + 1
-  end
-  if zoneCount > 0 then
-    FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
-    for line = 1,12 do
-      --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
-      lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
-      if lineplusoffset <= zoneCount then
-        local teleobj = TeleTable[lineplusoffset]
-        if MangAdmin.db.char.selectedZone == teleobj.name then
-          getglobal("ma_ZoneScrollBarEntry"..line):SetText("|cffff0000"..teleobj.name.."|r")
-        else
-          getglobal("ma_ZoneScrollBarEntry"..line):SetText(teleobj.name)
-        end
-        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
-          MangAdmin.db.char.selectedZone = teleobj.name
-          TeleportScrollUpdate()
-          SubzoneScrollUpdate()
-        end)
-        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-        getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
-        getglobal("ma_ZoneScrollBarEntry"..line):Enable()
-        getglobal("ma_ZoneScrollBarEntry"..line):Show()
-      else
-        getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+    local TeleTable = {}
+    local zoneCount = 0
+    for index, value in pairs(ReturnTeleportLocations()) do
+      if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
+        SubzoneScrollUpdate(index)
       end
+      table.insert(TeleTable, {name = index, subzones = value})
+      zoneCount = zoneCount + 1
     end
-  else
-    MangAdmin:NoResults("zones")
+    if zoneCount > 0 then
+      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
+      for line = 1,12 do
+        --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
+        if lineplusoffset <= zoneCount then
+          local teleobj = TeleTable[lineplusoffset]
+          if MangAdmin.db.char.selectedZone == teleobj.name then
+            getglobal("ma_ZoneScrollBarEntry"..line):SetText("|cffff0000"..teleobj.name.."|r")
+          else
+            getglobal("ma_ZoneScrollBarEntry"..line):SetText(teleobj.name)
+          end
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
+            MangAdmin.db.char.selectedZone = teleobj.name
+            InlineScrollUpdate()
+            SubzoneScrollUpdate()
+          end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_ZoneScrollBarEntry"..line):Enable()
+          getglobal("ma_ZoneScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      MangAdmin:NoResults("zones")
+    end
   end
 end
 

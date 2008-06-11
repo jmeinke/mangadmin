@@ -54,6 +54,7 @@ Frames\MangFrames_Tabs.lua
 Frames\MangFrames_MiniMenu.lua
 Frames\MangFrames_LookupButtons.lua
 Frames\MangFrames_PopupFrames.lua
+Frames\MangFrames_SmallPopupFrames.lua
 Frames\MangFrames_SectionMain.lua
 Frames\MangFrames_SectionTele.lua
 Frames\MangFrames_SectionLog.lua

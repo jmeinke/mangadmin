@@ -15,18 +15,39 @@
 ** GoogleCode Website: http://code.google.com/p/mangadmin/
 ** Subversion Repository: http://mangadmin.googlecode.com/svn/
 **
-**    Please report bugs:  http://code.google.com/p/mangadmin/issues/list
+**    Please report bugs:  http://www.manground.org/forum/index.php?showforum=9
 **
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 83:
+  * another try to fix the ticket system, it won't work with a translated mangos_string table until you
+    execute a query that will be provided soon, atm no time sorry...
+    * ticket system needs heavy testing with more than one ticket!
+  * fixed: display of guid (dec instead hex numbers)
+  * fixed: "go to ticket creator"-button
+  * added ticket number to the main window
+  * when clicking on a ticket a little popup with information on the ticket creator will be shown
+  * changed location for list of tickets for smaller, better, faster list view
+  * added buttons for (.explorecheat) show all maps, and off-button (hide all unexplored maps)
+  * moved the speed and scale sliders to the main window
+  * fixed: mail function (you can't use line break anymore!!, client or mangos causing this?)
+  * changed the size of the subzone scrollbar in teleport tab
+  * updated/corrected zhCN locale file, patch provided by tiwe
+  * deleted some unused files
+  * there is still a little MaNGOS bug to fix, after deleting a ticket, the ticket command
+    says the ticket is still there (ticket count doesn't decrease), only after 1 second or so...
+  
+Rev. 82:
+  * fixed; some commands for MangLinkifier, patch provided by JonMacDay and atreus420
+  
 Rev. 81:
   * fixed: some forgotten commands in r80, patch provided by elegos87
   
 Rev. 80:
   * fixed: another error with translations
   * fixed: commands after MaNGOS command table changes
-  * fixed: MangLinkifier, file provided by Atreus420
+  * fixed: MangLinkifier, fix provided by Atreus420
 
 Rev. 79:
   * fixed: bug with code which was accidently uncommented
