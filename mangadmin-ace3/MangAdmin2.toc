@@ -1,0 +1,9 @@
+## Interface: 20400
+## Title: MangAdmin |cff7fff7f -Ace3-|r
+## Notes: Manage your MaNGOS server easily
+## Notes-deDE: MaNGOS Server einfach verwalten
+## Author: Josh, InfamousBlob, Atreus420
+## Version: 1.1
+## X-Category: Interface Enhancements 
+
+Core.lua
