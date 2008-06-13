@@ -20,6 +20,9 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 93:
+  * fixed: show MangLinkifier Links (was bugged after last rev.)
+  
 Rev. 83:
   * another try to fix the ticket system, it won't work with a translated mangos_string table until you
     execute a query that will be provided soon, atm no time sorry...
