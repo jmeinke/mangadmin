@@ -4,7 +4,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("MangAdmin2")
 
 
 local options = {
-  name = "WelcomeHome",
+  name = "MangAdmin2",
   handler = MangAdmin2,
   type = "group",
   args = {
@@ -35,12 +35,12 @@ local options = {
 
 function MangAdmin2:OnInitialize()
   -- Called when the addon is loaded
-  self.db = LibStub("AceDB-3.0"):New("WelcomeHomeDB", defaults, "Default")
+  self.db = LibStub("AceDB-3.0"):New("MangAdmin2DB", defaults, "Default")
 
   LibStub("AceConfig-3.0"):RegisterOptionsTable("MangAdmin2", options)
-  --self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("MangAdmin2", "MangAdmin2")
-  self:RegisterChatCommand("wh", "ChatCommand")
-  self:RegisterChatCommand("welcomehome", "ChatCommand")
+  self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("MangAdmin2", "MangAdmin2")
+  self:RegisterChatCommand("ma2", "ChatCommand")
+  self:RegisterChatCommand("mangadmin2", "ChatCommand")
 end
 
 function MangAdmin2:OnEnable()
@@ -64,7 +64,7 @@ function MangAdmin2:ChatCommand(input)
   if not input or input:trim() == "" then
     InterfaceOptionsFrame_OpenToFrame(self.optionsFrame)
   else
-    LibStub("AceConfigCmd-3.0").HandleCommand(MangAdmin2, "wh", "WelcomeHome", input)
+    LibStub("AceConfigCmd-3.0").HandleCommand(MangAdmin2, "ma2", "MangAdmin2", input)
   end
 end
 
