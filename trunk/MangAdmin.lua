@@ -726,7 +726,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
         self.hooks[frame].AddMessage(frame, output, r, g, b, id)
       end
     else
-      output = MangLinkifier_Decompose(text)
+      text = MangLinkifier_Decompose(text)
       self.hooks[frame].AddMessage(frame, text, r, g, b, id)
     end
   --else
