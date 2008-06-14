@@ -371,6 +371,21 @@ function MangAdmin:CreatePopupFrames()
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
   })
+
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon1",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry1,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
+  })
   
   FrameLib:BuildButton({
     type = "CheckButton",
@@ -403,6 +418,21 @@ function MangAdmin:CreatePopupFrames()
       height = 30
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon2",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry2,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
   })
   
   FrameLib:BuildButton({
@@ -439,6 +469,21 @@ function MangAdmin:CreatePopupFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon3",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry3,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
+  })
+  
+  FrameLib:BuildButton({
     type = "CheckButton",
     name = "ma_PopupScrollBarEntry3ChkBtn",
     group = "popup",
@@ -469,6 +514,21 @@ function MangAdmin:CreatePopupFrames()
       height = 30
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon4",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry4,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
   })
   
   FrameLib:BuildButton({
@@ -505,6 +565,21 @@ function MangAdmin:CreatePopupFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon5",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry5,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
+  })
+  
+  FrameLib:BuildButton({
     type = "CheckButton",
     name = "ma_PopupScrollBarEntry5ChkBtn",
     group = "popup",
@@ -538,6 +613,21 @@ function MangAdmin:CreatePopupFrames()
   })
   
   FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon6",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry6,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
+  })
+  
+  FrameLib:BuildButton({
     type = "CheckButton",
     name = "ma_PopupScrollBarEntry6ChkBtn",
     group = "popup",
@@ -568,6 +658,21 @@ function MangAdmin:CreatePopupFrames()
       height = 30
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_PopupScrollBarEntryIcon7",
+    group = "popup",
+    parent = ma_PopupScrollBarEntry7,
+    setpoint = {
+      pos = "LEFT",
+      offX = -2,
+    },
+    size = {
+      width = 37,
+      height = 37
+    },
+    inherits = "ItemButtonTemplate"
   })
   
   FrameLib:BuildButton({
