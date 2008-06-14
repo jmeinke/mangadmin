@@ -20,6 +20,9 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 94:
+  * implemented showing of item icons on item search
+  
 Rev. 93:
   * fixed: show MangLinkifier Links (was bugged after last rev.)
   

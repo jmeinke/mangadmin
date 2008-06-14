@@ -2013,6 +2013,7 @@ function MangAdmin:NoResults(var)
     ma_lookupresulttext:SetText(Locale["searchResults"].."0")
     FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
     for line = 1,7 do
+      getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
       getglobal("ma_PopupScrollBarEntry"..line):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
@@ -2027,6 +2028,7 @@ function MangAdmin:NoResults(var)
     ma_lookupresulttext:SetText(Locale["favoriteResults"].."0")
     FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
     for line = 1,7 do
+      getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
       getglobal("ma_PopupScrollBarEntry"..line):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Disable()
       getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
@@ -2086,6 +2088,13 @@ function PopupScrollUpdate()
             item = MangAdmin.db.account.favorites.items[lineplusoffset]
           end
           local key = lineplusoffset
+          --item icons
+          getglobal("ma_PopupScrollBarEntryIcon"..line.."IconTexture"):SetTexture(GetItemIcon(item["itId"]))
+          getglobal("ma_PopupScrollBarEntryIcon"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..item["itId"]..":0:0:0:0:0:0:0"); GameTooltip:Show() end)
+          getglobal("ma_PopupScrollBarEntryIcon"..line):SetScript("OnLeave", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:Hide() end)
+          getglobal("ma_PopupScrollBarEntryIcon"..line):SetScript("OnClick", function() MangAdmin:AddItem(item["itId"], arg1) end)
+          getglobal("ma_PopupScrollBarEntryIcon"..line):Show()
+          --item description
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..item["itId"].."|r Name: |cffffffff"..item["itName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:AddItem(item["itId"], arg1) end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() GameTooltip:SetOwner(this, "ANCHOR_RIGHT"); GameTooltip:SetHyperlink("item:"..item["itId"]..":0:0:0:0:0:0:0"); GameTooltip:Show() end)
@@ -2109,6 +2118,7 @@ function PopupScrollUpdate()
           getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Enable()
           getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Show()
         else
+          getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
           getglobal("ma_PopupScrollBarEntry"..line.."ChkBtn"):Hide()
           getglobal("ma_PopupScrollBarEntry"..line):Hide()
         end
@@ -2132,6 +2142,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local itemset
@@ -2187,6 +2198,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local quest
@@ -2242,6 +2254,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local creature
@@ -2297,6 +2310,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local spell
@@ -2306,6 +2320,9 @@ function PopupScrollUpdate()
             spell = MangAdmin.db.account.favorites.spells[lineplusoffset]
           end
           local key = lineplusoffset
+          --spell icon
+          --getglobal("ma_PopupScrollBarEntryIcon"..line.."IconTexture"):SetTexture(GetSpellTexture(spell["spId"],BOOKTYPE_SPELL))
+          --spell info
           getglobal("ma_PopupScrollBarEntry"..line):SetText("Id: |cffffffff"..spell["spId"].."|r Name: |cffffffff"..spell["spName"].."|r")
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
           getglobal("ma_PopupScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
@@ -2352,6 +2369,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local skill
@@ -2407,6 +2425,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local object
@@ -2462,6 +2481,7 @@ function PopupScrollUpdate()
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
       FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
       for line = 1,7 do
+        getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
           local tele
