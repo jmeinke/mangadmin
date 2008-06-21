@@ -2573,12 +2573,13 @@ function InlineScrollUpdate()
   else
     local TeleTable = {}
     local zoneCount = 0
-    for index, value in pairs(ReturnTeleportLocations()) do
+    for index, value in pairsByKeys(ReturnTeleportLocations()) do
+      zoneCount = zoneCount + 1
       if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
         SubzoneScrollUpdate(index)
       end
+      --MangAdmin:LogAction("added index: "..index)
       table.insert(TeleTable, {name = index, subzones = value})
-      zoneCount = zoneCount + 1
     end
     if zoneCount > 0 then
       FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
@@ -2611,6 +2612,20 @@ function InlineScrollUpdate()
   end
 end
 
+function pairsByKeys(t, f)
+  local a = {}
+  for n in pairs(t) do table.insert(a, n) end
+  table.sort(a, f)
+  local i = 0      -- iterator variable
+  local iter = function ()   -- iterator function
+    i = i + 1
+    if a[i] == nil then return nil
+    else return a[i], t[a[i]]
+    end
+  end
+  return iter
+end
+
 function SubzoneScrollUpdate()
   local TeleTable = {}
   local subzoneCount = 0
@@ -2619,9 +2634,9 @@ function SubzoneScrollUpdate()
     shownZone = MangAdmin.db.char.selectedZone
   end
   ma_telesubzonetext:SetText(Locale["Zone"]..shownZone)
-  for index, value in pairs(ReturnTeleportLocations()) do
+  for index, value in pairsByKeys(ReturnTeleportLocations()) do
     if index == shownZone then
-      for i, v in pairs(value) do
+      for i, v in pairsByKeys(value) do
         table.insert(TeleTable, {name = i, command = v})
         subzoneCount = subzoneCount + 1
       end
