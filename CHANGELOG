@@ -20,8 +20,12 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 96:
+  * added russian language, translation file provided by alexey, thank you
+  
 Rev. 95:
   * sort teleport locations from A-Z
+  
 Rev. 94:
   * implemented showing of item icons on item search
   
