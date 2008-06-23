@@ -143,6 +143,7 @@ Locale:RegisterTranslations("huHU", function() return Return_huHU() end)
 Locale:RegisterTranslations("esES", function() return Return_esES() end)
 Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
 Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
+Locale:RegisterTranslations("ruRU", function() return Return_ruRU() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -1705,6 +1706,7 @@ function MangAdmin:InitDropDowns()
       {"Polish","plPL"},
       {"Portuguese","ptPT"},
       {"Romanian","roRO"},
+      {"Russian","ruRU"},
       {"Swedish","svSV"},
       {"Chinese","zhCN"}
     }
