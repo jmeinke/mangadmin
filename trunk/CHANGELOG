@@ -20,6 +20,10 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 97:
+  * fixed: load more then only one ticket, hacky way but works
+  * disabled the player info popup, a button will be added for it asap
+
 Rev. 96:
   * added russian language, translation file provided by alexey, thank you
   

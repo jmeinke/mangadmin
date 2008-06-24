@@ -337,7 +337,7 @@ function MangAdmin:OnTooltipUpdate()
       "func", function() MangAdmin:ShowTicketTab() end)
     local counter = 0
     local name
-    for i, name in ipairs(tickets) do
+    for i, name in pairs(tickets) do
       counter = counter + 1
       if counter == ticketCount then
         cat:AddLine(
@@ -513,6 +513,28 @@ function MangAdmin:HideAllGroups()
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
 end
 
+--[[function WaitLoop(seconds)
+    local stime = time() + seconds
+    local deltatime = time()
+    while deltatime < stime do
+      deltatime = time()
+   end
+end
+
+function MangAdmin:TicketHackTimer()
+  if self.db.char.requests.ticket then
+    if (time() - self.db.char.msgDeltaTime) > 0 then
+      self.db.char.requests.ticketbody = 0
+      self:RequestTickets()
+    else
+      self.db.char.msgDeltaTime = time()
+      self:LogAction("TicketHackTimer: Please be patient...")
+      WaitLoop(1)
+      self:TicketHackTimer()
+    end
+  end
+end]]
+
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
@@ -522,10 +544,16 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       catchedSth = true
       output = self:GetValueCallHandler(guid, field, value)
     end]]
-    if (time() - self.db.char.msgDeltaTime) > 0 then
-      self.db.char.requests.ticketbody = 0
-    end
-    self.db.char.msgDeltaTime = time()
+    
+    --[[if self.db.char.requests.ticket then
+      if (time() - self.db.char.msgDeltaTime) > 0 then
+          self.db.char.requests.ticketbody = 0
+          self:RequestTickets()
+      else
+        self:ChatMsg("ads")
+      end
+      self.db.char.msgDeltaTime = time()
+    end]]
     
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
@@ -637,7 +665,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     -- hook ticket count
     for count, status in string.gmatch(text, "Tickets count: (%d+) show new tickets: (%w+)") do
       if self.db.char.requests.ticket then
-        catchedSth = false
+        catchedSth = true
         output = false
         self:LoadTickets(count)
       end
@@ -689,30 +717,47 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     for char, update, category, message in string.gmatch(text, "Ticket of (.*) %(Last updated: (.*)%) %(Category: (%d+)%):(.*)") do
       if self.db.char.requests.ticket then
         local ticketCount = 0
-        table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+        table.foreachi(self.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
         local number = self.db.account.tickets.count - ticketCount
+        --self:LogAction(number)
         table.insert(self.db.account.buffer.tickets, {tNumber = number, tChar = char, tLUpdate = update, tCat = category, tMsg = ""})
         --self:RequestTickets()
         InlineScrollUpdate()
         catchedSth = false
         output = false
         self.db.char.requests.ticketbody = number
+        self.db.char.msgDeltaTime = time()
         --MangAdmin:ChatMsg("DEBUG YEAH")
+        --self:ChatMsg(".ticket")
+        self:LoadTickets(number)
       end
     end
     
     -- get ticket content
-    if self.db.char.requests.ticketbody > 0 then
-      if not catchedSth then
-        local number = self.db.char.requests.ticketbody
-        local oldmsg = self.db.account.buffer.tickets[number].tMsg
-        self.db.account.buffer.tickets[number].tMsg = oldmsg..text.."\n"
-        --ma_ticketeditbox:SetText(text)
-        catchedSth = true
-        output = false
-      else
-        self:RequestTickets() --??
-        self.db.char.requests.ticketbody = 0
+    if self.db.char.requests.ticket then
+      local delta = time() - self.db.char.msgDeltaTime
+      --self:LogAction("Delta: "..delta)
+      if self.db.char.requests.ticketbody > 0 then
+        if delta <= 300 then
+          if not catchedSth then
+            --self:LogAction(text)
+            local ticketCount = 0
+            table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+            --self:LogAction("Prepare to add text to DB ticket: "..ticketCount)
+            for k,v in ipairs(self.db.account.buffer.tickets) do
+              if k == ticketCount then
+                local oldmsg = v.tMsg
+                self.db.account.buffer.tickets[k].tMsg = oldmsg..text.."\n"
+                --self:LogAction("Added text to ticket in DB: "..k.." Ticket id:"..self.db.account.buffer.tickets[k].tNumber)
+              end
+            end
+            catchedSth = true
+            output = false
+          end
+        else
+          --self:LogAction("Time passed. Getting next ticket...")
+          --self:RequestTickets()
+        end
       end
     end
     
@@ -927,7 +972,7 @@ function MangAdmin:LearnSpell(value, state)
         self:LogAction(logcmd.." spell "..value.." to "..player..".")
       end
     elseif type(value) == "table" then
-      for k,v in ipairs(value) do
+      for k,v in pairs(value) do
         self:ChatMsg(command.." "..v)
         self:LogAction(logcmd.." spell "..v.." to "..player..".")
       end
@@ -957,7 +1002,7 @@ function MangAdmin:SetSkill(value, skill, maxskill)
       self:ChatMsg(".setskill "..value.." "..skill.." "..maxskill)
       self:LogAction("Set skill "..value.." of "..player.." to "..skill.." with a maximum of "..maxskill..".")
     elseif type(value) == "table" then
-      for k,v in ipairs(value) do
+      for k,v in pairs(value) do
         self:ChatMsg(".setskill "..v.." "..skill.." "..maxskill)
         self:LogAction("Set skill "..v.." of "..player.." to "..skill.." with a maximum of "..maxskill..".")
       end
@@ -983,7 +1028,7 @@ function MangAdmin:Quest(value, state)
       self:ChatMsg(command.." "..value)
       self:LogAction(logcmd.." quest with id "..value.." "..logcmd2.." "..player..".")
     elseif type(value) == "table" then
-      for k,v in ipairs(value) do
+      for k,v in pairs(value) do
         self:ChatMsg(command.." "..v)
         self:LogAction(logcmd.." quest with id "..value.." "..logcmd2.." "..player..".")
       end
@@ -1007,7 +1052,7 @@ function MangAdmin:Creature(value, state)
       self:ChatMsg(command.." "..value)
       self:LogAction(logcmd.." creature with id "..value..".")
     elseif type(value) == "table" then
-      for k,v in ipairs(value) do
+      for k,v in pairs(value) do
         self:ChatMsg(command.." "..v)
         self:LogAction(logcmd.." creature with id "..value..".")
       end
@@ -1344,22 +1389,19 @@ end
 
 function MangAdmin:RequestTickets()
   self.db.char.requests.ticket = true
-  local count = self.db.account.tickets.count
   local ticketCount = 0
-  table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
+  table.foreachi(self.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
   --ma_lookupresulttext:SetText(Locale["ma_TicketCount"]..count)
-  ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"]..count)
-  local tnumber = count - ticketCount
-  if tnumber == 0 then
-    self:LogAction("Loaded all available tickets! No more to load...")
-    ma_resetsearchbutton:Disable()
-    --self.db.char.requests.ticket = false -- BUG check in next rev: while MA is activated you won't be able to request tickets in chat!!
-  --elseif self.db.account.tickets.requested < 12 then
-  else
+  ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"]..self.db.account.tickets.count)
+  local tnumber = self.db.account.tickets.count - ticketCount
+  --self:LogAction("tNumber = "..tnumber..", Tc = "..ticketCount)
+  if tnumber > 0 then
     self:ChatMsg(".ticket "..tnumber)
     --self:LogAction(".ticket "..tnumber)
-    --MangAdmin.db.account.tickets.requested = MangAdmin.db.account.tickets.requested + 1;
     self:LogAction("Loading ticket "..tnumber.."...")
+  else
+    self:LogAction("Loaded all available tickets! No more to load...")
+    ma_resetsearchbutton:Disable()
   end
 end
 
@@ -1710,7 +1752,7 @@ function MangAdmin:InitDropDowns()
       {"Swedish","svSV"},
       {"Chinese","zhCN"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value) end
@@ -1736,7 +1778,7 @@ function MangAdmin:InitDropDowns()
       {Locale["ma_WeatherSnow"],"2 1"},
       {Locale["ma_WeatherSand"],"3 1"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, this.value) end
@@ -1794,7 +1836,7 @@ function MangAdmin:InitDropDowns()
       {"spell_scripts","spell_scripts"},
       {"game_graveyard_zone","game_graveyard_zone"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.checked = nil
@@ -1821,7 +1863,7 @@ function MangAdmin:InitDropDowns()
       {Locale["ma_Mana"],"mana"},
       {Locale["ma_Healthpoints"],"health"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_modifydropdown, this.value) end
@@ -1846,7 +1888,7 @@ function MangAdmin:InitDropDowns()
       {Locale["ma_Honor"],"honor"},
       {Locale["ma_Level"],"level"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_resetdropdown, this.value) end
@@ -1881,7 +1923,7 @@ function MangAdmin:InitDropDowns()
       {Locale["Gutterspeak"],"17737"},
       {Locale["Draenei"],"29932"}
     }
-    for k,v in ipairs(buttons) do
+    for k,v in pairs(buttons) do
       info.text = v[1]
       info.value = v[2]
       info.func = function() UIDropDownMenu_SetSelectedValue(ma_learnlangdropdown, this.value) end
@@ -2549,11 +2591,11 @@ function InlineScrollUpdate()
           getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function() 
             ma_ticketeditbox:SetText(object["tMsg"])
             ma_tpinfo_text:SetText(string.format(Locale["ma_TicketTicketLoaded"], object["tNumber"]))
-            MangAdmin.db.char.requests.tpinfo = true
-            MangAdmin:ChatMsg(".pinfo "..object["tChar"])
+            --MangAdmin.db.char.requests.tpinfo = true
+            --MangAdmin:ChatMsg(".pinfo "..object["tChar"])
             MangAdmin:LogAction("Displaying ticket number "..object["tNumber"].." from player "..object["tChar"])
-            MangAdmin:LogAction("Loading player info of ticket creator ("..object["tChar"]..")")
-            FrameLib:HandleGroup("popup2", function(frame) frame:Show() end)
+            --MangAdmin:LogAction("Loading player info of ticket creator ("..object["tChar"]..")")
+            --FrameLib:HandleGroup("popup2", function(frame) frame:Show() end)
             MangAdmin.db.account.tickets.selected = object
             ma_deleteticketbutton:Enable()
             ma_answerticketbutton:Enable()
