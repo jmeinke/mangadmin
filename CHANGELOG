@@ -20,6 +20,14 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 98:
+  * really big enhancements of the teleport location table by Necroblack/Tim,
+    whole changelog with lots of fixes and additions can be found here: 
+    http://mangadmin.googlecode.com/svn/trunk/teleport_changelog
+    This is a really cool contribution. Big thanks!
+  * added Dutch translation by Korhal, thank you
+  * fixed hooking of server info
+  
 Rev. 97:
   * fixed: load more then only one ticket, hacky way but works
   * disabled the player info popup, a button will be added for it asap

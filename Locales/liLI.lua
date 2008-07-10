@@ -24,6 +24,7 @@ function Return_liLI()
     ["realm"] = "|cFF00FF00Karalyste:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Veikejas:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Please select yourself or another player or nothing!",
     ["selectionerror2"] = "Please select only yourself or nothing!",

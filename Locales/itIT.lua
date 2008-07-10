@@ -24,6 +24,7 @@ function Return_itIT()
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Seleziona te stesso o un altro player o nulla!",
     ["selectionerror2"] = "Seleziona solo te stesso o nulla!",

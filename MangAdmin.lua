@@ -144,6 +144,7 @@ Locale:RegisterTranslations("esES", function() return Return_esES() end)
 Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
 Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
 Locale:RegisterTranslations("ruRU", function() return Return_ruRU() end)
+Locale:RegisterTranslations("nlNL", function() return Return_nlNL() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -697,13 +698,9 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     --check for info command to update informations in right bottom
-    for revision in string.gmatch(text, "%(Revision (.*)%) %(Win32%)") do
+    for revision, platform in string.gmatch(text, "%(Revision (.*)%) %((.*)%)") do
       ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
-      ma_infoplatformtext:SetText(Locale["info_platform"].."Win32")
-    end
-    for revision in string.gmatch(text, "%(Revision (.*)%) %(Unix%)") do
-      ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
-      ma_infoplatformtext:SetText(Locale["info_platform"].."Unix")
+      ma_infoplatformtext:SetText(Locale["info_platform"]..platform)
     end
     for users, maxusers in string.gmatch(text, "Online players: (%d+) %(max: (%d+)%)") do
       ma_infoonlinetext:SetText(Locale["info_online"]..users)
@@ -1738,6 +1735,7 @@ function MangAdmin:InitDropDowns()
     local buttons = {
       {"Czech","csCZ"},
       {"German","deDE"},
+      {"Dutch","nlNL"},
       {"English","enUS"},
       {"Spanish","esES"},
       {"Finnish","fiFI"},

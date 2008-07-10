@@ -1,4 +1,4 @@
-﻿-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -24,6 +24,7 @@ function Return_huHU()
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Karakter:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Grid-Navigátor",
     ["selectionerror1"] = "Válaszd ki magad, egy másik player-t vagy semmit!",
     ["selectionerror2"] = "Válaszd ki magad vagy semmit!",
