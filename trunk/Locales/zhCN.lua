@@ -24,6 +24,7 @@ function Return_zhCN()
     ["realm"] = "|cFF00FF00国度:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00角色:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00角色 GUID:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "提示菜单格",
     ["selectionerror1"] = "请选择你自己、其他角色或不选择任何目标!",
     ["selectionerror2"] = "请选择你自己或不选择任何目标!",

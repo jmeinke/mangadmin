@@ -24,6 +24,7 @@ function Return_deDE()
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "Bitte selektiere nur dich selbst, einen anderen Spieler, oder gar nichts!",
     ["selectionerror2"] = "Bitte selektiere nur gar nichts bzw. nur dich selbst!",

@@ -43,6 +43,7 @@ Locales\esES.lua
 Locales\zhCN.lua
 Locales\ptPT.lua
 Locales\ruRU.lua
+Locales\nlNL.lua
 
 TeleportTable.lua
 ## Core File

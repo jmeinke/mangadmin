@@ -24,6 +24,7 @@ function Return_svSV()
     ["realm"] = "|cFF00FF00Kungarike:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Karakt\195\164r:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Galler-Navigator",
     ["selectionerror1"] = "Var god välj dig själv, en annan spelare eller ingenting!",
     ["selectionerror2"] = "Var god välj endast dig själv eller ingenting!",

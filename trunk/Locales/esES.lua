@@ -24,6 +24,7 @@ function Return_esES()
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
     ["guid"] = "|cFF00FF00Guid:|r ",
+    ["tickets"] = "|cFF00FF00Tickets:|r ",
     ["gridnavigator"] = "Grid-Navigator",
     ["selectionerror1"] = "!Por favor, selecciónate o a otro jugador o a nada!",
     ["selectionerror2"] = "¡Porfavor seleccionate a ti o a nada!",
