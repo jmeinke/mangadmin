@@ -1354,7 +1354,6 @@ function MangAdmin:ShowTicketTab()
   ma_gocharticketbutton:Disable()
   ma_whisperticketbutton:Disable()
   MangAdmin:InstantGroupToggle("ticket")
-  ma_ZoneScrollBar:Show()
   self:LoadTickets(nil)
 end
 
