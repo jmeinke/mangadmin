@@ -48,6 +48,20 @@ function MangAdmin:CreateMiscSection()
     inherits = "OptionsCheckButtonTemplate"
   })
   
+  FrameLib:BuildButton({
+    type = "CheckButton",
+    name = "ma_checklocalsearchstringsbutton",
+    group = "misc",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 150,
+      offY = -4
+    },
+    text = "Enable Localized Search Strings",
+    inherits = "OptionsCheckButtonTemplate"
+  })
+  
   FrameLib:BuildFrame({
     type = "Slider",
     name = "ma_frmtrslider",

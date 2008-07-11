@@ -46,6 +46,7 @@ function ReturnTeleportLocations()
     ["Arena/Battlegrounds"] = {
       ["Arena - Nagrand - BC"] = ".go 4071.92 2926.85 13.0535 559",
       ["Arena - Blade's Edge - BC"] = ".go 6237.64 260.659 11.0744 562",
+      ["Arena - Ruins Of Lordaeron - BC"] = ".go 1285.810547 1667.896851 39.464172 572",
       ["Battle - Eye of the Storm - BC"] = ".go 2174.23 1569.57 1160.44 566",
       ["Battle - Arathi Basin - Alliance"] = ".go 1292.41 1288.80 -13.64 529",
       ["Battle - Arathi Basin - Horde"] = ".go 699.03 700.18 -15.16 529",
@@ -828,6 +829,7 @@ function ReturnTeleportLocations()
       ["Designer Island - May Crash"] = ".go 16303.5 -16173.5 40.4365 451",
       ["Newman's Landing"] = ".go -6379.61 1260.49 7.18831 0",
       ["GM Island"] = ".go 16222.1 16252.1 12.5872 1",
+	  ["GM Island - Jail"] = ".go 16228.5 16402.7 -62.834 1",
       ["Gillijim's Isle"] = ".go -13693.5 2806.3 -1.595215 0",
       ["Jail"] = ".go 0 0 0 13",
       ["Outside Alterac Valley A"] = ".go 605 -1040.9 265 30",
