@@ -20,6 +20,21 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 100:
+  * added support for localized mangos_string tables,
+    big part of the patch by infamousblob. Need translators.
+    If you have an english mangos_string table (which means that you have no text in any content_loc* column)
+    you have nothing to do.
+    Else go into the Misc section and check the checkbutton labeled "Enable Localized Search Strings",
+    then click the "apply changes" button...
+    This will only work with German and English because these are the only one who are translated so far...
+    So translators please take a look at the Locale/strings.lua file :-)
+  * added two teleport entries to the teleport table, they were included in infamous_blobs patch
+    but I don't know who provided them atm
+  
+Rev. 99:
+  * fixed teleport zones showing on ticket window
+
 Rev. 98:
   * really big enhancements of the teleport location table by Necroblack/Tim,
     whole changelog with lots of fixes and additions can be found here: 

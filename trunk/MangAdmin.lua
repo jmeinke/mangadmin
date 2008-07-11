@@ -26,9 +26,10 @@ if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
 --[[local]] MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0", "AceEvent-2.0")
 --[[local]] Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
+--[[local]] Strings    = AceLibrary("AceLocale-2.2"):new("TEST")
 --[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
 --[[local]] Graph      = AceLibrary("Graph-1.0")
-local Tablet     = AceLibrary("Tablet-2.0")
+local Tablet      = AceLibrary("Tablet-2.0")
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
@@ -63,6 +64,7 @@ MangAdmin:RegisterDefaults("char",
 MangAdmin:RegisterDefaults("account", 
   {
     language = nil,
+	localesearchstring = true,
     favorites = {
       items = {},
       itemsets = {},
@@ -145,6 +147,24 @@ Locale:RegisterTranslations("zhCN", function() return Return_zhCN() end)
 Locale:RegisterTranslations("ptPT", function() return Return_ptPT() end)
 Locale:RegisterTranslations("ruRU", function() return Return_ruRU() end)
 Locale:RegisterTranslations("nlNL", function() return Return_nlNL() end)
+-- Register String Traslations
+Strings:EnableDynamicLocales(true)
+Strings:RegisterTranslations("enUS", function() return ReturnStrings_enUS() end)
+Strings:RegisterTranslations("deDE", function() return ReturnStrings_deDE() end)
+Strings:RegisterTranslations("frFR", function() return ReturnStrings_frFR() end)
+Strings:RegisterTranslations("itIT", function() return ReturnStrings_itIT() end)
+Strings:RegisterTranslations("fiFI", function() return ReturnStrings_fiFI() end)
+Strings:RegisterTranslations("plPL", function() return ReturnStrings_plPL() end)
+Strings:RegisterTranslations("svSV", function() return ReturnStrings_svSV() end)
+Strings:RegisterTranslations("liLI", function() return ReturnStrings_liLI() end)
+Strings:RegisterTranslations("roRO", function() return ReturnStrings_roRO() end)
+Strings:RegisterTranslations("csCZ", function() return ReturnStrings_csCZ() end)
+Strings:RegisterTranslations("huHU", function() return ReturnStrings_huHU() end)
+Strings:RegisterTranslations("esES", function() return ReturnStrings_esES() end)
+Strings:RegisterTranslations("zhCN", function() return ReturnStrings_zhCN() end)
+Strings:RegisterTranslations("ptPT", function() return ReturnStrings_ptPT() end)
+Strings:RegisterTranslations("ruRU", function() return ReturnStrings_ruRU() end)
+Strings:RegisterTranslations("nlNL", function() return ReturnStrings_nlNL() end)
 --Locale:Debug()
 --Locale:SetLocale("enUS")
 
@@ -557,7 +577,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end]]
     
     -- hook .gps for gridnavigation
-    for x, y in string.gmatch(text, "X: (.*) Y: (.*) Z") do
+    for x, y in string.gmatch(text, Strings["ma_GmatchGPS"]) do
       for k,v in pairs(self.db.char.functionQueue) do
         if v == "GridNavigate" then
           self:GridNavigate(string.format("%.1f", x), string.format("%.1f", y), nil)
@@ -568,7 +588,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all item lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hitem:(%d+):0:0:0:0:0:0:0|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchItem"]) do
       if self.db.char.requests.item then
         table.insert(self.db.account.buffer.items, {itId = id, itName = name, checked = false})
         -- for item info in cache
@@ -585,7 +605,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all itemset lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hitemset:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchItemSet"]) do
       if self.db.char.requests.itemset then
         table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name, checked = false})
         PopupScrollUpdate()
@@ -595,7 +615,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all spell lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hspell:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchSpell"]) do
       if self.db.char.requests.spell then
         table.insert(self.db.account.buffer.spells, {spId = id, spName = name, checked = false})
         PopupScrollUpdate()
@@ -605,7 +625,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all skill lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hskill:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchSkill"]) do
       if self.db.char.requests.skill then
         table.insert(self.db.account.buffer.skills, {skId = id, skName = name, checked = false})
         PopupScrollUpdate()
@@ -615,7 +635,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all creature lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hcreature_entry:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchCreature"]) do
       if self.db.char.requests.creature then
         table.insert(self.db.account.buffer.creatures, {crId = id, crName = name, checked = false})
         PopupScrollUpdate()
@@ -625,7 +645,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all object lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hgameobject_entry:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchGameObject"]) do
       if self.db.char.requests.object then
         table.insert(self.db.account.buffer.objects, {objId = id, objName = name, checked = false})
         PopupScrollUpdate()
@@ -635,7 +655,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook all quest lookups
-    for id, name in string.gmatch(text, "|cffffffff|Hquest:(%d+)|h%[(.-)%]|h|r") do
+    for id, name in string.gmatch(text, Strings["ma_GmatchQuest"]) do
       if self.db.char.requests.quest then
         table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name, checked = false})
         PopupScrollUpdate()
@@ -645,7 +665,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
  
     -- hook all tele lookups
-    for name in string.gmatch(text, "h%[(.-)%]") do
+    for name in string.gmatch(text, Strings["ma_GmatchTele"]) do
       if self.db.char.requests.tele then
         table.insert(self.db.account.buffer.teles, {tName = name, checked = false})
         PopupScrollUpdate()
@@ -655,7 +675,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
    
     -- hook all new tickets
-    for name in string.gmatch(text, "New ticket from (.*)") do
+    for name in string.gmatch(text, Strings["ma_GmatchNewTicket"]) do
       -- now need function for: Got new ticket
       table.insert(self.db.char.newTicketQueue, name)
       self:SetIcon(ROOT_PATH.."Textures\\icon2.tga")
@@ -664,7 +684,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook ticket count
-    for count, status in string.gmatch(text, "Tickets count: (%d+) show new tickets: (%w+)") do
+    for count, status in string.gmatch(text, Strings["ma_GmatchTicketCount"]) do
       if self.db.char.requests.ticket then
         catchedSth = true
         output = false
@@ -673,7 +693,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook player account info
-    for status, char, guid, account, id, level, ip, login, latency in string.gmatch(text, "Player(.*) (.*) %(guid: (%d+)%) Account: (.*) %(id: (%d+)%) GMLevel: (%d+) Last IP: (.*) Last login: (.*) Latency: (%d+)ms") do
+    for status, char, guid, account, id, level, ip, login, latency in string.gmatch(text, Strings["ma_GmatchAccountInfo"]) do
       if self.db.char.requests.tpinfo then
         if status == "" then
           status = Locale["ma_Online"]
@@ -688,7 +708,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     -- hook player account info
-    for played, level, money in string.gmatch(text, "Played time: (.*) Level: (%d+) Money: (.*)") do
+    for played, level, money in string.gmatch(text, Strings["ma_GmatchAccountInfo2"]) do
       if self.db.char.requests.tpinfo then
         ma_tpinfo_text:SetText(ma_tpinfo_text:GetText().."\n"..Locale["ma_TicketsInfoPlayedTime"]..played.."\n"..Locale["ma_TicketsInfoLevel"]..level.."\n"..Locale["ma_TicketsInfoMoney"]..money)
         catchedSth = true
@@ -698,20 +718,20 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
     
     --check for info command to update informations in right bottom
-    for revision, platform in string.gmatch(text, "%(Revision (.*)%) %((.*)%)") do
+    for revision, platform in string.gmatch(text, Strings["ma_GmatchRevision"]) do
       ma_inforevisiontext:SetText(Locale["info_revision"]..revision)
       ma_infoplatformtext:SetText(Locale["info_platform"]..platform)
     end
-    for users, maxusers in string.gmatch(text, "Online players: (%d+) %(max: (%d+)%)") do
+    for users, maxusers in string.gmatch(text, Strings["ma_GmatchOnlinePlayers"]) do
       ma_infoonlinetext:SetText(Locale["info_online"]..users)
       ma_infomaxonlinetext:SetText(Locale["info_maxonline"]..maxusers)
     end
-    for uptime in string.gmatch(text, "Server uptime: (.*)") do
+    for uptime in string.gmatch(text, Strings["ma_GmatchUptime"]) do
       ma_infouptimetext:SetText(Locale["info_uptime"]..uptime)
     end
     
     -- get tickets
-    for char, update, category, message in string.gmatch(text, "Ticket of (.*) %(Last updated: (.*)%) %(Category: (%d+)%):(.*)") do
+    for char, update, category, message in string.gmatch(text, Strings["ma_GmatchTickets"]) do
       if self.db.char.requests.ticket then
         local ticketCount = 0
         table.foreachi(self.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
@@ -847,12 +867,18 @@ end
 function MangAdmin:SetLanguage()
   if self.db.account.language then
     Locale:SetLocale(self.db.account.language)
+    if self.db.account.localesearchstring then
+      Strings:SetLocale(self.db.account.language)
+    else
+      Strings:SetLocale("enUS")
+    end
   else
     self.db.account.language = Locale:GetLocale()
   end
 end
 
 function MangAdmin:ChangeLanguage(locale)
+  self.db.account.localesearchstring = ma_checklocalsearchstringsbutton:GetChecked()
   self.db.account.language = locale
   ReloadUI()
 end
@@ -2739,11 +2765,8 @@ function MangAdmin:InitCheckButtons()
     ma_checktransparencybutton:SetChecked(false)
   end
   
-  if self.db.char.instantKillMode then
-    ma_instantkillbutton:SetChecked(true)
-  else
-    ma_instantkillbutton:SetChecked(false)
-  end
+  ma_instantkillbutton:SetChecked(self.db.char.instantKillMode)
+  ma_checklocalsearchstringsbutton:SetChecked(self.db.account.localesearchstring)
 end
 
 function MangAdmin:ShowColorPicker(t)
@@ -2869,6 +2892,11 @@ function MangAdmin:ApplyStyleChanges()
     self.db.account.style.transparency.backgrounds = 0.5
   else
     self.db.account.style.transparency.backgrounds = 1.0
+  end
+  if ma_checklocalsearchstringsbutton:GetChecked() then
+    self.db.account.localesearchstring = true
+  else
+    self.db.account.localesearchstring = false
   end
   ReloadUI()
 end
