@@ -20,6 +20,10 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 101:
+  * added filtering of chat messages to the ticket system, so no chat messages get caught when
+    loading tickets
+  
 Rev. 100:
   * added support for localized mangos_string tables,
     big part of the patch by infamousblob. Need translators.
