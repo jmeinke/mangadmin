@@ -559,7 +559,7 @@ end]]
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
-  --if id == 11 then --make sure that the message comes from the server, message id = 11, I don't know why exactly this id but i think it's right
+  if id == 1 then --make sure that the message comes from the server, message id = 1, I don't know why exactly this id but i think it's right
     --[[ hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
@@ -792,9 +792,9 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       text = MangLinkifier_Decompose(text)
       self.hooks[frame].AddMessage(frame, text, r, g, b, id)
     end
-  --else
+  else
     -- message is not from server
-  --end
+  end
 end
 
 --[[ function MangAdmin:GetValueCallHandler(guid, field, value)
