@@ -119,9 +119,9 @@ MangAdmin:RegisterDefaults("account",
           b = 0
         },
         linkifier = {
-          r = 0,
-          g = 0,
-          b = 150
+          r = 0.8705882352941177,
+          g = 0.3725490196078432,
+          b = 0.1411764705882353
         }
       }
     }
@@ -559,7 +559,7 @@ end]]
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
-  if id == 1 then --make sure that the message comes from the server, message id = 1, I don't know why exactly this id but i think it's right
+  if id == 1 then --make sure that the message comes from the server, message id = 1
     --[[ hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
       catchedSth = true
@@ -575,7 +575,7 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
       self.db.char.msgDeltaTime = time()
     end]]
-    
+
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, Strings["ma_GmatchGPS"]) do
       for k,v in pairs(self.db.char.functionQueue) do
@@ -794,6 +794,8 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
   else
     -- message is not from server
+	-- Returns the message to the client, or else the chat frame never shows it
+	self.hooks[frame].AddMessage(frame, text, r, g, b, id)
   end
 end
 

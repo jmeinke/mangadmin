@@ -202,6 +202,20 @@ function Return_roRO()
     ["ma_SkillButton"] = "Skill-Search",
     ["ma_SkillVar1Button"] = "Skill",
     ["ma_SkillVar2Button"] = "Max Skill",
-    ["tt_DisplayAccountLvl"] = "Display your account level."
+    ["tt_DisplayAccountLvl"] = "Display your account level.",
+    --linkifier
+    ["lfer_Spawn"] = "Spawn",
+    ["lfer_List"] = "List",
+    ["lfer_Goto"] = "Goto",
+    ["lfer_Move"] = "Move",
+    ["lfer_Turn"] = "Turn",
+    ["lfer_Delete"] = "Delete",
+    ["lfer_Teleport"] = "Teleport",
+    ["lfer_Morph"] = "Morph",
+    ["lfer_Add"] = "Add",
+    ["lfer_Remove"] = "Remove",
+    ["lfer_Learn"] = "Learn",
+    ["lfer_Unlearn"] = "Unlearn",
+    ["lfer_Error"] = "Error Search String Matched but an error occured or unable to find type"
   }
 end

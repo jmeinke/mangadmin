@@ -202,6 +202,20 @@ function Return_ruRU()
     ["ma_SkillButton"] = "Поиск скилла",
     ["ma_SkillVar1Button"] = "Скилл",
     ["ma_SkillVar2Button"] = "Максимум скилл",
-    ["tt_DisplayAccountLvl"] = "Отобразить уровень доступа."
+    ["tt_DisplayAccountLvl"] = "Отобразить уровень доступа.",
+    --linkifier
+    ["lfer_Spawn"] = "Spawn",
+    ["lfer_List"] = "List",
+    ["lfer_Goto"] = "Goto",
+    ["lfer_Move"] = "Move",
+    ["lfer_Turn"] = "Turn",
+    ["lfer_Delete"] = "Delete",
+    ["lfer_Teleport"] = "Teleport",
+    ["lfer_Morph"] = "Morph",
+    ["lfer_Add"] = "Add",
+    ["lfer_Remove"] = "Remove",
+    ["lfer_Learn"] = "Learn",
+    ["lfer_Unlearn"] = "Unlearn",
+    ["lfer_Error"] = "Error Search String Matched but an error occured or unable to find type"
   }
 end
