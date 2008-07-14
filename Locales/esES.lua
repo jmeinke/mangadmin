@@ -202,6 +202,20 @@ function Return_esES()
     ["ma_SkillButton"] = "Buscar-Habilidad",
     ["ma_SkillVar1Button"] = "Habilidad",
     ["ma_SkillVar2Button"] = "Max. Habilidad",
-    ["tt_DisplayAccountLvl"] = "Mostrar el nivel de tu cuenta."
+    ["tt_DisplayAccountLvl"] = "Mostrar el nivel de tu cuenta.",
+    --linkifier
+    ["lfer_Spawn"] = "Spawn",
+    ["lfer_List"] = "List",
+    ["lfer_Goto"] = "Goto",
+    ["lfer_Move"] = "Move",
+    ["lfer_Turn"] = "Turn",
+    ["lfer_Delete"] = "Delete",
+    ["lfer_Teleport"] = "Teleport",
+    ["lfer_Morph"] = "Morph",
+    ["lfer_Add"] = "Add",
+    ["lfer_Remove"] = "Remove",
+    ["lfer_Learn"] = "Learn",
+    ["lfer_Unlearn"] = "Unlearn",
+    ["lfer_Error"] = "Error Search String Matched but an error occured or unable to find type"
   }
 end
