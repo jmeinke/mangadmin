@@ -20,6 +20,25 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 103:
+  *Improved handeling of message hooks, only attempts to match lookup messages it is currently looking for.
+  *Addded checks to disable hooking of lookup messages if the search window isn't open, and to disable it when closed.
+  *Added a space after the users name, for tickets when you choose to Whisper the player.
+  *Added support for clickable links on Teleport lookups, as well as a Delete link
+  *Fixed issue where items would be added to teleport search window.
+  *Seems to have fixed issue where after adding "white"(normal) items being re-added to search window
+
+Rev. 102:
+  *Fixed bug where messages would not return to the client
+  *Fixed Linkifier link color to work properly
+  *Updated Linkifier commands to the new format
+  *Localized All of Linkifier link strings
+    **New strings for translation needed may be found in the Locales language files for each language
+  *Localized most of Linkifier search strings
+    **New strings for translation may be found in the Locales stings file for each language. A few are not 
+      located in there as they are the default clicakble links for Mangos, which if changed would break 
+      the functinality of the links completely
+
 Rev. 101:
   * added filtering of chat messages to the ticket system, so no chat messages get caught when
     loading tickets

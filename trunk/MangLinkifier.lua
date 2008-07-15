@@ -78,6 +78,9 @@ function MangLinkifier_Decompose(chatstring)
     for guid in string.gmatch(chatstring, "%|cffffffff%|Hspell:(.*)%|h%[(.*)%]%|h%|r") do --LOOKUP SPELL
       chatstring = string.gsub (chatstring, "%|cffffffff%|Hspell:(.*)%|h%[(.*)%]%|h%|r", MangLinkifier_Link("%2", "%1", "lookupspell"))
     end
+    for guid in string.gmatch(chatstring, "%|cffffffff%|Htele:(.*)%|h%[(.*)%]%|h%|r") do --LOOKUP TELE
+      chatstring = string.gsub (chatstring, "%|cffffffff%|Htele:(.*)%|h%[(.*)%]%|h%|r", MangLinkifier_Link("%2", "%1", "lookuptele"))
+    end
   end
   return chatstring
 end
@@ -144,6 +147,9 @@ function MangLinkifier_Link(orgtxt, id, type)
     link = "|cffffffff|Hspell:" .. id .. "|h[" .. orgtxt .. "]|h|r"
     link = link .." - |cff" .. urlcolor .. "|Hlookupspelllearn:" .. id .. "|h["..Locale["lfer_Learn"].."]|h|r "
     link = link .." - |cff" .. urlcolor .. "|Hlookupspellunlearn:" .. id .. "|h["..Locale["lfer_Unlearn"].."]|h|r "
+  elseif(type == "lookuptele") then
+    link = "|cffffffff|Htele:" .. id .. "|h[" .. orgtxt .. "]|h|r"
+    link = link .." - |cff" .. urlcolor .. "|Hlookupteledelete:" .. id .. "|h["..Locale["lfer_Delete"].."]|h|r "
   else 
     link = orgtxt .." - |cffc20000"..Locale["lfer_Error"].." |r |cff008873" .. type .. "|r"
   end
@@ -263,6 +269,12 @@ function MangLinkifier_SetItemRef(link, text, button)
     return;
   elseif ( strsub(link, 1, 18) == "lookupspellunlearn" ) then
     SendChatMessage(".unlearn "..strsub(link, 20), say, nil, nil)
+    return;
+  elseif ( strsub(link, 1, 4) == "tele" ) then
+    SendChatMessage(".tele "..strsub(link, 6), say, nil, nil)
+    return;
+  elseif ( strsub(link, 1, 16) == "lookupteledelete" ) then
+    SendChatMessage(".tele del "..strsub(link, 18), say, nil, nil)
     return;
   end
   MangLinkifier_SetItemRef_Original(link, text, button);
