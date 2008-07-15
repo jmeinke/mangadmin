@@ -51,7 +51,8 @@ MangAdmin:RegisterDefaults("char",
       quest = false,
       creature = false,
       object = false,
-      tele = false
+      tele = false,
+	  toggle = false
     },
     nextGridWay = "ahead",
     selectedZone = nil,
@@ -434,6 +435,7 @@ function MangAdmin:TogglePopup(value, param)
     ma_modfavsbutton:SetText(Locale["ma_FavAdd"])
     ma_modfavsbutton:Enable()
     self:SearchReset()
+    self.db.char.requests.toggle = true
     if param.type == "item" then
       ma_ptabbutton_1:SetText(Locale["ma_ItemButton"])
       ma_var1editbox:Show()
@@ -575,7 +577,10 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       end
       self.db.char.msgDeltaTime = time()
     end]]
-
+    --Catches if Toggle is still on for some reason, but search frame is not up, and disables it so messages arent caught
+    if self.db.char.requests.toggle and not ma_popupframe:IsVisible() then
+      self.db.char.requests.toggle = false
+    end
     -- hook .gps for gridnavigation
     for x, y in string.gmatch(text, Strings["ma_GmatchGPS"]) do
       for k,v in pairs(self.db.char.functionQueue) do
@@ -586,94 +591,85 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
         end
       end
     end
-    
-    -- hook all item lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchItem"]) do
+    if self.db.char.requests.toggle then
       if self.db.char.requests.item then
-        table.insert(self.db.account.buffer.items, {itId = id, itName = name, checked = false})
-        -- for item info in cache
-        local itemName, itemLink, itemQuality, _, _, _, _, _, _ = GetItemInfo(id);
-        if not itemName then
-          GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
-          GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
-          GameTooltip:Hide()
+        -- hook all item lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchItem"]) do
+            table.insert(self.db.account.buffer.items, {itId = id, itName = name, checked = false})
+            -- for item info in cache
+            local itemName, itemLink, itemQuality, _, _, _, _, _, _ = GetItemInfo(id);
+            if not itemName then
+              GameTooltip:SetOwner(ma_popupframe, "ANCHOR_RIGHT")
+              GameTooltip:SetHyperlink("item:"..id..":0:0:0:0:0:0:0")
+              GameTooltip:Hide()
+            end
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false  
         end
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false  
+      elseif self.db.char.requests.itemset then
+        -- hook all itemset lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchItemSet"]) do
+            table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.spell then
+        -- hook all spell lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchSpell"]) do
+            table.insert(self.db.account.buffer.spells, {spId = id, spName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.skill then
+        -- hook all skill lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchSkill"]) do
+            table.insert(self.db.account.buffer.skills, {skId = id, skName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.creature then
+        -- hook all creature lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchCreature"]) do
+            table.insert(self.db.account.buffer.creatures, {crId = id, crName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.object then
+        -- hook all object lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchGameObject"]) do
+            table.insert(self.db.account.buffer.objects, {objId = id, objName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.quest then
+        -- hook all quest lookups
+        for id, name in string.gmatch(text, Strings["ma_GmatchQuest"]) do
+            table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+      elseif self.db.char.requests.tele then
+        -- hook all tele lookups
+        for name in string.gmatch(text, Strings["ma_GmatchTele"]) do
+            table.insert(self.db.account.buffer.teles, {tName = name, checked = false})
+            PopupScrollUpdate()
+            catchedSth = true
+            output = false
+        end
+        --this is to hide the message shown before the teles
+        if string.gmatch(text, Strings["ma_GmatchTeleFound"]) then
+          catchedSth = true
+          output = false
+        end
       end
     end
-    
-    -- hook all itemset lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchItemSet"]) do
-      if self.db.char.requests.itemset then
-        table.insert(self.db.account.buffer.itemsets, {isId = id, isName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-    
-    -- hook all spell lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchSpell"]) do
-      if self.db.char.requests.spell then
-        table.insert(self.db.account.buffer.spells, {spId = id, spName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-    
-    -- hook all skill lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchSkill"]) do
-      if self.db.char.requests.skill then
-        table.insert(self.db.account.buffer.skills, {skId = id, skName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-    
-    -- hook all creature lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchCreature"]) do
-      if self.db.char.requests.creature then
-        table.insert(self.db.account.buffer.creatures, {crId = id, crName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-    
-    -- hook all object lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchGameObject"]) do
-      if self.db.char.requests.object then
-        table.insert(self.db.account.buffer.objects, {objId = id, objName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-    
-    -- hook all quest lookups
-    for id, name in string.gmatch(text, Strings["ma_GmatchQuest"]) do
-      if self.db.char.requests.quest then
-        table.insert(self.db.account.buffer.quests, {qsId = id, qsName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
- 
-    -- hook all tele lookups
-    for name in string.gmatch(text, Strings["ma_GmatchTele"]) do
-      if self.db.char.requests.tele then
-        table.insert(self.db.account.buffer.teles, {tName = name, checked = false})
-        PopupScrollUpdate()
-        catchedSth = true
-        output = false
-      end
-    end
-   
     -- hook all new tickets
     for name in string.gmatch(text, Strings["ma_GmatchNewTicket"]) do
       -- now need function for: Got new ticket
@@ -1354,7 +1350,7 @@ function MangAdmin:Ticket(value)
     self:TogglePopup("mail", {recipient = ticket["tChar"], subject = "Ticket("..ticket["tCat"]..")", body = ticket["tMsg"]})
   elseif value == "whisper" then
     ChatFrameEditBox:Show()
-    ChatFrameEditBox:Insert("/w "..ticket["tChar"]);
+    ChatFrameEditBox:Insert("/w "..ticket["tChar"].." ");
   end
 end
 
@@ -1563,6 +1559,7 @@ function MangAdmin:Favorites(value, searchtype)
 end
 
 function MangAdmin:SearchStart(var, value)
+  self.db.char.requests.toggle = true
   if var == "item" then
     self.db.char.requests.item = true
     self.db.account.buffer.items = {}
@@ -1623,6 +1620,7 @@ function MangAdmin:SearchReset()
   self.db.char.requests.favobject = false
   self.db.char.requests.tele = false
   self.db.char.requests.favtele = false
+  self.db.char.requests.toggle = false
   self.db.account.buffer.items = {}
   self.db.account.buffer.itemsets = {}
   self.db.account.buffer.spells = {}
@@ -1726,9 +1724,9 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_announcebutton       , Locale["tt_AnnounceButton"]     , function() MangAdmin:Announce(ma_announceeditbox:GetText()) end)
   self:PrepareScript(ma_resetannouncebutton  , nil                             , function() ma_announceeditbox:SetText("") end)
   self:PrepareScript(ma_shutdownbutton       , Locale["tt_ShutdownButton"]     , function() MangAdmin:Shutdown(ma_shutdowneditbox:GetText()) end)
-  self:PrepareScript(ma_closebutton          , nil                             , function() FrameLib:HandleGroup("bg", function(frame) frame:Hide() end) end)
-  self:PrepareScript(ma_popupclosebutton     , nil                             , function() FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end) end)
-  self:PrepareScript(ma_popup2closebutton    , nil                             , function() FrameLib:HandleGroup("popup2", function(frame) frame:Hide()  end) end)
+  self:PrepareScript(ma_closebutton          , nil                             , function() MangAdmin:CloseButton("bg") end)
+  self:PrepareScript(ma_popupclosebutton     , nil                             , function() MangAdmin:CloseButton("popup") end)
+  self:PrepareScript(ma_popup2closebutton    , nil                             , function() MangAdmin:CloseButton("popup2") end)
   --self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:TogglePopup("search", {type = "ticket"}); MangAdmin:LoadTickets() end)
   self:PrepareScript(ma_showticketsbutton    , nil                             , function() MangAdmin:LoadTickets() end)
   self:PrepareScript(ma_deleteticketbutton   , nil                             , function() MangAdmin:Ticket("delete") end)
@@ -2901,4 +2899,16 @@ function MangAdmin:ApplyStyleChanges()
     self.db.account.localesearchstring = false
   end
   ReloadUI()
+end
+
+function MangAdmin:CloseButton(name)
+  if name == "bg" then
+    MangAdmin:SearchReset()
+    FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
+  elseif name == "popup" then
+    MangAdmin:SearchReset()
+    FrameLib:HandleGroup("popup", function(frame) frame:Hide()  end)
+  elseif name == "popup2" then
+    FrameLib:HandleGroup("popup2", function(frame) frame:Hide()  end)
+  end
 end
