@@ -561,6 +561,7 @@ end]]
 function MangAdmin:AddMessage(frame, text, r, g, b, id)
   -- frame is the object that was hooked (one of the ChatFrames)  
   local catchedSth = false
+  local output = true
   if id == 1 then --make sure that the message comes from the server, message id = 1
     --[[ hook all uint32 .getvalue requests
     for guid, field, value in string.gmatch(text, "The uint32 value of (%w+) in (%w+) is: (%w+)") do
@@ -779,10 +780,8 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
       if output == false then
         -- don't output anything
       elseif output == true then
+        text = MangLinkifier_Decompose(text)
         self.hooks[frame].AddMessage(frame, text, r, g, b, id)
-      else
-        output = MangLinkifier_Decompose(output)
-        self.hooks[frame].AddMessage(frame, output, r, g, b, id)
       end
     else
       text = MangLinkifier_Decompose(text)
@@ -790,8 +789,10 @@ function MangAdmin:AddMessage(frame, text, r, g, b, id)
     end
   else
     -- message is not from server
-	-- Returns the message to the client, or else the chat frame never shows it
-	self.hooks[frame].AddMessage(frame, text, r, g, b, id)
+    --Linkifier should be used on non server messages as well to catch links suc as items in chat
+    text = MangLinkifier_Decompose(text)
+    -- Returns the message to the client, or else the chat frame never shows it
+    self.hooks[frame].AddMessage(frame, text, r, g, b, id)
   end
 end
 
