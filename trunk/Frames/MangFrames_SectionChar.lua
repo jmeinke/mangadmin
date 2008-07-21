@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -289,6 +289,287 @@ function MangAdmin:CreateCharSection()
     },
     text = Locale["ma_KickButton"]
   })
+
+  FrameLib:BuildButton({
+    name = "ma_cooldownbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_cooldownbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -130
+    },
+    text = Locale["ma_CooldownButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_demorphbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_demorphbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -154
+    },
+    text = Locale["ma_DemorphButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_showmapsbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_showmapsbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -178
+    },
+    text = Locale["ma_ShowMapsButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_hidemapsbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_hidemapsbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -202
+    },
+    text = Locale["ma_HideMapsButton"]
+  })
+
+FrameLib:BuildButton({
+    name = "ma_gpsbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_gpsbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -226
+    },
+    text = Locale["ma_GPSButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_guidbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_guidbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -10
+    },
+    text = Locale["ma_GUIDButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_movestackbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_movestackbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -34
+    },
+    text = Locale["ma_MoveStackButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcfreezebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcfreezebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -58
+    },
+    text = Locale["ma_NPCFreezeButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcunfreeze_randombutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcunfreeze_randombutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -82
+    },
+    text = Locale["ma_NPCUnFreeze_RandomButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcunfreeze_waybutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcunfreeze_waybutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -106
+    },
+    text = Locale["ma_NPCUnFreeze_WayButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcinfobutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcinfobutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -130
+    },
+    text = Locale["ma_NPCInfoButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_pinfobutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_pinfobutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -154
+    },
+    text = Locale["ma_PinfoButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_distancebutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_distancebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -178
+    },
+    text = Locale["ma_DistanceButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_recallbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_recallbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -202
+    },
+    text = Locale["ma_RecallButton"]
+  })
+
   
   FrameLib:BuildFrame({
     name = "ma_learnlangdropdown",
