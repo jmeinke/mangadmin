@@ -20,6 +20,25 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 106: 
+  * Added 'cooldown' command to Character tab.
+  * Added 'demorph' command to Character tab.
+  * Added 'show maps' command (.explorecheat 1) to Character tab
+  * Added 'hide maps' command (.explorecheat 0) to Character tab
+  * Added 'gps' command to Character tab
+  * Added 'Show GUID' command to Character tab
+  * Added 'Show Move' command to Character tab
+  * Added commands to set NPC movement type (stay/random/waypoint)
+  * Added 'NPC Info' command to Character tab
+  * Added 'Player Info' command to Character tab
+  * Added 'Distance' command to Character tab
+  * Added 'Recall' command to Character tab
+  * Above changes are localized to enUS ONLY!!!
+
+Rev. 105: Accidental commit, nothing changed -- Codewheel
+
+Rev. 104: [infamousblob, please record your changes]
+
 Rev. 103:
   *Improved handeling of message hooks, only attempts to match lookup messages it is currently looking for.
   *Addded checks to disable hooking of lookup messages if the search window isn't open, and to disable it when closed.

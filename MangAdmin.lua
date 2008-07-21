@@ -1156,6 +1156,118 @@ function MangAdmin:KickPlayer()
   end
 end
 
+function MangAdmin:Cooldown()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".cooldown")
+    self:LogAction("Cooled player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:Demorph()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".demorph")
+    self:LogAction("Demorphed player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:ShowMaps()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".explorecheat 1")
+    self:LogAction("Revealed maps for player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:HideMaps()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".explorecheat 0")
+    self:LogAction("Hid maps for player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:GPS()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".gps")
+    self:LogAction("Got GPS coordinates for player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:ShowGUID()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".guid")
+    self:LogAction("Got GUID for player "..player..".")
+end
+
+function MangAdmin:ShowMove()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".movegens")
+    self:LogAction("Got Movement Stack for player "..player..".")
+end
+
+function MangAdmin:NPCFreeze()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".npc setmovetype stay NODEL")
+    self:LogAction("Set NPC movement to STAY for player "..player..".")
+end
+
+function MangAdmin:NPCUnFreeze_Random()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".npc setmovetype random NODEL")
+    self:LogAction("Set NPC movement type to RANDOM for player "..player..".")
+end
+
+function MangAdmin:NPCUnFreeze_Way()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".npc setmovetype way NODEL")
+    self:LogAction("Set NPC movement type to WAYPOINT for player "..player..".")
+end
+
+function MangAdmin:NPCInfo()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".npc info")
+    self:LogAction("Got NPC info for player "..player..".")
+end
+
+function MangAdmin:Pinfo()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".pinfo")
+    self:LogAction("Got Player Info for player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
+function MangAdmin:Distance()
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".distance")
+    self:LogAction("Got distance to player "..player..".")
+end
+
+function MangAdmin:Recall()
+  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
+    local player = UnitName("target") or UnitName("player")
+    self:ChatMsg(".recall")
+    self:LogAction("Recalled player "..player..".")
+  else
+    self:Print(Locale["selectionerror1"])
+  end
+end
+
 function MangAdmin:RevivePlayer()
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
@@ -1717,6 +1829,20 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_savebutton           , nil                             , function() MangAdmin:SavePlayer() end)
   self:PrepareScript(ma_dismountbutton       , nil                             , function() MangAdmin:DismountPlayer() end)
   self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
+  self:PrepareScript(ma_cooldownbutton       , Locale["tt_CooldownButton"]     , function() MangAdmin:Cooldown() end)
+  self:PrepareScript(ma_demorphbutton        , Locale["tt_DemorphButton"]      , function() MangAdmin:Demorph() end)
+  self:PrepareScript(ma_showmapsbutton       , Locale["tt_ShowMapsButton"]     , function() MangAdmin:ShowMaps() end)
+  self:PrepareScript(ma_hidemapsbutton       , Locale["tt_HideMapsButton"]     , function() MangAdmin:HideMaps() end)
+  self:PrepareScript(ma_gpsbutton            , Locale["tt_GPSButton"]          , function() MangAdmin:GPS() end)
+  self:PrepareScript(ma_guidbutton           , Locale["tt_GUIDButton"]         , function() MangAdmin:ShowGUID() end)
+  self:PrepareScript(ma_movestackbutton      , Locale["tt_MoveStackButton"]    , function() MangAdmin:ShowMove() end)
+  self:PrepareScript(ma_npcfreezebutton      , Locale["tt_NPCFreezeButton"]    , function() MangAdmin:NPCFreeze() end)
+  self:PrepareScript(ma_npcunfreeze_randombutton    , Locale["tt_NPCUnFreeze_RandomButton"]  , function() MangAdmin:NPCUnFreeze_Random() end)
+  self:PrepareScript(ma_npcunfreeze_waybutton    , Locale["tt_NPCUnFreeze_WayButton"]  , function() MangAdmin:NPCUnFreeze_Way() end)
+  self:PrepareScript(ma_npcinfobutton        , Locale["tt_NPCInfoButton"]      , function() MangAdmin:NPCInfo() end)
+  self:PrepareScript(ma_pinfobutton          , Locale["tt_PinfoButton"]        , function() MangAdmin:Pinfo() end)
+  self:PrepareScript(ma_distancebutton       , Locale["tt_DistanceButton"]     , function() MangAdmin:Distance() end)
+  self:PrepareScript(ma_recallbutton         , Locale["tt_RecallButton"]       , function() MangAdmin:Recall() end)
   self:PrepareScript(ma_respawnbutton        , nil                             , function() MangAdmin:Respawn() end)
   self:PrepareScript(ma_gridnaviaheadbutton  , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "ahead" end)
   self:PrepareScript(ma_gridnavibackbutton   , nil                             , function() MangAdmin:GridNavigate(nil, nil); self.db.char.nextGridWay = "back" end)
