@@ -695,5 +695,80 @@ FrameLib:BuildButton({
     },
     text = "Reset"
   })
-  
+    FrameLib:BuildFrame({
+    type = "EditBox",
+    name = "ma_charactertarget",
+    group = "char",
+    parent = ma_midframe,
+    size = {
+      width = 120,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -100,
+      offY = -150
+    },
+    inherits = "InputBoxTemplate"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_jailabutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_jailabutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -150
+    },
+    text = Locale["ma_JailAButton"]
+    })
+
+  FrameLib:BuildButton({
+    name = "ma_jailhbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_jailhbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -175
+    },
+    text = Locale["ma_JailHButton"]
+  })
+  FrameLib:BuildButton({
+    name = "ma_unjailbutton",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_unjailbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -200
+    },
+    text = Locale["ma_UnJailButton"]
+  })
+
 end

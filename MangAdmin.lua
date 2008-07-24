@@ -1258,6 +1258,50 @@ function MangAdmin:Distance()
     self:LogAction("Got distance to player "..player..".")
 end
 
+function MangAdmin:SetJail_A()
+    self:ChatMsg(".tele del ma_AllianceJail")
+    i=1
+    while i<100 do
+        i=i+1
+        self:ChatMsg(".")
+    end
+    self:ChatMsg(".tele add ma_AllianceJail")
+    self:LogAction("Set location of Alliance Jail")
+end
+
+function MangAdmin:SetJail_H()
+    self:ChatMsg(".tele del ma_HordeJail")
+    i=1
+    while i<100 do
+        i=i+1
+        self:ChatMsg(".")
+    end
+    self:ChatMsg(".tele add ma_HordeJail")
+    self:LogAction("Set location of Horde Jail")
+end
+
+function MangAdmin:JailA()
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".tele name "..cname.." ma_AllianceJail")
+    self:LogAction("Jailed player "..player..".")
+    self:ChatMsg(".notify "..cname.." has been found guilty and jailed.")
+end
+
+function MangAdmin:JailH()
+    cname=ma_charactertarget:GetText()
+    --self:ChatMsg("Selected "..cname)
+    self:ChatMsg(".tele name "..cname.." ma_HordeJail")
+    self:LogAction("Jailed player "..player..".")
+    self:ChatMsg(".notify "..cname.." has been found guilty and jailed.")
+end
+
+function MangAdmin:UnJail()
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".recall "..cname)
+    self:LogAction("UnJailed player "..player..".")
+    self:ChatMsg(".notify "..cname.." has been pardoned and released from jail.")
+end
+
 function MangAdmin:Recall()
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
@@ -1816,6 +1860,11 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_mapsonbutton         , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleMaps(1) end)
   self:PrepareScript(ma_mapsoffbutton        , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
+  self:PrepareScript(ma_setjail_a_button     , Locale["tt_SetJail_A_Button"]   , function() MangAdmin:SetJail_A() end)
+  self:PrepareScript(ma_setjail_h_button     , Locale["tt_SetJail_H_Button"]   , function() MangAdmin:SetJail_H() end)
+  self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
+  self:PrepareScript(ma_jailhbutton         , Locale["tt_JailHButton"]        , function() MangAdmin:JailH() end)
+  self:PrepareScript(ma_unjailbutton         , Locale["tt_UnJailButton"]       , function() MangAdmin:UnJail() end)
   --self:PrepareScript(ma_learnallbutton       , nil                             , function() MangAdmin:LearnSpell("all") end)
   --self:PrepareScript(ma_learncraftsbutton    , nil                             , function() MangAdmin:LearnSpell("all_crafts") end)
   --self:PrepareScript(ma_learngmbutton        , nil                             , function() MangAdmin:LearnSpell("all_gm") end)
