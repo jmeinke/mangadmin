@@ -1,4 +1,4 @@
-/************************************************************************************************************
+﻿/************************************************************************************************************
 **
 ** MangAdmin Version 1.0
 **
@@ -20,6 +20,27 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 107:
+  * Added Jails group and 3 teles to Teleport table
+  * Added SetJail (A) and SetJail (H) commands to Main tab
+  * Added a target editbox and Jail (A), Jail (H), and UnJail commands to Character tab.
+  * The above changes allow use of a Jail/UnJail system *without* having to have the Jail patch compiled into ManGos. 
+    To use: Teleport to wherever you want the alliance Jail to be (or use the tele I supplied). Once there,
+    click the Main tab, then click the SetJail A button. This creates a tele location that will be used as a tele 
+    target for Jailing. Teleport to a good location for a Horde Jail (or use the supplied tele, repeat steps 
+    for setting the Horde Jail (using the SetJail H button).
+    To send a character to jail, open the Character tab, type the character's name in the editbox, then click 
+    the Jail A or Jail H button to send the character to jail. Withthe character's name in the editbox, clicking
+    the UnJail button will do a .recall on the character, sending them back where they were before the last teleport.
+    Caveats: In order to execute multiple commands in one function, I had to put a delay between each command. I did
+    it sloppily.. you will note your character saying some odd things to waste time between commands. When I have 
+    a more elegant way of implementing a delay, I will add it. Also, be aware that sending a character to jail 
+    does NOT prevent them from hearthing back out... may or may not be addressed in the future.
+  * The target editbox will be used for future commands which require a name 
+    (as opposed to commands which act on the targeted creature). Will look into automatically filling the 
+    editbox with a name when a character is targeted.
+
+
 Rev. 106: 
   * Added 'cooldown' command to Character tab.
   * Added 'demorph' command to Character tab.

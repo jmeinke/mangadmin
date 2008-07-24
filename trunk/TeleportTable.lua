@@ -700,6 +700,11 @@ function ReturnTeleportLocations()
       ["The Dead Scar - Q'D"] = ".go 11616.88 -7085.5 2.29 530",
       ["The Sin'loren"] = ".go 13204.00 -7048.03 3.66 530",
     },
+    ["Jails"] = {
+      ["Alliance"] = ".go -98.0155 149.8360 -40.3827 35",
+      ["Horde"] = ".go -11139.1845 -1742.4421 -29.7365 0",
+      ["Official"] = ".go 16228.5 16402.7 -64.377914 1",
+    },
     ["Loch Modan"] = {
       ["Algaz Station"] = ".go -4909.516113 -2726.763672 329.060089 0",
       ["Ironband's Excavation Site"] = ".go -5755.53 -3998.42 330.436 0",

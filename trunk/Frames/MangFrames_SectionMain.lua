@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -431,6 +431,46 @@ function MangAdmin:CreateMainSection()
       offY = -58
     },
     text = Locale["ma_DismountButton"]
+  })
+  
+FrameLib:BuildButton({
+    name = "ma_setjail_a_button",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_setjail_a_button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -82
+    },
+    text = Locale["ma_SetJail_A_Button"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_setjail_h_button",
+    group = "main",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_setjail_h_button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -106
+    },
+    text = Locale["ma_SetJail_H_Button"]
   })
   
   FrameLib:BuildButton({

@@ -1,3 +1,11 @@
+7/23/2008 by iotech
+[Add]------ Jails -----------
+[Add] Alliance Jail (unused Stockade in Stormwind)
+[Add] Horde Jail (empty Kharazan Crypt)
+[Copy] Official Jail
+
+(these changes to support r107 SetJail/Jail/UnJail functions)
+
 Changes by Necroblack:
 
 ------Isle of Quel'Danas------
