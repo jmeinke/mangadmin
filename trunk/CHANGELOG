@@ -20,6 +20,30 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 108:
+  * Added a label to the editbox (added on r106) naming it "Parameter(s). users will type in the parameters 
+    being passed to parameterized commands.
+  * Added the following *parameterized* commands:
+    .ban
+    .baninfo
+    .banlist
+    .unban
+    .goname
+    .groupgo
+    .namego
+    .guild create
+    .guild invite
+    .guild rank
+    .guild delete
+    .tele add
+    .tele del
+    .tele group
+    .tele name
+    .mute
+    Note: Tooltops on each button give the syntax of the parameters the user needs to type in the editbox.
+  * Changed wording on the Move Random and Move Waypoint buttons to make the text fit.
+
+
 Rev. 107:
   * Added Jails group and 3 teles to Teleport table
   * Added SetJail (A) and SetJail (H) commands to Main tab

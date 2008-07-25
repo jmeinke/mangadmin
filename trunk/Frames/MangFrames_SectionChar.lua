@@ -695,23 +695,357 @@ FrameLib:BuildButton({
     },
     text = "Reset"
   })
+ 
+  FrameLib:BuildFontString({
+    name = "ma_parameterboxtext",
+    group = "char",
+    parent = ma_midframe,
+    text = "Parameter(s)",
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -150,
+      offY = -110
+    }
+  })
+  
     FrameLib:BuildFrame({
     type = "EditBox",
     name = "ma_charactertarget",
     group = "char",
     parent = ma_midframe,
     size = {
-      width = 120,
+      width = 200,
       height = 20
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -100,
-      offY = -150
+      offX = -50,
+      offY = -125
     },
     inherits = "InputBoxTemplate"
   })
 
+FrameLib:BuildButton({
+    name = "ma_r1c1button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r1c1button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -329,
+      offY = -150
+    },
+    text = Locale["ma_r1c1Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r1c2button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r1c2button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -248,
+      offY = -150
+    },
+    text = Locale["ma_r1c2Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r1c3button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r1c3button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -150
+    },
+    text = Locale["ma_r1c3Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r1c4button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r1c4button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -86,
+      offY = -150
+    },
+    text = Locale["ma_r1c4Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r2c1button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r2c1button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -329,
+      offY = -175
+    },
+    text = Locale["ma_r2c1Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r2c2button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r2c2button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -248,
+      offY = -175
+    },
+    text = Locale["ma_r2c2Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r2c3button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r2c3button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -175
+    },
+    text = Locale["ma_r2c3Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r2c4button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r2c4button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -86,
+      offY = -175
+    },
+    text = Locale["ma_r2c4Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r3c1button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r3c1button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -329,
+      offY = -200
+    },
+    text = Locale["ma_r3c1Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r3c2button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r3c2button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -248,
+      offY = -200
+    },
+    text = Locale["ma_r3c2Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r3c3button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r3c3button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -200
+    },
+    text = Locale["ma_r3c3Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r3c4button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r3c4button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -86,
+      offY = -200
+    },
+    text = Locale["ma_r3c4Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r4c1button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r4c1button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -329,
+      offY = -225
+    },
+    text = Locale["ma_r4c1Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r4c2button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r4c2button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -248,
+      offY = -225
+    },
+    text = Locale["ma_r4c2Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r4c3button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r4c3button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -167,
+      offY = -225
+    },
+    text = Locale["ma_r4c3Button"]
+    })
+
+FrameLib:BuildButton({
+    name = "ma_r4c4button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r4c4button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -86,
+      offY = -225
+    },
+    text = Locale["ma_r4c4Button"]
+    })
+
+  
   FrameLib:BuildButton({
     name = "ma_jailabutton",
     group = "char",
@@ -726,7 +1060,7 @@ FrameLib:BuildButton({
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -10,
+      offX = -5,
       offY = -150
     },
     text = Locale["ma_JailAButton"]
@@ -746,11 +1080,12 @@ FrameLib:BuildButton({
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -10,
+      offX = -5,
       offY = -175
     },
     text = Locale["ma_JailHButton"]
   })
+
   FrameLib:BuildButton({
     name = "ma_unjailbutton",
     group = "char",
@@ -765,10 +1100,31 @@ FrameLib:BuildButton({
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -10,
+      offX = -5,
       offY = -200
     },
     text = Locale["ma_UnJailButton"]
   })
+
+  FrameLib:BuildButton({
+    name = "ma_r4c5button",
+    group = "char",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_r4c5button_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -5,
+      offY = -225
+    },
+    text = Locale["ma_r4c5Button"]
+})
+
 
 end
