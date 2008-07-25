@@ -1471,6 +1471,109 @@ function MangAdmin:ReloadTable(tablename)
   end
 end
 
+function MangAdmin:r1c1()
+--.ban
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".ban "..cname)
+    self:LogAction("Banned player: "..cname..".")
+end
+function MangAdmin:r1c2()
+--.goname
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".goname "..cname)
+    self:LogAction("Teleported TO player: "..cname..".")
+end
+function MangAdmin:r1c3()
+--.guild create
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".guild create "..cname)
+    self:LogAction("Created Guild: "..cname..".")
+end
+function MangAdmin:r1c4()
+--.tele add
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".tele add "..cname)
+    self:LogAction("Added .tele location: "..cname..".")
+end
+function MangAdmin:r2c1()
+--.baninfo
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".baninfo "..cname)
+    self:LogAction("Listed .baninfo: "..cname..".")
+end
+function MangAdmin:r2c2()
+--.groupgo
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".groupgo "..cname)
+    self:LogAction("Teleported "..cname.." and his/her group TO me.")
+end
+function MangAdmin:r2c3()
+--.guild invite 
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".guild invite "..cname)
+    self:LogAction("Guild invitation: "..cname..".")
+end
+function MangAdmin:r2c4()
+--.tele del
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".tele del "..cname)
+    self:LogAction("Deleted .tele location: "..cname..".")
+end
+function MangAdmin:r3c1()
+--.banlist
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".banlist "..cname)
+    self:LogAction("Listed bans matching: "..cname..".")
+end
+function MangAdmin:r3c2()
+--.namego
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".namego "..cname)
+    self:LogAction("Teleported "..cname.." TO me.")
+end
+function MangAdmin:r3c3()
+--.guild rank
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".guild rank "..cname)
+    self:LogAction("Guild rank change: "..cname..".")
+end
+function MangAdmin:r3c4()
+--.tele group 
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".tele group "..cname)
+    self:LogAction("Group teleported: "..cname..".")
+end
+function MangAdmin:r4c1()
+--.unban
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".unban "..cname)
+    self:LogAction("Unbanned "..cname..".")
+end
+function MangAdmin:r4c2()
+--.guild delete
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".guild delete "..cname)
+    self:LogAction("Deleted guild: "..cname..".")
+end
+function MangAdmin:r4c3()
+--.guild uninvite
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".guild uninvite "..cname)
+    self:LogAction("Removed from guild: "..cname..".")
+end
+function MangAdmin:r4c4()
+--.tele name
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".tele name "..cname)
+    self:LogAction("Teleported: "..cname..".")
+end
+function MangAdmin:r4c5()
+--.mute
+    cname=ma_charactertarget:GetText()
+    self:ChatMsg(".mute "..cname)
+    self:LogAction("Muted "..cname..".")
+end
+
 function MangAdmin:ReloadScripts()
   self:ChatMsg(".loadscripts")
   self:LogAction("(Re-)Loaded scripts.")
@@ -1860,6 +1963,23 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_mapsonbutton         , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleMaps(1) end)
   self:PrepareScript(ma_mapsoffbutton        , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
+  self:PrepareScript(ma_r1c1button           , Locale["tt_r1c1Button"]         , function() MangAdmin:r1c1() end)
+  self:PrepareScript(ma_r1c2button           , Locale["tt_r1c2Button"]         , function() MangAdmin:r1c2() end)
+  self:PrepareScript(ma_r1c3button           , Locale["tt_r1c3Button"]         , function() MangAdmin:r1c3() end)
+  self:PrepareScript(ma_r1c4button           , Locale["tt_r1c4Button"]         , function() MangAdmin:r1c4() end)
+  self:PrepareScript(ma_r2c1button           , Locale["tt_r2c1Button"]         , function() MangAdmin:r2c1() end)
+  self:PrepareScript(ma_r2c2button           , Locale["tt_r2c2Button"]         , function() MangAdmin:r2c2() end)
+  self:PrepareScript(ma_r2c3button           , Locale["tt_r2c3Button"]         , function() MangAdmin:r2c3() end)
+  self:PrepareScript(ma_r2c4button           , Locale["tt_r2c4Button"]         , function() MangAdmin:r2c4() end)
+  self:PrepareScript(ma_r3c1button           , Locale["tt_r3c1Button"]         , function() MangAdmin:r3c1() end)
+  self:PrepareScript(ma_r3c2button           , Locale["tt_r3c2Button"]         , function() MangAdmin:r3c2() end)
+  self:PrepareScript(ma_r3c3button           , Locale["tt_r3c3Button"]         , function() MangAdmin:r3c3() end)
+  self:PrepareScript(ma_r3c4button           , Locale["tt_r3c4Button"]         , function() MangAdmin:r3c4() end)
+  self:PrepareScript(ma_r4c1button           , Locale["tt_r4c1Button"]         , function() MangAdmin:r4c1() end)
+  self:PrepareScript(ma_r4c2button           , Locale["tt_r4c2Button"]         , function() MangAdmin:r4c2() end)
+  self:PrepareScript(ma_r4c3button           , Locale["tt_r4c3Button"]         , function() MangAdmin:r4c3() end)
+  self:PrepareScript(ma_r4c4button           , Locale["tt_r4c4Button"]         , function() MangAdmin:r4c4() end)
+  self:PrepareScript(ma_r4c5button           , Locale["tt_r4c5Button"]         , function() MangAdmin:r4c5() end)
   self:PrepareScript(ma_setjail_a_button     , Locale["tt_SetJail_A_Button"]   , function() MangAdmin:SetJail_A() end)
   self:PrepareScript(ma_setjail_h_button     , Locale["tt_SetJail_H_Button"]   , function() MangAdmin:SetJail_H() end)
   self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
