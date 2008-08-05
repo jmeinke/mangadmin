@@ -20,6 +20,19 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+REV. 110:
+  * Added the Following Teleports
+    [Fix] Darkshire
+    [Add] The Weeping Cave
+    [Add] Thondroril River - House
+    [Add] DarrowShrine
+    [Update] Tiragarde Keep Z-axis
+  * Corrected information text on the View all maps button foun on the "Main" tab
+Rev. 109:
+  * Minor update to teleports
+    [Update] Testing- small box (old jail) x-axis
+    [REMOVE] GM Island - Jail (moved to Jail in 108 by iotech)
+
 Rev. 108:
   * Added a label to the editbox (added on r106) naming it "Parameter(s). users will type in the parameters 
     being passed to parameterized commands.
