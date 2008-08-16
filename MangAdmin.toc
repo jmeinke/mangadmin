@@ -65,6 +65,8 @@ Frames\MangFrames_SectionChar.lua
 Frames\MangFrames_SectionTicket.lua
 Frames\MangFrames_SectionMisc.lua
 Frames\MangFrames_SectionServer.lua
+Frames\MangFrames_SectionNpc.lua
+Frames\MangFrames_SectionGO.lua
 
 ## Frame Generation
 MangFrames.lua

@@ -20,6 +20,13 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 111:
+  * [Add] NPC Tab (future use)
+  * [Add] Objects Tab (future use)
+  * [Move] Move Grid Navigator to Main to open up space on Tele tab for changes there.
+  Note: This rev adds no new functionality, and is only for preparation for larger changes 
+  in the next rev(s). Therefore, a new zip/rar will not be produced.
+ 
 REV. 110:
   * Added the Following Teleports
     [Fix] Darkshire
@@ -28,6 +35,7 @@ REV. 110:
     [Add] DarrowShrine
     [Update] Tiragarde Keep Z-axis
   * Corrected information text on the View all maps button foun on the "Main" tab
+
 Rev. 109:
   * Minor update to teleports
     [Update] Testing- small box (old jail) x-axis
@@ -95,7 +103,27 @@ Rev. 106:
 
 Rev. 105: Accidental commit, nothing changed -- Codewheel
 
-Rev. 104: [infamousblob, please record your changes]
+Rev. 104: 
+    * Fixed Linkifier to work on items/etc in regular chat
+    * Changed a little of the chat hook handling
+    * Fixed Linkifier GameObjects comamnds missing a argument
+    * Teleport Changes thanks to Necroblack
+          o [FIX]GM Island - Jail (Z axis)
+          o [FIX] Jail (Z axis)
+          o [ADD]Karazhan Crypts
+          o [ADD]Naxxramas - Outside
+          o [ADD]Zul'Gurub - Alter of storms
+          o [ADD]Ahn'Qiraj - Backlands
+          o [ADD]Blackchar Cave
+          o [ADD]Ortell's Hideout
+          o [ADD]Wetlands Hidden spot
+          o [ADD]Ruins of Lordaeron (PvP Zone) Stable
+          o [ADD]Ruins of Lordaeron (PvP Zone) Crypt
+          o [ADD]Ruins of Lordaeron (PvP Zone) Pyrewood Village
+          o [ADD]Ruins of Lordaeron (PvP Zone) Toolshed
+          o [ADD] Testing - Big Box
+          o [RENAME] Jail => Testing - Small Box(Old Jail)
+
 
 Rev. 103:
   *Improved handeling of message hooks, only attempts to match lookup messages it is currently looking for.
