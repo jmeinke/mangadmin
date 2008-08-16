@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -130,6 +130,51 @@ function MangAdmin:CreateMiniMenu()
     },
     text = "Cr"
   })
+
+    FrameLib:BuildButton({
+    name = "ma_mm_npcbutton",
+    group = "minimenu",
+    parent = ma_miniframe,
+    texture = {
+      name = "ma_mm_npcbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_mm_charbutton",
+      relPos = "BOTTOMLEFT",
+      offX = 0,
+      offY = -2
+    },
+    text = "Np"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_mm_gobutton",
+    group = "minimenu",
+    parent = ma_miniframe,
+    texture = {
+      name = "ma_mm_gobutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 20,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_mm_npcbutton",
+      relPos = "BOTTOMLEFT",
+      offX = 0,
+      offY = -2
+    },
+    text = "GO"
+  })
+
   
   FrameLib:BuildButton({
     name = "ma_mm_telebutton",
@@ -145,7 +190,7 @@ function MangAdmin:CreateMiniMenu()
     },
     setpoint = {
       pos = "TOPLEFT",
-      relTo = "ma_mm_charbutton",
+      relTo = "ma_mm_gobutton",
       relPos = "BOTTOMLEFT",
       offX = 0,
       offY = -2

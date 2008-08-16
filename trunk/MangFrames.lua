@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -22,6 +22,7 @@
 -- Also some variables are globally taken from MangAdmin.lua
 
 function MangAdmin:CreateFrames()
+  -- These need to be called in TOC order
   self:CreateMiniMenu()
   self:CreateStartFrames()
   self:CreateTabs()
@@ -35,12 +36,16 @@ function MangAdmin:CreateFrames()
   self:CreateTicketSection()
   self:CreateMiscSection()
   self:CreateServerSection()
+  self:CreateNpcSection()
+  self:CreateGOSection()
   
   --FrameLib:HandleGroup("bg", function(frame) frame:Hide() end)
   --FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("ticket", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("server", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("npc", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("go", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("log", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("misc", function(frame) frame:Hide() end)

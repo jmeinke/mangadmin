@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -48,7 +48,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 80,
+      width = 70,
       height = 20
     },
     setpoint = {
@@ -75,7 +75,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 80,
+      width = 70,
       height = 20
     },
     setpoint = {
@@ -86,6 +86,59 @@ function MangAdmin:CreateTabs()
     },
     text = Locale["tabmenu_Char"]
   })
+
+  FrameLib:BuildButton({
+    name = "ma_tabbutton_npc",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_tabbutton_npc_texture",
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
+      }
+    },
+    size = {
+      width = 70,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_tabbutton_char",
+      relPos = "TOPRIGHT",
+      offX = 2
+    },
+    text = Locale["tabmenu_NPC"]
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_tabbutton_go",
+    group = "tabbuttons",
+    parent = ma_topframe,
+    texture = {
+      name = "ma_tabbutton_go_texture",
+      color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm},
+      gradient = {
+        orientation = "vertical",
+        min = {102,102,102,0},
+        max = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
+      }
+    },
+    size = {
+      width = 70,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_tabbutton_npc",
+      relPos = "TOPRIGHT",
+      offX = 2
+    },
+    text = Locale["tabmenu_GO"]
+  })
+
 
   FrameLib:BuildButton({
     name = "ma_tabbutton_tele",
@@ -101,12 +154,12 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 100,
+      width = 70,
       height = 20
     },
     setpoint = {
       pos = "TOPLEFT",
-      relTo = "ma_tabbutton_char",
+      relTo = "ma_tabbutton_go",
       relPos = "TOPRIGHT",
       offX = 2
     },
@@ -127,7 +180,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 130,
+      width = 70,
       height = 20
     },
     setpoint = {
@@ -153,7 +206,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 100,
+      width = 70,
       height = 20
     },
     setpoint = {
@@ -180,7 +233,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 80,
+      width = 70,
       height = 20
     },
     setpoint = {
@@ -206,7 +259,7 @@ function MangAdmin:CreateTabs()
       }
     },
     size = {
-      width = 80,
+      width = 70,
       height = 20
     },
     setpoint = {
