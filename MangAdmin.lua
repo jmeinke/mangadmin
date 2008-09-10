@@ -236,7 +236,7 @@ function MangAdmin:OnEnable()
   ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"].."0")
   self:SearchReset()
   -- refresh server information
-  self:ChatMsg(".info")
+  self:ChatMsg(".server info")
   -- register events
   --self:RegisterEvent("ZONE_CHANGED") -- for teleport list update
   self:RegisterEvent("PLAYER_TARGET_CHANGED")
@@ -1446,10 +1446,10 @@ end
 
 function MangAdmin:Shutdown(value)
   if value == "" then
-    self:ChatMsg(".shutdown 0")
+    self:ChatMsg(".server shutdown 0")
     self:LogAction("Shut down server instantly.")
   else
-    self:ChatMsg(".shutdown "..value)
+    self:ChatMsg(".server shutdown "..value)
     self:LogAction("Shut down server in "..value.." seconds.")
   end
 end
