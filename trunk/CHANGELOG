@@ -20,13 +20,27 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 114:
+  * little clean-up (there is really a lot of more to clean up) ;)
+  * removing double function for hiding/revealing maps for players
+  * enlarged the minimenu/toolbar and the apply-changes button to look better
+  * added a checkbox to enable or disable tooltips
+  * added a checkbox to enable or disable the toolbar/minimenu
+  * added command: "/mangadmin minimenu 0/1" to show or hide the minimenu
+  
+Rev. 113:
+  * Small fix, refresh button. Thanks ae3265
+  
+Rev. 112:
+  * Fixes to shutdown commands and server info. Thanks to Sora23. (Rev. 6555+)
+  
 Rev. 111:
   * [Add] NPC Tab (future use)
   * [Add] Objects Tab (future use)
   * [Move] Move Grid Navigator to Main to open up space on Tele tab for changes there.
   Note: This rev adds no new functionality, and is only for preparation for larger changes 
   in the next rev(s). Therefore, a new zip/rar will not be produced.
- 
+  
 REV. 110:
   * Added the Following Teleports
     [Fix] Darkshire
@@ -35,12 +49,12 @@ REV. 110:
     [Add] DarrowShrine
     [Update] Tiragarde Keep Z-axis
   * Corrected information text on the View all maps button foun on the "Main" tab
-
+  
 Rev. 109:
   * Minor update to teleports
     [Update] Testing- small box (old jail) x-axis
     [REMOVE] GM Island - Jail (moved to Jail in 108 by iotech)
-
+  
 Rev. 108:
   * Added a label to the editbox (added on r106) naming it "Parameter(s). users will type in the parameters 
     being passed to parameterized commands.
