@@ -44,7 +44,7 @@ function MangAdmin:CreateMiniMenu()
     draggable = true,
     size = {
       width = 28,
-      height = 184
+      height = 224
     },
     setpoint = {
       pos = "RIGHT"
@@ -61,7 +61,7 @@ function MangAdmin:CreateMiniMenu()
     },
     size = {
       width = 24,
-      height = 180
+      height = 220
     },
     setpoint = {
       pos = "TOPLEFT",

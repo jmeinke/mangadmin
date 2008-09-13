@@ -62,6 +62,34 @@ function MangAdmin:CreateMiscSection()
     inherits = "OptionsCheckButtonTemplate"
   })
   
+  FrameLib:BuildButton({
+    type = "CheckButton",
+    name = "ma_showminimenubutton",
+    group = "misc",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 150,
+      offY = -34
+    },
+    text = "Enable Minimenu/Toolbar",
+    inherits = "OptionsCheckButtonTemplate"
+  })
+  
+  FrameLib:BuildButton({
+    type = "CheckButton",
+    name = "ma_showtooltipsbutton",
+    group = "misc",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 150,
+      offY = -64
+    },
+    text = "Enable Tooltips",
+    inherits = "OptionsCheckButtonTemplate"
+  })
+  
   FrameLib:BuildFrame({
     type = "Slider",
     name = "ma_frmtrslider",
@@ -227,13 +255,13 @@ function MangAdmin:CreateMiscSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 100,
-      height = 20
+      width = 180,
+      height = 30
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 10,
-      offY = -210
+      offX = 40,
+      offY = -220
     },
     text = "Apply changes"
   })
@@ -248,7 +276,7 @@ function MangAdmin:CreateMiscSection()
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -98,
+      offX = -118,
       offY = -10
     },
     inherits = "UIDropDownMenuTemplate"
@@ -263,7 +291,7 @@ function MangAdmin:CreateMiscSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 90,
+      width = 110,
       height = 20
     },
     setpoint = {

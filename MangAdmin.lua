@@ -18,18 +18,18 @@
 -------------------------------------------------------------------------------------------------------------
 
 local MAJOR_VERSION = "MangAdmin-1.0"
-local MINOR_VERSION = "$Revision: 1 $"
+local MINOR_VERSION = "$Revision: 114 $"
 ROOT_PATH     = "Interface\\AddOns\\MangAdmin\\"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
---[[local]] MangAdmin  = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0", "AceEvent-2.0")
---[[local]] Locale     = AceLibrary("AceLocale-2.2"):new("MangAdmin")
---[[local]] Strings    = AceLibrary("AceLocale-2.2"):new("TEST")
---[[local]] FrameLib   = AceLibrary("FrameLib-1.0")
---[[local]] Graph      = AceLibrary("Graph-1.0")
-local Tablet      = AceLibrary("Tablet-2.0")
+MangAdmin    = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceDB-2.0", "AceHook-2.1", "FuBarPlugin-2.0", "AceDebug-2.0", "AceEvent-2.0")
+Locale       = AceLibrary("AceLocale-2.2"):new("MangAdmin")
+Strings      = AceLibrary("AceLocale-2.2"):new("TEST")
+FrameLib     = AceLibrary("FrameLib-1.0")
+Graph        = AceLibrary("Graph-1.0")
+local Tablet = AceLibrary("Tablet-2.0")
 
 MangAdmin:RegisterDB("MangAdminDb", "MangAdminDbPerChar")
 MangAdmin:RegisterDefaults("char", 
@@ -52,7 +52,7 @@ MangAdmin:RegisterDefaults("char",
       creature = false,
       object = false,
       tele = false,
-	  toggle = false
+      toggle = false
     },
     nextGridWay = "ahead",
     selectedZone = nil,
@@ -65,7 +65,7 @@ MangAdmin:RegisterDefaults("char",
 MangAdmin:RegisterDefaults("account", 
   {
     language = nil,
-	localesearchstring = true,
+    localesearchstring = true,
     favorites = {
       items = {},
       itemsets = {},
@@ -97,6 +97,7 @@ MangAdmin:RegisterDefaults("account",
     },
     style = {
       showtooltips = true,
+      showminimenu = true,
       transparency = {
         buttons = 1.0,
         frames = 0.7,
@@ -189,6 +190,12 @@ MangAdmin.consoleOpts = {
       desc = Locale["cmd_tooltip"],
       type = 'execute',
       func = function() MangAdmin:ToggleTooltips() end
+    },
+    minimenu = {
+      name = "tooltips",
+      desc = "Toogle the toolbar/minimenu",
+      type = 'execute',
+      func = function() MangAdmin:ToggleMinimenu() end
     }
   }
 }
@@ -200,7 +207,7 @@ function MangAdmin:OnInitialize()
   self:RegisterChatCommand(Locale["slashcmds"], self.consoleOpts) -- this registers the chat commands
   self:InitButtons() -- this prepares the actions and tooltips of nearly all MangAdmin buttons  
   self:SearchReset()
-   -- FuBar plugin config
+  -- FuBar plugin config
   MangAdmin.hasNoColor = true
   MangAdmin.hasNoText = false
   MangAdmin.clickableTooltip = true
@@ -228,10 +235,14 @@ function MangAdmin:OnInitialize()
   MangLinkifier_SetItemRef_Original = SetItemRef
   SetItemRef = MangLinkifier_SetItemRef
   self.db.char.msgDeltaTime = time()
+  -- hide minimenu if not enabled
+  if not self.db.account.style.showminimenu then
+    FrameLib:HandleGroup("minimenu", function(frame) frame:Hide() end)
+  end
 end
 
 function MangAdmin:OnEnable()
-  self:SetDebugging(true) -- to have debugging through the whole app.    
+  self:SetDebugging(true) -- to have debugging through the whole app
   ma_toptext:SetText(Locale["char"].." "..Locale["guid"]..tonumber(UnitGUID("player"),16))
   ma_top2text:SetText(Locale["realm"].." "..Locale["tickets"].."0")
   self:SearchReset()
@@ -1178,26 +1189,6 @@ function MangAdmin:Demorph()
   end
 end
 
-function MangAdmin:ShowMaps()
-  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
-    local player = UnitName("target") or UnitName("player")
-    self:ChatMsg(".explorecheat 1")
-    self:LogAction("Revealed maps for player "..player..".")
-  else
-    self:Print(Locale["selectionerror1"])
-  end
-end
-
-function MangAdmin:HideMaps()
-  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
-    local player = UnitName("target") or UnitName("player")
-    self:ChatMsg(".explorecheat 0")
-    self:LogAction("Hid maps for player "..player..".")
-  else
-    self:Print(Locale["selectionerror1"])
-  end
-end
-
 function MangAdmin:GPS()
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
@@ -1473,107 +1464,60 @@ function MangAdmin:ReloadTable(tablename)
   end
 end
 
-function MangAdmin:r1c1()
---.ban
-    cname=ma_charactertarget:GetText()
+function MangAdmin:QuickCommand(v)
+  local cname = ma_charactertarget:GetText()
+  if(v == 1) then --.ban
     self:ChatMsg(".ban "..cname)
     self:LogAction("Banned player: "..cname..".")
-end
-function MangAdmin:r1c2()
---.goname
-    cname=ma_charactertarget:GetText()
+  elseif(v == 2) then --.goname
     self:ChatMsg(".goname "..cname)
     self:LogAction("Teleported TO player: "..cname..".")
-end
-function MangAdmin:r1c3()
---.guild create
-    cname=ma_charactertarget:GetText()
+  elseif(v == 3) then --.guild create
     self:ChatMsg(".guild create "..cname)
     self:LogAction("Created Guild: "..cname..".")
-end
-function MangAdmin:r1c4()
---.tele add
-    cname=ma_charactertarget:GetText()
+  elseif(v == 4) then --.tele add
     self:ChatMsg(".tele add "..cname)
     self:LogAction("Added .tele location: "..cname..".")
-end
-function MangAdmin:r2c1()
---.baninfo
-    cname=ma_charactertarget:GetText()
+  elseif(v == 5) then --.baninfo
     self:ChatMsg(".baninfo "..cname)
     self:LogAction("Listed .baninfo: "..cname..".")
-end
-function MangAdmin:r2c2()
---.groupgo
-    cname=ma_charactertarget:GetText()
+  elseif(v == 6) then --.groupgo
     self:ChatMsg(".groupgo "..cname)
     self:LogAction("Teleported "..cname.." and his/her group TO me.")
-end
-function MangAdmin:r2c3()
---.guild invite 
-    cname=ma_charactertarget:GetText()
+  elseif(v == 7) then --.guild invite 
     self:ChatMsg(".guild invite "..cname)
     self:LogAction("Guild invitation: "..cname..".")
-end
-function MangAdmin:r2c4()
---.tele del
-    cname=ma_charactertarget:GetText()
+  elseif(v == 8) then --.tele del
     self:ChatMsg(".tele del "..cname)
     self:LogAction("Deleted .tele location: "..cname..".")
-end
-function MangAdmin:r3c1()
---.banlist
-    cname=ma_charactertarget:GetText()
+  elseif(v == 9) then --.banlist
     self:ChatMsg(".banlist "..cname)
     self:LogAction("Listed bans matching: "..cname..".")
-end
-function MangAdmin:r3c2()
---.namego
-    cname=ma_charactertarget:GetText()
+  elseif(v == 10) then --.namego
     self:ChatMsg(".namego "..cname)
     self:LogAction("Teleported "..cname.." TO me.")
-end
-function MangAdmin:r3c3()
---.guild rank
-    cname=ma_charactertarget:GetText()
+  elseif(v == 11) then --.guild rank
     self:ChatMsg(".guild rank "..cname)
     self:LogAction("Guild rank change: "..cname..".")
-end
-function MangAdmin:r3c4()
---.tele group 
-    cname=ma_charactertarget:GetText()
+  elseif(v == 12) then --.tele group
     self:ChatMsg(".tele group "..cname)
     self:LogAction("Group teleported: "..cname..".")
-end
-function MangAdmin:r4c1()
---.unban
-    cname=ma_charactertarget:GetText()
+  elseif(v == 13) then --.unban
     self:ChatMsg(".unban "..cname)
     self:LogAction("Unbanned "..cname..".")
-end
-function MangAdmin:r4c2()
---.guild delete
-    cname=ma_charactertarget:GetText()
+  elseif(v == 14) then --.guild delete
     self:ChatMsg(".guild delete "..cname)
     self:LogAction("Deleted guild: "..cname..".")
-end
-function MangAdmin:r4c3()
---.guild uninvite
-    cname=ma_charactertarget:GetText()
+  elseif(v == 15) then --.guild uninvite
     self:ChatMsg(".guild uninvite "..cname)
     self:LogAction("Removed from guild: "..cname..".")
-end
-function MangAdmin:r4c4()
---.tele name
-    cname=ma_charactertarget:GetText()
+  elseif(v == 16) then --.tele name
     self:ChatMsg(".tele name "..cname)
     self:LogAction("Teleported: "..cname..".")
-end
-function MangAdmin:r4c5()
---.mute
-    cname=ma_charactertarget:GetText()
+  elseif(v == 17) then --.mute
     self:ChatMsg(".mute "..cname)
     self:LogAction("Muted "..cname..".")
+  end
 end
 
 function MangAdmin:ReloadScripts()
@@ -1628,7 +1572,6 @@ function MangAdmin:ToggleMaps(value)
   else
     MangAdmin:LogAction("Hide all unexplored maps for selected player.")
   end
-  
 end
 
 function MangAdmin:ShowTicketTab()
@@ -1966,30 +1909,30 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_taxicheatoffbutton   , Locale["tt_TaxiOffButton"]      , function() MangAdmin:ToggleTaxicheat("off") end)
   self:PrepareScript(ma_ticketonbutton       , Locale["tt_TicketOn"]           , function() MangAdmin:ToggleTickets("on") end)
   self:PrepareScript(ma_ticketoffbutton      , Locale["tt_TicketOff"]          , function() MangAdmin:ToggleTickets("off") end)
-  self:PrepareScript(ma_mapsonbutton         , Locale["tt_ShowMapsButton"]           , function() MangAdmin:ToggleMaps(1) end)
-  self:PrepareScript(ma_mapsoffbutton        , Locale["tt_HideMapsButton"]          , function() MangAdmin:ToggleMaps(0) end)
+  self:PrepareScript(ma_mapsonbutton         , Locale["tt_ShowMapsButton"]     , function() MangAdmin:ToggleMaps(1) end)
+  self:PrepareScript(ma_mapsoffbutton        , Locale["tt_HideMapsButton"]     , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_bankbutton           , Locale["tt_BankButton"]         , function() MangAdmin:ChatMsg(".bank") end)
-  self:PrepareScript(ma_r1c1button           , Locale["tt_r1c1Button"]         , function() MangAdmin:r1c1() end)
-  self:PrepareScript(ma_r1c2button           , Locale["tt_r1c2Button"]         , function() MangAdmin:r1c2() end)
-  self:PrepareScript(ma_r1c3button           , Locale["tt_r1c3Button"]         , function() MangAdmin:r1c3() end)
-  self:PrepareScript(ma_r1c4button           , Locale["tt_r1c4Button"]         , function() MangAdmin:r1c4() end)
-  self:PrepareScript(ma_r2c1button           , Locale["tt_r2c1Button"]         , function() MangAdmin:r2c1() end)
-  self:PrepareScript(ma_r2c2button           , Locale["tt_r2c2Button"]         , function() MangAdmin:r2c2() end)
-  self:PrepareScript(ma_r2c3button           , Locale["tt_r2c3Button"]         , function() MangAdmin:r2c3() end)
-  self:PrepareScript(ma_r2c4button           , Locale["tt_r2c4Button"]         , function() MangAdmin:r2c4() end)
-  self:PrepareScript(ma_r3c1button           , Locale["tt_r3c1Button"]         , function() MangAdmin:r3c1() end)
-  self:PrepareScript(ma_r3c2button           , Locale["tt_r3c2Button"]         , function() MangAdmin:r3c2() end)
-  self:PrepareScript(ma_r3c3button           , Locale["tt_r3c3Button"]         , function() MangAdmin:r3c3() end)
-  self:PrepareScript(ma_r3c4button           , Locale["tt_r3c4Button"]         , function() MangAdmin:r3c4() end)
-  self:PrepareScript(ma_r4c1button           , Locale["tt_r4c1Button"]         , function() MangAdmin:r4c1() end)
-  self:PrepareScript(ma_r4c2button           , Locale["tt_r4c2Button"]         , function() MangAdmin:r4c2() end)
-  self:PrepareScript(ma_r4c3button           , Locale["tt_r4c3Button"]         , function() MangAdmin:r4c3() end)
-  self:PrepareScript(ma_r4c4button           , Locale["tt_r4c4Button"]         , function() MangAdmin:r4c4() end)
-  self:PrepareScript(ma_r4c5button           , Locale["tt_r4c5Button"]         , function() MangAdmin:r4c5() end)
+  self:PrepareScript(ma_r1c1button           , Locale["tt_r1c1Button"]         , function() MangAdmin:QuickCommand(1) end)
+  self:PrepareScript(ma_r1c2button           , Locale["tt_r1c2Button"]         , function() MangAdmin:QuickCommand(2) end)
+  self:PrepareScript(ma_r1c3button           , Locale["tt_r1c3Button"]         , function() MangAdmin:QuickCommand(3) end)
+  self:PrepareScript(ma_r1c4button           , Locale["tt_r1c4Button"]         , function() MangAdmin:QuickCommand(4) end)
+  self:PrepareScript(ma_r2c1button           , Locale["tt_r2c1Button"]         , function() MangAdmin:QuickCommand(5) end)
+  self:PrepareScript(ma_r2c2button           , Locale["tt_r2c2Button"]         , function() MangAdmin:QuickCommand(6) end)
+  self:PrepareScript(ma_r2c3button           , Locale["tt_r2c3Button"]         , function() MangAdmin:QuickCommand(7) end)
+  self:PrepareScript(ma_r2c4button           , Locale["tt_r2c4Button"]         , function() MangAdmin:QuickCommand(8) end)
+  self:PrepareScript(ma_r3c1button           , Locale["tt_r3c1Button"]         , function() MangAdmin:QuickCommand(9) end)
+  self:PrepareScript(ma_r3c2button           , Locale["tt_r3c2Button"]         , function() MangAdmin:QuickCommand(10) end)
+  self:PrepareScript(ma_r3c3button           , Locale["tt_r3c3Button"]         , function() MangAdmin:QuickCommand(11) end)
+  self:PrepareScript(ma_r3c4button           , Locale["tt_r3c4Button"]         , function() MangAdmin:QuickCommand(12) end)
+  self:PrepareScript(ma_r4c1button           , Locale["tt_r4c1Button"]         , function() MangAdmin:QuickCommand(13) end)
+  self:PrepareScript(ma_r4c2button           , Locale["tt_r4c2Button"]         , function() MangAdmin:QuickCommand(14) end)
+  self:PrepareScript(ma_r4c3button           , Locale["tt_r4c3Button"]         , function() MangAdmin:QuickCommand(15) end)
+  self:PrepareScript(ma_r4c4button           , Locale["tt_r4c4Button"]         , function() MangAdmin:QuickCommand(16) end)
+  self:PrepareScript(ma_r4c5button           , Locale["tt_r4c5Button"]         , function() MangAdmin:QuickCommand(17) end)
   self:PrepareScript(ma_setjail_a_button     , Locale["tt_SetJail_A_Button"]   , function() MangAdmin:SetJail_A() end)
   self:PrepareScript(ma_setjail_h_button     , Locale["tt_SetJail_H_Button"]   , function() MangAdmin:SetJail_H() end)
   self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
-  self:PrepareScript(ma_jailhbutton         , Locale["tt_JailHButton"]        , function() MangAdmin:JailH() end)
+  self:PrepareScript(ma_jailhbutton          , Locale["tt_JailHButton"]        , function() MangAdmin:JailH() end)
   self:PrepareScript(ma_unjailbutton         , Locale["tt_UnJailButton"]       , function() MangAdmin:UnJail() end)
   --self:PrepareScript(ma_learnallbutton       , nil                             , function() MangAdmin:LearnSpell("all") end)
   --self:PrepareScript(ma_learncraftsbutton    , nil                             , function() MangAdmin:LearnSpell("all_crafts") end)
@@ -2006,14 +1949,14 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
   self:PrepareScript(ma_cooldownbutton       , Locale["tt_CooldownButton"]     , function() MangAdmin:Cooldown() end)
   self:PrepareScript(ma_demorphbutton        , Locale["tt_DemorphButton"]      , function() MangAdmin:Demorph() end)
-  self:PrepareScript(ma_showmapsbutton       , Locale["tt_ShowMapsButton"]     , function() MangAdmin:ShowMaps() end)
-  self:PrepareScript(ma_hidemapsbutton       , Locale["tt_HideMapsButton"]     , function() MangAdmin:HideMaps() end)
+  self:PrepareScript(ma_showmapsbutton       , Locale["tt_ShowMapsButton"]     , function() MangAdmin:ToggleMaps(1) end)
+  self:PrepareScript(ma_hidemapsbutton       , Locale["tt_HideMapsButton"]     , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_gpsbutton            , Locale["tt_GPSButton"]          , function() MangAdmin:GPS() end)
   self:PrepareScript(ma_guidbutton           , Locale["tt_GUIDButton"]         , function() MangAdmin:ShowGUID() end)
   self:PrepareScript(ma_movestackbutton      , Locale["tt_MoveStackButton"]    , function() MangAdmin:ShowMove() end)
   self:PrepareScript(ma_npcfreezebutton      , Locale["tt_NPCFreezeButton"]    , function() MangAdmin:NPCFreeze() end)
-  self:PrepareScript(ma_npcunfreeze_randombutton    , Locale["tt_NPCUnFreeze_RandomButton"]  , function() MangAdmin:NPCUnFreeze_Random() end)
-  self:PrepareScript(ma_npcunfreeze_waybutton    , Locale["tt_NPCUnFreeze_WayButton"]  , function() MangAdmin:NPCUnFreeze_Way() end)
+  self:PrepareScript(ma_npcunfreeze_randombutton , Locale["tt_NPCUnFreeze_RandomButton"]  , function() MangAdmin:NPCUnFreeze_Random() end)
+  self:PrepareScript(ma_npcunfreeze_waybutton , Locale["tt_NPCUnFreeze_WayButton"]  , function() MangAdmin:NPCUnFreeze_Way() end)
   self:PrepareScript(ma_npcinfobutton        , Locale["tt_NPCInfoButton"]      , function() MangAdmin:NPCInfo() end)
   self:PrepareScript(ma_pinfobutton          , Locale["tt_PinfoButton"]        , function() MangAdmin:Pinfo() end)
   self:PrepareScript(ma_distancebutton       , Locale["tt_DistanceButton"]     , function() MangAdmin:Distance() end)
@@ -3060,15 +3003,25 @@ function MangAdmin:ToggleTooltips()
   ReloadUI()
 end
 
+function MangAdmin:ToggleMinimenu()
+  if self.db.account.style.showminimenu then
+    self.db.account.style.showminimenu = false
+  else
+    self.db.account.style.showminimenu = true
+  end
+  ReloadUI()
+end
+
 function MangAdmin:InitCheckButtons()
   if self.db.account.style.transparency.backgrounds < 1.0 then
     ma_checktransparencybutton:SetChecked(true)
   else
     ma_checktransparencybutton:SetChecked(false)
   end
-  
   ma_instantkillbutton:SetChecked(self.db.char.instantKillMode)
   ma_checklocalsearchstringsbutton:SetChecked(self.db.account.localesearchstring)
+  ma_showminimenubutton:SetChecked(self.db.account.style.showminimenu)
+  ma_showtooltipsbutton:SetChecked(self.db.account.style.showtooltips)
 end
 
 function MangAdmin:ShowColorPicker(t)
@@ -3199,6 +3152,16 @@ function MangAdmin:ApplyStyleChanges()
     self.db.account.localesearchstring = true
   else
     self.db.account.localesearchstring = false
+  end
+  if ma_showtooltipsbutton:GetChecked() then
+    self.db.account.style.showtooltips = true
+  else
+    self.db.account.style.showtooltips = false
+  end
+  if ma_showminimenubutton:GetChecked() then
+    self.db.account.style.showminimenu = true
+  else
+    self.db.account.style.showminimenu = false
   end
   ReloadUI()
 end
