@@ -20,6 +20,11 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 115:
+  * Major changes to Teleport tab, dividing all teles into 1. Continents/Types, then 2. Zone, then 3. Subzone
+    Have seen some odd behavior when scrolling the lists. If you see this and have a fix, please submit!!
+    Much work remains to be done in TeleportTable.lua to fully support this rev. Should be done with next rev.
+
 Rev. 114:
   * little clean-up (there is really a lot of more to clean up) ;)
   * removing double function for hiding/revealing maps for players

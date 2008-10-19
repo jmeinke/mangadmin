@@ -34,13 +34,266 @@ function MangAdmin:CreateTeleSection()
   }
   
   FrameLib:BuildFontString({
+    name = "ma_teleconttext",
+    group = "tele",
+    parent = ma_midframe,
+    text = "Continent Selection",
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 5,
+      offY = -10
+    }
+  })
+
+  FrameLib:BuildFrame({
+    type = "ScrollFrame",
+    name = "ma_ContScrollBar",
+    group = "tele",
+    parent = ma_midframe,
+    texture = {
+      color = {0,0,0,0.7}
+    },
+    size = {
+      width = 185,
+      height = 225
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 5,
+      offY = -25
+    },
+    inherits = "FauxScrollFrameTemplate"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry1",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBar",
+      relPos = "TOPLEFT",
+      offX = 2,
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry1_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Eastern Kingdoms (N)",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry2",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry1",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry2_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Eastern Kingdoms (S)",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry3",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry2",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry3_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Kalimdor",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry4",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry3",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry4_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Outland",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry5",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry4",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry5_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Battlegrounds",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry6",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry5",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry6_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Instances: Eastern Kingdoms",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry7",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry6",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry7_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Instances: Kalimdor",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry8",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry7",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry8_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Instances: Outland",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry9",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry8",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry9_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Other",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_ContScrollBarEntry10",
+    group = "tele",
+    parent = ma_midframe,
+    setpoint = {
+      pos = "TOPLEFT",
+      relTo = "ma_ContScrollBarEntry9",
+      relPos = "BOTTOMLEFT",
+      offY = -2
+    },
+    texture = {
+      name = "ma_ContScrollBarEntry10_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    text = "Jails",
+    size = {
+      width = 181,
+      height = 16
+    },
+    script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
+  })
+
+  FrameLib:BuildFontString({
     name = "ma_telezonetext",
     group = "tele",
     parent = ma_midframe,
     text = "Zone Selection",
     setpoint = {
       pos = "TOPLEFT",
-      offX = 10,
+      offX = 220,
       offY = -10
     }
   })
@@ -54,12 +307,12 @@ function MangAdmin:CreateTeleSection()
       color = {0,0,0,0.7}
     },
     size = {
-      width = 154,
+      width = 174,
       height = 225
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 10,
+      offX = 220,
       offY = -25
     },
     inherits = "FauxScrollFrameTemplate"
@@ -81,7 +334,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -102,7 +355,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -123,7 +376,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -144,7 +397,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -165,7 +418,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -186,7 +439,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -207,7 +460,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -228,7 +481,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -249,7 +502,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -270,7 +523,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -291,7 +544,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -312,7 +565,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 150,
+      width = 170,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -325,7 +578,7 @@ function MangAdmin:CreateTeleSection()
     text = "Selected Subzone",
     setpoint = {
       pos = "TOPLEFT",
-      offX = 200,
+      offX = 420,
       offY = -10
     }
   })
@@ -339,12 +592,12 @@ function MangAdmin:CreateTeleSection()
       color = {0,0,0,0.7}
     },
     size = {
-      width = 204,
+      width = 224,
       height = 225
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 200,
+      offX = 420,
       offY = -25
     },
     inherits = "FauxScrollFrameTemplate"
@@ -366,7 +619,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -387,7 +640,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -408,7 +661,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -429,7 +682,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -450,7 +703,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -471,7 +724,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -492,7 +745,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -513,7 +766,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -534,7 +787,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -555,7 +808,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -576,7 +829,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
@@ -597,7 +850,7 @@ function MangAdmin:CreateTeleSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 200,
+      width = 220,
       height = 16
     },
     script = {{"OnShow", function() this:RegisterForClicks("LeftButtonDown", "RightButtonDown") end}}
