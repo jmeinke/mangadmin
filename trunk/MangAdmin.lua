@@ -20,7 +20,7 @@
 local MAJOR_VERSION = "MangAdmin-1.0"
 local MINOR_VERSION = "$Revision: 114 $"
 ROOT_PATH     = "Interface\\AddOns\\MangAdmin\\"
-
+local cont = ""
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
@@ -1996,6 +1996,56 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_btntrslider          , Locale["tt_BtnTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("buttons") end},{"OnValueChanged", function() ma_btntrsliderText:SetText(string.format("%.2f", ma_btntrslider:GetValue())) end}})  
   self:PrepareScript(ma_instantkillbutton    , nil                             , function() self.db.char.instantKillMode = ma_instantkillbutton:GetChecked() end)
   self:PrepareScript(ma_mm_revivebutton      , nil                             , function() SendChatMessage(".revive", "GUILD", nil, nil) end)
+  self:PrepareScript(ma_ContScrollBarEntry1      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "EK_N"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry2      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "EK_S"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry3      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "K"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry4      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "Ou"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry5      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "BG"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry6      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "I_EK"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry7      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "I_K"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry8      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "I_O"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry9      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "Ot"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
+  self:PrepareScript(ma_ContScrollBarEntry10      , nil                      , function() 
+    MangAdmin.db.char.selectedCont = "J"
+    cont=MangAdmin.db.char.selectedCont
+    MangAdmin:TeleScrollUpdate() 
+    end)
 end
 
 function MangAdmin:InitDropDowns()
@@ -2235,12 +2285,20 @@ function MangAdmin:InitSliders()
 end
 
 function MangAdmin:InitScrollFrames()
+  cont = MangAdmin.db.char.selectedCont
   ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, InlineScrollUpdate) end)
-  ma_ZoneScrollBar:SetScript("OnShow", function() InlineScrollUpdate() end)
-  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(16, SubzoneScrollUpdate) end)
-  ma_SubzoneScrollBar:SetScript("OnShow", function() SubzoneScrollUpdate() end)
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() 
+    --cont = MangAdmin.db.char.selectedCont 
+    FauxScrollFrame_OnVerticalScroll(16, self:TeleScrollUpdate()) 
+    end)
+  ma_ZoneScrollBar:SetScript("OnShow", function() self:TeleScrollUpdate() end)
+  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() 
+    --cont = MangAdmin.db.char.selectedCont
+    --self:ChatMsg("Loaded cont:" ..cont)
+    FauxScrollFrame_OnVerticalScroll(16, self:SubzoneScrollUpdate()) 
+    end)
+  ma_SubzoneScrollBar:SetScript("OnShow", function() self:SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
@@ -2883,12 +2941,12 @@ function InlineScrollUpdate()
       --MangAdmin:NoResults("ticket")
     end
   else
-    local TeleTable = {}
+    --[[local TeleTable = {}
     local zoneCount = 0
-    for index, value in pairsByKeys(ReturnTeleportLocations()) do
+    for index, value in pairsByKeys(ReturnTeleportLocations(cont)) do
       zoneCount = zoneCount + 1
       if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
-        SubzoneScrollUpdate(index)
+        SubzoneScrollUpdate(cont)
       end
       --MangAdmin:LogAction("added index: "..index)
       table.insert(TeleTable, {name = index, subzones = value})
@@ -2907,11 +2965,60 @@ function InlineScrollUpdate()
           end
           getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
             MangAdmin.db.char.selectedZone = teleobj.name
-            InlineScrollUpdate()
-            SubzoneScrollUpdate()
+            InlineScrollUpdate(cont)
+            SubzoneScrollUpdate(cont)
           end)
-          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function()  end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function()  end)
+          getglobal("ma_ZoneScrollBarEntry"..line):Enable()
+          getglobal("ma_ZoneScrollBarEntry"..line):Show()
+        else
+          getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+        end
+      end
+    else
+      MangAdmin:NoResults("zones")
+    end]]
+  end
+end
+
+function MangAdmin:TeleScrollUpdate()
+    cont = MangAdmin.db.char.selectedCont
+    --MangAdmin.db.char.selectedCont = cont
+    --self:ChatMsg("Wrote cont:" ..cont)
+    local TeleTable = {}
+    local zoneCount = 0
+    for index, value in pairsByKeys(ReturnTeleportLocations(cont)) do
+      zoneCount = zoneCount + 1
+      if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
+        MangAdmin:SubzoneScrollUpdate()
+      end
+      --MangAdmin:LogAction("added index: "..index)
+      table.insert(TeleTable, {name = index, subzones = value})
+    end
+    
+    if zoneCount > -1 then
+      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
+      for line = 1,12 do
+        --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
+        --self:ChatMsg("L+O:" ..lineplusoffset)
+        if lineplusoffset <= zoneCount then
+          local teleobj = TeleTable[lineplusoffset]
+          if MangAdmin.db.char.selectedZone == teleobj.name then
+            getglobal("ma_ZoneScrollBarEntry"..line):SetText("|cffff0000"..teleobj.name.."|r")
+          else
+            getglobal("ma_ZoneScrollBarEntry"..line):SetText(teleobj.name)
+          end
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
+            MangAdmin.db.char.selectedZone = teleobj.name
+            --MangAdmin.db.char.selectedCont = cont
+            MangAdmin:TeleScrollUpdate()
+            --InlineScrollUpdate(cont)
+            MangAdmin:SubzoneScrollUpdate()
+          end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() cont = MangAdmin.db.char.selectedCont end)
+          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() cont = MangAdmin.db.char.selectedCont end)
           getglobal("ma_ZoneScrollBarEntry"..line):Enable()
           getglobal("ma_ZoneScrollBarEntry"..line):Show()
         else
@@ -2921,7 +3028,6 @@ function InlineScrollUpdate()
     else
       MangAdmin:NoResults("zones")
     end
-  end
 end
 
 function pairsByKeys(t, f)
@@ -2938,15 +3044,16 @@ function pairsByKeys(t, f)
   return iter
 end
 
-function SubzoneScrollUpdate()
+function MangAdmin:SubzoneScrollUpdate()
+  cont = MangAdmin.db.char.selectedCont
   local TeleTable = {}
   local subzoneCount = 0
-  local shownZone = "Alterac Mountains"
+  --local shownZone = "Alterac Mountains"
   if MangAdmin.db.char.selectedZone then
     shownZone = MangAdmin.db.char.selectedZone
   end
   ma_telesubzonetext:SetText(Locale["Zone"]..shownZone)
-  for index, value in pairsByKeys(ReturnTeleportLocations()) do
+  for index, value in pairsByKeys(ReturnTeleportLocations(cont)) do
     if index == shownZone then
       for i, v in pairsByKeys(value) do
         table.insert(TeleTable, {name = i, command = v})
@@ -2954,6 +3061,8 @@ function SubzoneScrollUpdate()
       end
     end
   end
+  --MangAdmin:ChatMsg("subs:" ..subzoneCount)
+  --MangAdmin:ChatMsg("Cont:" ..cont)
   if subzoneCount > 0 then
     FauxScrollFrame_Update(ma_SubzoneScrollBar,subzoneCount,12,16)
     for line = 1,12 do
@@ -2963,8 +3072,8 @@ function SubzoneScrollUpdate()
         local teleobj = TeleTable[lineplusoffset]
         getglobal("ma_SubzoneScrollBarEntry"..line):SetText(teleobj.name)
         getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnClick", function() MangAdmin:ChatMsg(teleobj.command) end)
-        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnEnter", function() cont = MangAdmin.db.char.selectedCont end)
+        getglobal("ma_SubzoneScrollBarEntry"..line):SetScript("OnLeave", function() cont = MangAdmin.db.char.selectedCont end)
         getglobal("ma_SubzoneScrollBarEntry"..line):Enable()
         getglobal("ma_SubzoneScrollBarEntry"..line):Show()
       else
