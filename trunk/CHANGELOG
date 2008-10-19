@@ -20,6 +20,10 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 117:
+  * [UPDATE] Updated German localization. (Thanks Yoshi!)
+  * [UPDATE] Updated Dutch localization. (Thanks Korhal!)
+
 Rev. 116:
   * [FIX] Fixed teleport_target_position table reload (thanks Klark20!)
   * [FIX] Fixed .quest add command in Quest list (thanks Klark20!)
