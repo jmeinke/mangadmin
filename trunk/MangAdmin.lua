@@ -1051,7 +1051,7 @@ function MangAdmin:Quest(value, state)
   if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
     local class = UnitClass("target") or UnitClass("player")
-    local command = ".addquest"
+    local command = ".quest add"
     local logcmd = "Added"
     local logcmd2 = "to"
     if state == "RightButton" then
@@ -2147,7 +2147,7 @@ function MangAdmin:InitDropDowns()
       {"spell_learn_spell","spell_learn_spell"},
       {"spell_proc_event","spell_proc_event"},
       {"spell_script_target","spell_script_target"},
-      {"spell_teleport","spell_teleport"},
+      {"spell_target_position","spell_target_position"},
       {"button_scripts","button_scripts"},
       {"quest_end_scripts","quest_end_scripts"},
       {"quest_start_scripts","quest_start_scripts"},

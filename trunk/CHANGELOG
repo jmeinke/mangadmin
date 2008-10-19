@@ -20,6 +20,10 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 116:
+  * [FIX] Fixed teleport_target_position table reload (thanks Klark20!)
+  * [FIX] Fixed .quest add command in Quest list (thanks Klark20!)
+
 Rev. 115:
   * Major changes to Teleport tab, dividing all teles into 1. Continents/Types, then 2. Zone, then 3. Subzone
     Have seen some odd behavior when scrolling the lists. If you see this and have a fix, please submit!!
