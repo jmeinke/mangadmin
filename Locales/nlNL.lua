@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -199,23 +199,23 @@ function Return_nlNL()
     ["tt_RotateRight"] = "Draai naar Rechts.",
     ["tt_FrmTrSlider"] = "Wijzig frame doorzichtigheid.",
     ["tt_BtnTrSlider"] = "Wijzig knop doorzichtigheid.",
-    ["ma_SkillButton"] = "Skill-Search",
+    ["ma_SkillButton"] = "Skills-Zoeken",
     ["ma_SkillVar1Button"] = "Skill",
     ["ma_SkillVar2Button"] = "Verhoog Skill",
     ["tt_DisplayAccountLvl"] = "Toon uw account level.",
     --linkifier
     ["lfer_Spawn"] = "Spawn",
-    ["lfer_List"] = "List",
-    ["lfer_Goto"] = "Goto",
-    ["lfer_Move"] = "Move",
-    ["lfer_Turn"] = "Turn",
-    ["lfer_Delete"] = "Delete",
-    ["lfer_Teleport"] = "Teleport",
-    ["lfer_Morph"] = "Morph",
-    ["lfer_Add"] = "Add",
-    ["lfer_Remove"] = "Remove",
-    ["lfer_Learn"] = "Learn",
-    ["lfer_Unlearn"] = "Unlearn",
-    ["lfer_Error"] = "Error Search String Matched but an error occured or unable to find type"
+    ["lfer_List"] = "Lijst",
+    ["lfer_Goto"] = "Go naar",
+    ["lfer_Move"] = "Verplaats",
+    ["lfer_Turn"] = "Draai",
+    ["lfer_Delete"] = "Verwijder",
+    ["lfer_Teleport"] = "Teleporteer",
+    ["lfer_Morph"] = "Verander",
+    ["lfer_Add"] = "Voeg toe",
+    ["lfer_Remove"] = "Haal weg",
+    ["lfer_Learn"] = "Leer",
+    ["lfer_Unlearn"] = "Vergeet",
+    ["lfer_Error"] = "Fout Zoek String kwam overeen maar fout tijdens het laden van object, misschien bestaat het niet."
   }
 end
