@@ -300,7 +300,7 @@ function MangAdmin:CreateMiniMenu()
     },
     setpoint = {
       pos = "CENTER",
-      offY = 200
+      offY = 100
     },
     text = "REVIVE!"
   })

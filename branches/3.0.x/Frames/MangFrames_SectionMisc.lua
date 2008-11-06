@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -55,7 +55,7 @@ function MangAdmin:CreateMiscSection()
     parent = ma_midframe,
     setpoint = {
       pos = "TOPLEFT",
-      offX = 150,
+      offX = 160,
       offY = -4
     },
     text = "Enable Localized Search Strings",
@@ -69,7 +69,7 @@ function MangAdmin:CreateMiscSection()
     parent = ma_midframe,
     setpoint = {
       pos = "TOPLEFT",
-      offX = 150,
+      offX = 160,
       offY = -34
     },
     text = "Enable Minimenu/Toolbar",
@@ -83,7 +83,7 @@ function MangAdmin:CreateMiscSection()
     parent = ma_midframe,
     setpoint = {
       pos = "TOPLEFT",
-      offX = 150,
+      offX = 160,
       offY = -64
     },
     text = "Enable Tooltips",
@@ -276,8 +276,8 @@ function MangAdmin:CreateMiscSection()
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -118,
-      offY = -10
+      offX = -110,
+      offY = -8
     },
     inherits = "UIDropDownMenuTemplate"
   })
