@@ -1,11 +1,11 @@
 --[[
 Name: AceLocale-2.2
-Revision: $Rev: 40629 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceLocale-2.2
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceLocale-2.2
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceLocale-2.2
 Description: Localization library for addons to use to handle proper
              localization and internationalization.
 Dependencies: AceLibrary
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceLocale-2.2"
-local MINOR_VERSION = "$Revision: 40629 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end

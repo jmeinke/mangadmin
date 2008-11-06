@@ -1,6 +1,6 @@
 --[[
 Name: GraphLib-1.0
-Revision: $Rev: 46038 $
+Revision: $Rev: 58333 $
 Author(s): Cryect (cryect@gmail.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/wiki/GraphLib
@@ -10,7 +10,7 @@ Description: Allows for easy creation of graphs
 
 --Thanks to Nelson Minar for catching several errors where width was being used instead of height (damn copy and paste >_>)
 
-local major, minor = "Graph-1.0", "$Revision: 46038 $"
+local major, minor = "Graph-1.0", "$Revision: 58333 $"
 
 if not AceLibrary then error(major .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(major, minor) then return end
@@ -21,7 +21,9 @@ local GraphFunctions={}
 --Search for just Addon\\ at the front since the interface part often gets trimmed
 local TextureDirectory="Interface\\AddOns\\"..string.match(debugstack(1,1,0),"AddOns\\(.+)Graph%-1%.0\\").."GraphTextures\\"
 
-
+local tinsert, tremove = tinsert, tremove
+local pairs, ipairs = pairs, ipairs
+local math = math
 
 --------------------------------------------------------------------------------
 --Graph Creation Functions
@@ -60,8 +62,8 @@ function lib:CreateGraphRealtime(name,parent,relative,relativeTo,offsetX,offsetY
 		t:SetGradientAlpha("VERTICAL",0.2,0.0,0.0,0.5,1.0,0.0,0.0,1.0)
 		
 		bar:Show()
-		table.insert(graph.Bars,bar)
-		table.insert(graph.BarsUsing,bar)
+		tinsert(graph.Bars,bar)
+		tinsert(graph.BarsUsing,bar)
 	end
 
 	
@@ -396,7 +398,7 @@ function GraphFunctions:AddTimeData(value)
 	t.Time=GetTime()
 	self.LastDataTime=t.Time
 	t.Value=value
-	table.insert(self.Data,t)
+	tinsert(self.Data,t)
 end
 
 --RefreshRealtimeGraph - Refreshes the gridlines for the realtime graph
@@ -479,7 +481,7 @@ function GraphFunctions:RealtimeSetWidth(Width)
 			local t=bar:GetStatusBarTexture()		
 			t:SetGradientAlpha("VERTICAL",self.BarColorBot[1],self.BarColorBot[2],self.BarColorBot[3],self.BarColorBot[4],self.BarColorTop[1],self.BarColorTop[2],self.BarColorTop[3],self.BarColorTop[4])
 			
-			table.insert(self.Bars,bar)
+			tinsert(self.Bars,bar)
 		else
 			self.Bars[i]:SetPoint("BOTTOMLEFT",self,"BOTTOMLEFT",i-1,0)
 		end
@@ -490,12 +492,12 @@ function GraphFunctions:RealtimeSetWidth(Width)
 
 	if Width>SizeOfBarsUsed then
 		for i=SizeOfBarsUsed+1,Width do
-			table.insert(self.BarsUsing,self.Bars[i])
+			tinsert(self.BarsUsing,self.Bars[i])
 			self.Bars[i]:Show()
 		end
 	elseif Width<SizeOfBarsUsed then
 		for i=Width+1,SizeOfBarsUsed do
-			table.remove(self.BarsUsing,Width+1)
+			tremove(self.BarsUsing,Width+1)
 			self.Bars[i]:Hide()
 		end
 	end
@@ -598,11 +600,11 @@ function GraphFunctions:AddDataSeries(points,color,n2)
 	if n2 or (table.getn(points)==2 and table.getn(points[1])~=2) then
 		data={}
 		for k,v in ipairs(points[1]) do
-			table.insert(data,{v,points[2][k]})
+			tinsert(data,{v,points[2][k]})
 		end
 	end
 	
-	table.insert(self.Data,{Points=data;Color=color})
+	tinsert(self.Data,{Points=data;Color=color})
 	
 	self.NeedsUpdate=true
 end
@@ -622,11 +624,11 @@ function GraphFunctions:AddFilledDataSeries(points,color,n2)
 	if n2 or (table.getn(points)==2 and table.getn(points[1])~=2) then
 		data={}
 		for k,v in ipairs(points[1]) do
-			table.insert(data,{v,points[2][k]})
+			tinsert(data,{v,points[2][k]})
 		end
 	end
 	
-	table.insert(self.FilledData,{Points=data;Color=color})
+	tinsert(self.FilledData,{Points=data;Color=color})
 	
 	self.NeedsUpdate=true
 end
@@ -697,7 +699,7 @@ function GraphFunctions:FindFontString()
 	else
 		g=self:CreateFontString(nil,"OVERLAY")
 	end
-	table.insert(self.FontStrings,g)
+	tinsert(self.FontStrings,g)
 	return g
 end
 
@@ -811,7 +813,7 @@ function GraphFunctions:AddPie(Percent, Color)
 			PiePercent=PiePercent+CurPiece
 			CurAngle=CurAngle+Angle
 
-			table.insert(Section.Textures,t)
+			tinsert(Section.Textures,t)
 
 			if k == 7 then
 				LastPiece=0.09
@@ -878,7 +880,7 @@ function GraphFunctions:CompletePie(Color)
 				PiePercent=PiePercent+CurPiece
 				CurAngle=CurAngle+Angle
 
-				table.insert(Section.Textures,t)
+				tinsert(Section.Textures,t)
 			end
 			CurPiece=CurPiece/2
 			Angle=Angle/2
@@ -894,7 +896,7 @@ function GraphFunctions:CompletePie(Color)
 		t:Show()
 
 		t:SetVertexColor(Color[1],Color[2],Color[3],1.0)
-		table.insert(Section.Textures,t)
+		tinsert(Section.Textures,t)
 	end
 
 	--Finish adding section data
@@ -1355,7 +1357,7 @@ function GraphFunctions:OnUpdateGraphRealtime()
 			local DataValue=1/(2*self.TimeRadius)
 			for k,v in pairs(self.Data) do
 				if v.Time<(CurTime+self.XMin-self.TimeRadius) then
-					table.remove(self.Data,k)	
+					tremove(self.Data,k)	
 				else	
 					local DataTime=v.Time-CurTime
 					local LowestBar=math.max(math.floor((DataTime-self.XMin-self.TimeRadius)/BarTimeRadius),1)
@@ -1372,7 +1374,7 @@ function GraphFunctions:OnUpdateGraphRealtime()
 			for k,v in pairs(self.Data) do
 				local Temp
 				if v.Time<(CurTime+self.XMin-self.TimeRadius) then
-					table.remove(self.Data,k)	
+					tremove(self.Data,k)	
 				else	
 					local DataTime=v.Time-CurTime
 					local LowestBar=math.max(math.floor((DataTime-self.XMin-self.TimeRadius)/BarTimeRadius),1)
@@ -1413,7 +1415,7 @@ function GraphFunctions:OnUpdateGraphRealtime()
 				local DataValue=1/(2*self.TimeRadius)
 				for k,v in pairs(self.Data) do
 					if v.Time<(CurTime+self.XMax-self.TimeRadius-TimeDiff) then
-						table.remove(self.Data,k)	
+						tremove(self.Data,k)	
 					else	
 						local DataTime=v.Time-CurTime
 						local LowestBar=math.max(math.max(math.floor((DataTime-self.XMin-self.TimeRadius)/BarTimeRadius),RecalcBars),1)
@@ -1454,7 +1456,7 @@ function GraphFunctions:OnUpdateGraphRealtime()
 				for k,v in pairs(self.Data) do
 					Total=Total+v.Value*Weight
 					if v.Time<(self.LastShift-self.TimeRadius) then
-						table.remove(self.Data,k)
+						tremove(self.Data,k)
 					end
 				end
 
@@ -1493,7 +1495,7 @@ function GraphFunctions:OnUpdateGraphRealtime()
 			for k,v in pairs(self.Data) do
 				Total=Total+v.Value*Weight
 				if v.Time<(self.LastShift-self.TimeRadius) then
-					table.remove(self.Data,k)
+					tremove(self.Data,k)
 				end
 			end
 
@@ -1749,49 +1751,28 @@ local TAXIROUTE_LINEFACTOR_2 = TAXIROUTE_LINEFACTOR / 2; -- Half o that
 -- w        - Width of line
 -- relPoint - Relative point on canvas to interpret coords (Default BOTTOMLEFT)
 function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer)
-	local T, lineNum, relPoint;
+	local relPoint = "BOTTOMLEFT"
 	
 	if sx==ex then
 		if sy==ey then
 			return
 		else
-			self:DrawVLine(C,sx,sy,ey,w, color, layer)
+			return self:DrawVLine(C,sx,sy,ey,w, color, layer)
 		end
 	elseif sy==ey then
-		self:DrawHLine(C,sx,ex,sy,w, color, layer)
+		return self:DrawHLine(C,sx,ex,sy,w, color, layer)
 	end
-
-	if (not relPoint) then relPoint = "BOTTOMLEFT"; end
-
 
 	if not C.GraphLib_Lines then
 		C.GraphLib_Lines={}
 		C.GraphLib_Lines_Used={}
 	end
 
-	T=nil;
+	local T = tremove(C.GraphLib_Lines) or C:CreateTexture(nil, "ARTWORK")
+	T:SetTexture(TextureDirectory.."line")
+	tinsert(C.GraphLib_Lines_Used,T)
 
-	for k,v in pairs(C.GraphLib_Lines) do
-		if not v:IsShown() and not T then
-			T=v
-			lineNum=k
-			T:Show()	
-			T:SetTexture(TextureDirectory.."line")
-			table.insert(C.GraphLib_Lines_Used,T)
-			table.remove(C.GraphLib_Lines,k)
-			break
-		end
-	end
-
-	if not T then
-		T=C:CreateTexture(nil, "ARTWORK")
-		T:SetTexture(TextureDirectory.."line")
-		tinsert(C.GraphLib_Lines_Used,T)
-	end
-
-	if layer then
-		T:SetDrawLayer(layer)
-	end
+	T:SetDrawLayer(layer or "ARTWORK")
 
 	T:SetVertexColor(color[1],color[2],color[3],color[4]);
 	-- Determine dimensions and center point of line
@@ -1830,130 +1811,77 @@ function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer)
 	T:ClearAllPoints();
 	T:SetTexCoord(TLx, TLy, BLx, BLy, TRx, TRy, BRx, BRy);
 	T:SetPoint("BOTTOMLEFT", C, relPoint, cx - Bwid, cy - Bhgt);
-	T:SetPoint("TOPRIGHT",	C, relPoint, cx + Bwid, cy + Bhgt);
-
+	T:SetPoint("TOPRIGHT",   C, relPoint, cx + Bwid, cy + Bhgt);
+	T:Show()
 	return T
 end
 
 --Thanks to Celandro
 function lib:DrawVLine(C, x, sy, ey, w, color, layer)
-	local T, lineNum, relPoint;
-	if (not relPoint) then relPoint = "BOTTOMLEFT"; end
-
+	local relPoint = "BOTTOMLEFT"
 
 	if not C.GraphLib_Lines then
 		C.GraphLib_Lines={}
 		C.GraphLib_Lines_Used={}
 	end
 
-	T=nil;
+	local T = tremove(C.GraphLib_Lines) or C:CreateTexture(nil, "ARTWORK")
+	T:SetTexture(TextureDirectory.."sline");
+	tinsert(C.GraphLib_Lines_Used,T);
 
-	for k,v in pairs(C.GraphLib_Lines) do
-		if not v:IsShown() and not T then
-			T=v;
-			lineNum=k;
-			T:Show();
-			T:SetTexture(TextureDirectory.."sline");
-			table.insert(C.GraphLib_Lines_Used,T)
-			table.remove(C.GraphLib_Lines,k)
-			break
-		end
-	end
-
-	if not T then
-		T=C:CreateTexture(nil, "ARTWORK");
-		T:SetTexture(TextureDirectory.."sline");
-		tinsert(C.GraphLib_Lines_Used,T);
-	end
-
-	if layer then
-		T:SetDrawLayer(layer)
-	end
+	T:SetDrawLayer(layer or "ARTWORK")
 
 	T:SetVertexColor(color[1],color[2],color[3],color[4]);
 
 	if sy>ey then
-		local t=sy
-		sy=ey
-		ey=sy
+		sy, ey = ey, sy
 	end
 
 	-- Set texture coordinates and anchors
 	T:ClearAllPoints();
 	T:SetTexCoord(1, 0, 0, 0, 1, 1, 0, 1);
 	T:SetPoint("BOTTOMLEFT", C, relPoint, x-w/2, sy);
-	T:SetPoint("TOPRIGHT",	C, relPoint, x+w/2, ey);
-
+	T:SetPoint("TOPRIGHT",   C, relPoint, x+w/2, ey);
+	T:Show()
 	return T
 end
 
 function lib:DrawHLine(C, sx, ex, y, w, color, layer)
-	local T, lineNum, relPoint;
-	if (not relPoint) then relPoint = "BOTTOMLEFT"; end
-
+	local relPoint = "BOTTOMLEFT"
 
 	if not C.GraphLib_Lines then
 		C.GraphLib_Lines={}
 		C.GraphLib_Lines_Used={}
 	end
 
-	T=nil;
+	local T = tremove(C.GraphLib_Lines) or C:CreateTexture(nil, "ARTWORK")
+	T:SetTexture(TextureDirectory.."sline");
+	tinsert(C.GraphLib_Lines_Used,T);
 
-	for k,v in pairs(C.GraphLib_Lines) do
-		if not v:IsShown() and not T then
-			T=v;
-			lineNum=k;
-			T:Show();
-			T:SetTexture(TextureDirectory.."sline");
-			table.insert(C.GraphLib_Lines_Used,T)
-			table.remove(C.GraphLib_Lines,k)
-			break
-		end
-	end
-
-	if not T then
-		T=C:CreateTexture(nil, "ARTWORK");
-		T:SetTexture(TextureDirectory.."sline");
-		tinsert(C.GraphLib_Lines_Used,T);
-	end
-
-	if layer then
-		T:SetDrawLayer(layer)
-	end
+	T:SetDrawLayer(layer or "ARTWORK")
 
 	T:SetVertexColor(color[1],color[2],color[3],color[4]);
 
 	if sx>ex then
-		local t=sx
-		sx=ex
-		ex=sx
+		sx, ex = ex, sx
 	end
 
 	-- Set texture coordinates and anchors
 	T:ClearAllPoints();
 	T:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1);
 	T:SetPoint("BOTTOMLEFT", C, relPoint, sx, y-w/2);
-	T:SetPoint("TOPRIGHT",	C, relPoint, ex, y+w/2);
-
+	T:SetPoint("TOPRIGHT",   C, relPoint, ex, y+w/2);
+	T:Show()
 	return T
 end
 
 function lib:HideLines(C)
-	if not C.GraphLib_Lines then
-		return
+	if C.GraphLib_Lines then
+		for i = #C.GraphLib_Lines_Used, 1, -1 do
+			C.GraphLib_Lines_Used[i]:Hide()
+			tinsert(C.GraphLib_Lines,tremove(C.GraphLib_Lines_Used))
+		end
 	end
-
-	for k,v in pairs(C.GraphLib_Lines) do
-		v:Hide()
-	end
-
-	while C.GraphLib_Lines_Used[1] do
-		C.GraphLib_Lines_Used[1]:Hide()
-		table.insert(C.GraphLib_Lines,C.GraphLib_Lines_Used[1])
-		table.remove(C.GraphLib_Lines_Used,1)		
-	end
-
---	Recount:Print("Unused Lines "..table.maxn(C.GraphLib_Lines).." Used Lines "..table.maxn(C.GraphLib_Lines_Used))
 end
 
 --Two parts to each bar
@@ -1962,16 +1890,9 @@ function lib:DrawBar(C, sx, sy, ex, ey, color, level)
 	
 	--Want sx<=ex if not then flip them
 	if sx>ex then
-		local t=sx
-		sx=ex
-		ex=t
-
-		t=sy
-		sy=ey
-		ey=t
+		sx, ex = ex, sx
+		sy, ey = ey, sy
 	end
-
-	
 
 	if not C.GraphLib_Bars then
 		C.GraphLib_Bars={}
@@ -1983,11 +1904,11 @@ function lib:DrawBar(C, sx, sy, ex, ey, color, level)
 	
 	if (#C.GraphLib_Bars)>0 then
 		Bar=C.GraphLib_Bars[#C.GraphLib_Bars]
-		table.remove(C.GraphLib_Bars,#C.GraphLib_Bars)
+		tremove(C.GraphLib_Bars,#C.GraphLib_Bars)
 		Bar:Show()		
 
 		Tri=C.GraphLib_Tris[#C.GraphLib_Tris]
-		table.remove(C.GraphLib_Tris,#C.GraphLib_Tris)
+		tremove(C.GraphLib_Tris,#C.GraphLib_Tris)
 		Tri:Show()		
 	end
 

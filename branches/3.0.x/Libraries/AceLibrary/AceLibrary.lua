@@ -1,13 +1,13 @@
 --[[
 Name: AceLibrary
-Revision: $Rev: 58127 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Iriel (iriel@vigilance-committee.org)
              Tekkub (tekkub@gmail.com)
-             Revision: $Rev: 58127 $
+             Revision: $Rev: 1091 $
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceLibrary
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceLibrary
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceLibrary
 Description: Versioning library to handle other library instances, upgrading,
              and proper access.
              It also provides a base for libraries to work off of, providing
@@ -18,7 +18,7 @@ License: LGPL v2.1
 ]]
 
 local ACELIBRARY_MAJOR = "AceLibrary"
-local ACELIBRARY_MINOR = "$Revision: 58127 $"
+local ACELIBRARY_MINOR = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 local _G = getfenv(0)
 local previous = _G[ACELIBRARY_MAJOR]

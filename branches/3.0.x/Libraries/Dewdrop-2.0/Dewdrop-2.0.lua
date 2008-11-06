@@ -1,6 +1,6 @@
 ﻿--[[
 Name: Dewdrop-2.0
-Revision: $Rev: 56529 $
+Revision: $Rev: 78658 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://wiki.wowace.com/index.php/Dewdrop-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Dewdrop-2.0"
-local MINOR_VERSION = "$Revision: 56529 $"
+local MINOR_VERSION = "$Revision: 78658 $"
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -97,6 +97,17 @@ elseif GetLocale() == "zhCN" then
 	KEY_BUTTON2 = "鼠标右键"
 	DISABLED = "禁用"
 	DEFAULT_CONFIRM_MESSAGE = "是否执行'%s'?"
+elseif GetLocale() == "ruRU" then
+	CLOSE = "Закрыть"
+	CLOSE_DESC = "Закрыть меню."
+	VALIDATION_ERROR = "Ошибка проверки данных."
+	USAGE_TOOLTIP = "Используйте: %s."
+	RANGE_TOOLTIP = "Используйте колесо мыши для прокрутки ползунка."
+	RESET_KEYBINDING_DESC = "Нажмите клавишу Escape для очистки клавиши."
+	KEY_BUTTON1 = "ЛКМ"
+	KEY_BUTTON2 = "ПКМ"
+	DISABLED = "Отключено"
+	DEFAULT_CONFIRM_MESSAGE = "Вы уверены что вы хотите выполнять `%s'?"
 end
 
 Dewdrop.KEY_BUTTON1 = KEY_BUTTON1
