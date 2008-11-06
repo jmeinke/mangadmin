@@ -1,0 +1,84 @@
+/************************************************************************************************************
+**
+** MangAdmin Version 1.0
+**
+** Copyright (C) 2007 Free Software Foundation, Inc.
+** License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+** This is free software: you are free to change and redistribute it.
+** There is NO WARRANTY, to the extent permitted by law.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+**
+** Official Forums: http://www.manground.org/forum/
+** GoogleCode Website: http://code.google.com/p/mangadmin/
+** Subversion Repository: http://mangadmin.googlecode.com/svn/
+**
+**    Please report bugs:  http://code.google.com/p/mangadmin/issues/list 
+**
+************************************************************************************************************/
+
+=TODO=
+
+- GameObject onglet:
+  - add, delete, move with possibilities:
+    - up
+    - down
+    - left
+    - right
+    - with +
+  - example:
+    By clicking move up with +4 the command, the result is: 
+    .move 0 0 4 0 (with a gameobject coordinate at 0 0 0 0)
+  - idea provided by killerdead
+ 
+- buttons:
+  - create guild leader name
+  - learn profession* with skill
+  - modify money/energy/rage/hp/mana
+  - delete
+  - add creature guid
+  - respawn
+  - distance
+  - pinfo and npcinfo
+  - modify level/spawn distance/spawn time/model id/faction/flags
+  - add gameobject id
+  - delete gameobject
+  - turn gameobject
+  - move up/down/left/right gameobject
+  - clear log button
+  - copy button for log text
+  - more
+  
+=Suggestions/Requests by Yas (Quote)=
+  - Field for morph command, combined with bookmarks can be usefull too (at least for me :-)
+  - New window with informations about targetted object (by .targetobject) and with button to delete/move..
+  - Window like Who List but with simplier filtering of players, teleporting, (mass teleporting?), mailing...
+  
+=Suggestions/Requests by litlmutt=
+  -ability to teleport to a player
+  -teleport a player to you
+  -addvendoritem
+  -del vendor item
+  -Addspw
+  -group tele
+  -morph
+  -demorph
+  
+=Suggestions/Request by Markb=
+  -button to delete npc
+  -button to delete game object
+  
+=Suggestions/Request by Fozzy325 (Quote)=
+  It would be great to have a remove res sickness button (.unaura 15007)
+
+==What should come next:==
+  * add a function to exchange favorites with each other (synchronization) or simply send own
+    favorites to other player, favorites can also be exported or imported
+  * fix: correct some coordinates in MangFrames_Start.lua, this prevents layout boxes to
+    float between good and bod positions when using /rl often
+  * add: waypoint action buttons
+  * move unlocalizable strings from core or frame code to locale files
+  * add icon preview for item search (this can be implemented since item icon informations
+    are stored by client)

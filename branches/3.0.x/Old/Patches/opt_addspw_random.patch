@@ -1,0 +1,83 @@
+Index: src/game/Chat.cpp
+===================================================================
+--- src/game/Chat.cpp	(revision 4117)
++++ src/game/Chat.cpp	(working copy)
+@@ -157,6 +157,13 @@
+         { NULL,          0, NULL,                                                        "",   NULL }
+     };
+ 
++    static ChatCommand addSpwCommandTable[] =
++    {
++        { "random",      SEC_GAMEMASTER,    &ChatHandler::HandleAddSpwRandomCommand,     "",   NULL },
++        { "",            SEC_ADMINISTRATOR, &ChatHandler::HandleAddSpwCommand,           "",   NULL },
++        { NULL,          0, NULL,                                                        "",   NULL }
++    };
++
+     static ChatCommand commandTable[] =
+     {
+         { "acct",        SEC_PLAYER,        &ChatHandler::HandleAcctCommand,             "",   NULL },
+@@ -232,7 +239,7 @@
+         { "emote",       SEC_ADMINISTRATOR, &ChatHandler::HandleEmoteCommand,            "",   NULL },
+         { "showarea",    SEC_ADMINISTRATOR, &ChatHandler::HandleShowAreaCommand,         "",   NULL },
+         { "hidearea",    SEC_ADMINISTRATOR, &ChatHandler::HandleHideAreaCommand,         "",   NULL },
+-        { "addspw",      SEC_GAMEMASTER,    &ChatHandler::HandleAddSpwCommand,           "",   NULL },
++        { "addspw",      SEC_GAMEMASTER,    NULL,                                        "",   addSpwCommandTable },
+         { "spawndist",   SEC_GAMEMASTER,    &ChatHandler::HandleSpawnDistCommand,        "",   NULL },
+         { "spawntime",   SEC_GAMEMASTER,    &ChatHandler::HandleSpawnTimeCommand,        "",   NULL },
+         { "additem",     SEC_ADMINISTRATOR, &ChatHandler::HandleAddItemCommand,          "",   NULL },
+Index: src/game/Chat.h
+===================================================================
+--- src/game/Chat.h	(revision 4117)
++++ src/game/Chat.h	(working copy)
+@@ -200,6 +200,7 @@
+         bool HandleDisplayIdCommand(const char* args);
+         bool HandleFactionIdCommand(const char* args);
+         bool HandleAddSpwCommand(const char* args);
++        bool HandleAddSpwRandomCommand(const char* args);
+         bool HandleSpawnDistCommand(const char* args);
+         bool HandleSpawnTimeCommand(const char* args);
+         bool HandleGoCreatureCommand(const char* args);
+Index: src/game/Level2.cpp
+===================================================================
+--- src/game/Level2.cpp	(revision 4117)
++++ src/game/Level2.cpp	(working copy)
+@@ -584,6 +584,39 @@
+     return true;
+ }
+ 
++bool ChatHandler::HandleAddSpwRandomCommand(const char* args)
++{
++    QueryResult *result = sDatabase.Query( "SELECT `guid` FROM `creature` ORDER BY RAND() LIMIT 1" );
++    if( !result )
++    {
++        return false;
++    }
++    uint32 id = (*result)[0].GetUInt32();
++	delete result;
++
++    Player *chr = m_session->GetPlayer();
++    float x = chr->GetPositionX();
++    float y = chr->GetPositionY();
++    float z = chr->GetPositionZ();
++    float o = chr->GetOrientation();
++
++    Creature* pCreature = new Creature(chr);
++    if (!pCreature->Create(objmgr.GenerateLowGuid(HIGHGUID_UNIT), chr->GetMapId(), x, y, z, o, id))
++    {
++        delete pCreature;
++        return false;
++    }
++
++    // To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells();
++    pCreature->LoadFromDB(pCreature->GetGUIDLow(), chr->GetInstanceId());
++
++    MapManager::Instance().GetMap(pCreature->GetMapId(), pCreature)->Add(pCreature);
++
++    sLog.outDebug(LANG_ADD_OBJ);
++
++    return true;
++}
++
+ bool ChatHandler::HandleDeleteCommand(const char* args)
+ {
+     Creature *unit = getSelectedCreature();
