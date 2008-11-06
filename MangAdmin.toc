@@ -1,12 +1,12 @@
 ## Name: MangAdmin
 ## Interface: 30000
 ## Title: MangAdmin
-## Version: 1.0
+## Version: 1.3.0.2
 ## DefaultState: Enabled
 ## OptionalDeps: AceLibrary, AceEvent-2.0, AceHook-2.1, AceDebug-2.0, AceLocale-2.2, AceConsole-2.0, AceAddon-2.0
-## Notes: This addon does only work with MaNGO-Servers
+## Notes: This addon only works with MaNGOS-Servers and 3.0.x clients.
 ## License: GPLv3
-## X-Date: 24.April 2008
+## X-Date: 6.November 2008
 ## X-eMail: josh.developer@gmail.com
 ## X-Website: http://www.manground.org/forum/
 ## SavedVariables: MangAdminDb

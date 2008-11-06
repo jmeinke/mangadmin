@@ -16,6 +16,8 @@
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
 -------------------------------------------------------------------------------------------------------------
+local genv = getfenv(0)
+local Mang = genv.Mang
 
 local MAJOR_VERSION = "MangAdmin-1.0"
 local MINOR_VERSION = "$Revision: 114 $"
@@ -1547,7 +1549,7 @@ function MangAdmin:Ticket(value)
     self:ChatMsg(".delticket "..ticket["tNumber"])
     self:LogAction("Deleted ticket with number: "..ticket["tNumber"])
     self:ShowTicketTab()
-    --InlineScrollUpdate()
+    InlineScrollUpdate()
   elseif value == "gochar" then
     self:ChatMsg(".goname "..ticket["tChar"])
   elseif value == "getchar" then
@@ -1609,7 +1611,7 @@ function MangAdmin:LoadTickets(number)
     self:ChatMsg(".ticket")
     self:LogAction("Requesting ticket number!")
   end
-  --InlineScrollUpdate()
+  InlineScrollUpdate()
 end
 
 function MangAdmin:RequestTickets()
@@ -2293,11 +2295,12 @@ end
 
 function MangAdmin:InitScrollFrames()
   cont = MangAdmin.db.char.selectedCont
-  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 30, PopupScrollUpdate()) end)
+  ma_PopupScrollBar:SetScript("OnVerticalScroll", PopupScrollUpdate(), function(self, offset) FauxScrollFrame_OnVerticalScroll(self, offset, 30, PopupScrollUpdate()) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, TeleScrollUpdate()) end)
+  --local zoneupdate = function() Mang:TeleScrollUpdate() end
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", TeleScrollUpdate(), function(self, offset) FauxScrollFrame_OnVerticalScroll(self, offset, 16, TeleScrollUpdate()) end)
   ma_ZoneScrollBar:SetScript("OnShow", function() TeleScrollUpdate() end)
-  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, SubzoneScrollUpdate()) end)
+  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", SubzoneScrollUpdate(), function(self, offset) FauxScrollFrame_OnVerticalScroll(self, offset, 16, SubzoneScrollUpdate()) end)
   ma_SubzoneScrollBar:SetScript("OnShow", function() SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(self, ma_ticketeditbox) end},
@@ -2901,19 +2904,22 @@ function PopupScrollUpdate()
 end
 
 function InlineScrollUpdate()
+  --MangAdmin:ChatMsg("InlineScrollUpdate is being used!")
   if MangAdmin.db.char.requests.ticket then --get tickets
+    --MangAdmin:ChatMsg("InlineScrollUpdate is being used!")
     local ticketCount = 0
     table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
     if ticketCount > 0 then
+      MangAdmin:ChatMsg("Ticket Count:" .. ticketCount)
       --FauxScrollFrame_Update(ma_PopupScrollBar,4,7,30); --for paged mode, only load 4 at a time
-      FauxScrollFrame_Update(ma_ZoneScrollBar,ticketCount,12,16);
+      FauxScrollFrame_Update(ma_ticketscrollframe,ticketCount,12,16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
-        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
+        lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ticketscrollframe)
         if lineplusoffset <= ticketCount then
           local object = MangAdmin.db.account.buffer.tickets[lineplusoffset]
-          getglobal("ma_ZoneScrollBarEntry"..line):SetText("Id: |cffffffff"..object["tNumber"].."|r Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
-          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function() 
+          getglobal("ma_ticketscrollframe"..line):SetText("Id: |cffffffff"..object["tNumber"].."|r Cat: |cffffffff"..object["tCat"].."|r Player: |cffffffff"..object["tChar"].."|r")
+          getglobal("ma_ticketscrollframe"..line):SetScript("OnClick", function() 
             ma_ticketeditbox:SetText(object["tMsg"])
             ma_tpinfo_text:SetText(string.format(Locale["ma_TicketTicketLoaded"], object["tNumber"]))
             --MangAdmin.db.char.requests.tpinfo = true
@@ -2928,16 +2934,16 @@ function InlineScrollUpdate()
             ma_gocharticketbutton:Enable()
             ma_whisperticketbutton:Enable()
           end)
-          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
-          getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
-          getglobal("ma_ZoneScrollBarEntry"..line):Enable()
-          getglobal("ma_ZoneScrollBarEntry"..line):Show()
+          getglobal("ma_ticketscrollframe"..line):SetScript("OnEnter", function() --[[Do nothing]] end)
+          getglobal("ma_ticketscrollframe"..line):SetScript("OnLeave", function() --[[Do nothing]] end)
+          getglobal("ma_ticketscrollframe"..line):Enable()
+          getglobal("ma_ticketscrollframe"..line):Show()
         else
-          getglobal("ma_ZoneScrollBarEntry"..line):Hide()
+          getglobal("ma_ticketscrollframe"..line):Hide()
         end
       end
     else
-      --MangAdmin:NoResults("ticket")
+      MangAdmin:NoResults("ticket")
     end
   else
     --[[local TeleTable = {}
@@ -2982,6 +2988,9 @@ function InlineScrollUpdate()
 end
 
 function TeleScrollUpdate()
+    if not ma_ZoneScrollBar then 
+      MangAdmin:ChatMsg("Lost ma_ZoneScrollBar")
+    end
     cont = MangAdmin.db.char.selectedCont
     --MangAdmin.db.char.selectedCont = cont
     --self:ChatMsg("Wrote cont:" ..cont)
@@ -2989,18 +2998,21 @@ function TeleScrollUpdate()
     local zoneCount = 0
     for index, value in pairsByKeys(ReturnTeleportLocations(cont)) do
       zoneCount = zoneCount + 1
+      --MangAdmin:ChatMsg("Zone count:" .. zoneCount)
       if not MangAdmin.db.char.selectedZone and zoneCount == 0 then
-        MangAdmin:SubzoneScrollUpdate()
+        SubzoneScrollUpdate()
       end
       --MangAdmin:LogAction("added index: "..index)
       table.insert(TeleTable, {name = index, subzones = value})
     end
     
     if zoneCount > -1 then
-      --self:ChatMsg("Zone count:" .. zoneCount)
-      throwaway = ma_ZoneScrollBar.group
-      
-      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16);
+      --MangAdmin:ChatMsg("Zone count:" .. zoneCount)
+      if not ma_ZoneScrollBar then 
+        MangAdmin:ChatMsg("Lost ma_ZoneScrollBar")
+      end
+
+      FauxScrollFrame_Update(ma_ZoneScrollBar, zoneCount, 12, 16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)

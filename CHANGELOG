@@ -20,6 +20,13 @@
 ************************************************************************************************************/
 
 =CHANGELOG=
+Rev. 126
+  * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
+          on client revisions earlier then 3.0.1
+  * [FIX?] Produced a hack to get scoll lists working again, however it still throws a (safely ignored) lua error. 
+           Turn off Show   Lua Errors in your Interface settings to avoid seeing this. 
+  * First public build of 3.0.x compatible version. Updated Changelog, updated appversion to 1.3.0.2 to reflect.
+
 Rev. 125
   * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
           on client revisions earlier then 3.0.1
@@ -31,7 +38,7 @@ Rev. 124
   * [UPDATE] Made updates to a number of files to support changes to API witn 3.0.x client versions. Use Diff
           to see exact changes. No new features added.
   * [Known Issue] All scroll lists are broken and throw lua errors.
-
+  * Created svn branch for 3.0.x versions.
 Rev. 119:
   * [UPDATE] TeleportTable.lua updated to support new teleport_target_position.
   * [FIX] A few .go x y z positions in TeleportTable.lua 
