@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -174,7 +174,19 @@ function MangAdmin:CreateStartFrames()
       offY = 24
     }
   })
-  
+
+    FrameLib:BuildFontString({
+    name = "ma_revtext",
+    group = "bg",
+    parent = ma_topframe,
+    text = "v3 r01 ALPHA",
+    setpoint = {
+      pos = "BOTTOMLEFT",
+      offX = 15,
+      offY = 2
+    }
+  })
+
   FrameLib:BuildFontString({
     name = "ma_top2text",
     group = "bg",
@@ -277,7 +289,7 @@ function MangAdmin:CreateStartFrames()
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -130,
+      offX = -200,
       offY = -10
     },
     inherits = "UIDropDownMenuTemplate"

@@ -2049,68 +2049,6 @@ function MangAdmin:InitButtons()
 end
 
 function MangAdmin:InitDropDowns()
-  local function LangDropDownInitialize()
-    local level = 1
-    local info = UIDropDownMenu_CreateInfo()
-    local buttons = {
-      {"Czech","csCZ"},
-      {"German","deDE"},
-      {"Dutch","nlNL"},
-      {"English","enUS"},
-      {"Spanish","esES"},
-      {"Finnish","fiFI"},
-      {"French","frFR"},
-      {"Hungarian","huHU"},
-      {"Italian","itIT"},
-      {"Lithuanian","liLI"},
-      {"Polish","plPL"},
-      {"Portuguese","ptPT"},
-      {"Romanian","roRO"},
-      {"Russian","ruRU"},
-      {"Swedish","svSV"},
-      {"Chinese","zhCN"}
-    }
-    for k,v in pairs(buttons) do
-      info.text = v[1]
-      info.value = v[2]
-      info.func = function() UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value) end
-      info.checked = nil
-      --info.notCheckable = true
-      info.icon = nil
-      info.keepShownOnClick = nil
-      UIDropDownMenu_AddButton(info, level)
-    end
-    UIDropDownMenu_SetSelectedValue(ma_languagedropdown, Locale:GetLocale())
-  end
-  UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_languagedropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_languagedropdown)
-  -- WEATHER
-  local function WeatherDropDownInitialize()
-    local level = 1
-    local info = UIDropDownMenu_CreateInfo()
-    local buttons = {
-      {Locale["ma_WeatherFine"],"0 0"},
-      {Locale["ma_WeatherFog"],"0 1"},
-      {Locale["ma_WeatherRain"],"1 1"},
-      {Locale["ma_WeatherSnow"],"2 1"},
-      {Locale["ma_WeatherSand"],"3 1"}
-    }
-    for k,v in pairs(buttons) do
-      info.text = v[1]
-      info.value = v[2]
-      info.func = function() UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, this.value) end
-      info.checked = nil
-      --info.notCheckable = true
-      info.icon = nil
-      info.keepShownOnClick = nil
-      UIDropDownMenu_AddButton(info, level)
-    end
-    UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, "0 0")
-  end  
-  UIDropDownMenu_Initialize(ma_weatherdropdown, WeatherDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_weatherdropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_weatherdropdown)
   -- RELOAD TABLES
   local function ReloadTableDropDownInitialize()
     local level = 1
@@ -2166,8 +2104,75 @@ function MangAdmin:InitDropDowns()
     UIDropDownMenu_SetSelectedValue(ma_reloadtabledropdown, "all")
   end  
   UIDropDownMenu_Initialize(ma_reloadtabledropdown, ReloadTableDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_reloadtabledropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_reloadtabledropdown)
+  UIDropDownMenu_SetWidth(ma_reloadtabledropdown,100)
+  UIDropDownMenu_SetButtonWidth(ma_reloadtabledropdown, 20)
+
+  -- WEATHER
+  local function WeatherDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {Locale["ma_WeatherFine"],"0 0"},
+      {Locale["ma_WeatherFog"],"0 1"},
+      {Locale["ma_WeatherRain"],"1 1"},
+      {Locale["ma_WeatherSnow"],"2 1"},
+      {Locale["ma_WeatherSand"],"3 1"}
+    }
+    for k,v in pairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, this.value) end
+      info.checked = nil
+      --info.notCheckable = true
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+    UIDropDownMenu_SetSelectedValue(ma_weatherdropdown, "0 0")
+  end  
+  UIDropDownMenu_Initialize(ma_weatherdropdown, WeatherDropDownInitialize)
+  UIDropDownMenu_SetWidth(ma_weatherdropdown, 100)
+  UIDropDownMenu_SetButtonWidth(ma_weatherdropdown, 20)
+
+  --LANGUAGE
+  local function LangDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {"Czech","csCZ"},
+      {"German","deDE"},
+      {"Dutch","nlNL"},
+      {"English","enUS"},
+      {"Spanish","esES"},
+      {"Finnish","fiFI"},
+      {"French","frFR"},
+      {"Hungarian","huHU"},
+      {"Italian","itIT"},
+      {"Lithuanian","liLI"},
+      {"Polish","plPL"},
+      {"Portuguese","ptPT"},
+      {"Romanian","roRO"},
+      {"Russian","ruRU"},
+      {"Swedish","svSV"},
+      {"Chinese","zhCN"}
+    }
+    for k,v in pairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_languagedropdown, this.value) end
+      info.checked = nil
+      --info.notCheckable = true
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+    UIDropDownMenu_SetSelectedValue(ma_languagedropdown, Locale:GetLocale())
+  end
+  UIDropDownMenu_Initialize(ma_languagedropdown, LangDropDownInitialize)
+  UIDropDownMenu_SetWidth(ma_languagedropdown, 100)
+  UIDropDownMenu_SetButtonWidth(ma_languagedropdown, 20)
+
+  
   -- MODIFY
   local function ModifyDropDownInitialize()
     local level = 1
@@ -2193,8 +2198,9 @@ function MangAdmin:InitDropDowns()
     UIDropDownMenu_SetSelectedValue(ma_modifydropdown, "levelup")
   end  
   UIDropDownMenu_Initialize(ma_modifydropdown, ModifyDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_modifydropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_modifydropdown)
+  UIDropDownMenu_SetWidth(ma_modifydropdown, 100)
+  UIDropDownMenu_SetButtonWidth(ma_modifydropdown, 20)
+
   -- RESET
   local function ResetDropDownInitialize()
     local level = 1
@@ -2218,8 +2224,9 @@ function MangAdmin:InitDropDowns()
     UIDropDownMenu_SetSelectedValue(ma_resetdropdown, "talents")
   end  
   UIDropDownMenu_Initialize(ma_resetdropdown, ResetDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_resetdropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_resetdropdown)
+  UIDropDownMenu_SetWidth(ma_resetdropdown, 100)
+  UIDropDownMenu_SetButtonWidth(ma_resetdropdown, 20)
+
   -- LEARN LANG
   local function LearnLangDropDownInitialize()
     local level = 1
@@ -2253,8 +2260,8 @@ function MangAdmin:InitDropDowns()
     UIDropDownMenu_SetSelectedValue(ma_learnlangdropdown, "all_lang")
   end  
   UIDropDownMenu_Initialize(ma_learnlangdropdown, LearnLangDropDownInitialize)
-  UIDropDownMenu_SetWidth(100, ma_learnlangdropdown)
-  UIDropDownMenu_SetButtonWidth(20, ma_learnlangdropdown)
+  UIDropDownMenu_SetWidth(ma_learnlangdropdown,100)
+  UIDropDownMenu_SetButtonWidth(ma_learnlangdropdown,20)
 end
 
 function MangAdmin:InitSliders()
@@ -2286,28 +2293,21 @@ end
 
 function MangAdmin:InitScrollFrames()
   cont = MangAdmin.db.char.selectedCont
-  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(30, PopupScrollUpdate) end)
+  ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 30, PopupScrollUpdate()) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() 
-    --cont = MangAdmin.db.char.selectedCont 
-    FauxScrollFrame_OnVerticalScroll(16, self:TeleScrollUpdate()) 
-    end)
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, MangAdmin:TeleScrollUpdate()) end)
   ma_ZoneScrollBar:SetScript("OnShow", function() self:TeleScrollUpdate() end)
-  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() 
-    --cont = MangAdmin.db.char.selectedCont
-    --self:ChatMsg("Loaded cont:" ..cont)
-    FauxScrollFrame_OnVerticalScroll(16, self:SubzoneScrollUpdate()) 
-    end)
+  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, MangAdmin:SubzoneScrollUpdate()) end)
   ma_SubzoneScrollBar:SetScript("OnShow", function() self:SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
-  self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged() end},
-    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
-    {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
+  self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(self, ma_ticketeditbox) end},
+    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(self, x, y, w, h) end},
+    {"OnUpdate", function() ScrollingEdit_OnUpdate(self, 0, ma_ticketeditbox) end}})
   ma_mailscrollframe:SetScrollChild(ma_maileditbox)
-  self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(); MangAdmin:UpdateMailBytesLeft() end},
-    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(arg1, arg2, arg3, arg4) end},
-    {"OnUpdate", function() ScrollingEdit_OnUpdate() end}})
-  ma_logframe:SetScript("OnUpdate", function() MangAdminLogOnUpdate(arg1) end)
+  self:PrepareScript(ma_maileditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(self, ma_maileditbox); MangAdmin:UpdateMailBytesLeft() end},
+    {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(self, x, y, w, h) end},
+    {"OnUpdate", function() ScrollingEdit_OnUpdate(self, 0, ma_maileditbox) end}})
+  ma_logframe:SetScript("OnUpdate", function() MangAdminLogOnUpdate(self, 0, ma_logframe) end)
 end
 
 function MangAdmin:InitModelFrame()
@@ -2369,7 +2369,7 @@ function MangAdmin:NoResults(var)
     -- Reset list and make an entry "No Tickets"
     self:LogAction(Locale["ma_TicketsNoTickets"])
     ma_ticketeditbox:SetText(Locale["ma_TicketsNoTickets"])
-    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,30)
+    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,30);
     for line = 1,12 do
       getglobal("ma_ZoneScrollBarEntry"..line):Disable()
       if line == 1 then
@@ -2381,7 +2381,7 @@ function MangAdmin:NoResults(var)
     end
   elseif var == "search" then
     ma_lookupresulttext:SetText(Locale["searchResults"].."0")
-    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
+    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30);
     for line = 1,7 do
       getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
       getglobal("ma_PopupScrollBarEntry"..line):Disable()
@@ -2396,7 +2396,7 @@ function MangAdmin:NoResults(var)
     end
   elseif var == "favorites" then
     ma_lookupresulttext:SetText(Locale["favoriteResults"].."0")
-    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30)
+    FauxScrollFrame_Update(ma_PopupScrollBar,7,7,30);
     for line = 1,7 do
       getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
       getglobal("ma_PopupScrollBarEntry"..line):Disable()
@@ -2410,7 +2410,7 @@ function MangAdmin:NoResults(var)
       end
     end
   elseif var == "zones" then
-    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,16)
+    FauxScrollFrame_Update(ma_ZoneScrollBar,12,12,16);
     for line = 1,12 do
       getglobal("ma_ZoneScrollBarEntry"..line):Disable()
       if line == 1 then
@@ -2421,7 +2421,7 @@ function MangAdmin:NoResults(var)
       end
     end
   elseif var == "subzones" then
-    FauxScrollFrame_Update(ma_SubzoneScrollBar,12,12,16)
+    FauxScrollFrame_Update(ma_SubzoneScrollBar,12,12,16);
     for line = 1,12 do
       getglobal("ma_SubzoneScrollBarEntry"..line):Disable()
       if line == 1 then
@@ -2437,7 +2437,6 @@ end
 function PopupScrollUpdate()
   local line -- 1 through 7 of our window to scroll
   local lineplusoffset -- an index into our data calculated from the scroll offset
-  
   if MangAdmin.db.char.requests.item or MangAdmin.db.char.requests.favitem then --get items
     local count = 0
     if MangAdmin.db.char.requests.item then
@@ -2447,7 +2446,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
         if lineplusoffset <= count then
@@ -2510,7 +2509,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2566,7 +2565,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2622,7 +2621,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2678,7 +2677,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2737,7 +2736,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2793,7 +2792,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2849,7 +2848,7 @@ function PopupScrollUpdate()
     end
     if count > 0 then
       ma_lookupresulttext:SetText(Locale["searchResults"]..count)
-      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30)
+      FauxScrollFrame_Update(ma_PopupScrollBar,count,7,30);
       for line = 1,7 do
         getglobal("ma_PopupScrollBarEntryIcon"..line):Hide()
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_PopupScrollBar)
@@ -2906,8 +2905,8 @@ function InlineScrollUpdate()
     local ticketCount = 0
     table.foreachi(MangAdmin.db.account.buffer.tickets, function() ticketCount = ticketCount + 1 end)
     if ticketCount > 0 then
-      --FauxScrollFrame_Update(ma_PopupScrollBar,4,7,30) --for paged mode, only load 4 at a time
-      FauxScrollFrame_Update(ma_ZoneScrollBar,ticketCount,12,16)
+      --FauxScrollFrame_Update(ma_PopupScrollBar,4,7,30); --for paged mode, only load 4 at a time
+      FauxScrollFrame_Update(ma_ZoneScrollBar,ticketCount,12,16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
@@ -2952,7 +2951,7 @@ function InlineScrollUpdate()
       table.insert(TeleTable, {name = index, subzones = value})
     end
     if zoneCount > 0 then
-      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
+      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
@@ -2998,7 +2997,8 @@ function MangAdmin:TeleScrollUpdate()
     end
     
     if zoneCount > -1 then
-      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16)
+      self:ChatMsg("Zone count:" .. zoneCount)
+      FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
         lineplusoffset = line + FauxScrollFrame_GetOffset(ma_ZoneScrollBar)
@@ -3064,7 +3064,7 @@ function MangAdmin:SubzoneScrollUpdate()
   --MangAdmin:ChatMsg("subs:" ..subzoneCount)
   --MangAdmin:ChatMsg("Cont:" ..cont)
   if subzoneCount > 0 then
-    FauxScrollFrame_Update(ma_SubzoneScrollBar,subzoneCount,12,16)
+    FauxScrollFrame_Update(ma_SubzoneScrollBar,subzoneCount,12,16);
     for line = 1,12 do
       --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
       lineplusoffset = line + FauxScrollFrame_GetOffset(ma_SubzoneScrollBar)

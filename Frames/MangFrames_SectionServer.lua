@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -140,7 +140,7 @@ function MangAdmin:CreateServerSection()
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -98,
+      offX = -95,
       offY = -10
     },
     inherits = "UIDropDownMenuTemplate"
@@ -195,12 +195,12 @@ function MangAdmin:CreateServerSection()
       color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
     },
     size = {
-      width = 100,
+      width = 110,
       height = 20
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -94,
+      offX = -99,
       offY = -44
     },
     text = "(Re-)Load Scripts"

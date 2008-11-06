@@ -1,5 +1,5 @@
 ## Name: MangAdmin
-## Interface: 20400
+## Interface: 30000
 ## Title: MangAdmin
 ## Version: 1.0
 ## DefaultState: Enabled

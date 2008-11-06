@@ -581,7 +581,7 @@ FrameLib:BuildButton({
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -90,
+      offX = -85,
       offY = -10
     },
     inherits = "UIDropDownMenuTemplate"
@@ -670,7 +670,7 @@ FrameLib:BuildButton({
     },
     setpoint = {
       pos = "TOPRIGHT",
-      offX = -90,
+      offX = -85,
       offY = -70
     },
     inherits = "UIDropDownMenuTemplate"

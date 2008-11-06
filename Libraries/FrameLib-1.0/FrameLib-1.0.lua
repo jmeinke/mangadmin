@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------------------------
+﻿-------------------------------------------------------------------------------------------------------------
 --
 -- MangAdmin Version 1.0
 --
@@ -181,7 +181,7 @@ function FrameLib:BuildButton(def)
     button:SetWidth(def.size.width or 100)
     button:SetHeight(def.size.height or 100)
   end
-  button:SetTextFontObject(def.NormalFontObject or GameFontNormal)
+  button:SetNormalFontObject(def.NormalFontObject or GameFontNormal)
   button:SetHighlightFontObject(def.HighlightFontObject or GameFontHighlight)
   button:SetDisabledFontObject(def.DisabledFontObject or GameFontDisable)	
   button:ClearAllPoints()
