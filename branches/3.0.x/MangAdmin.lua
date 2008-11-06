@@ -1999,52 +1999,52 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_ContScrollBarEntry1      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "EK_N"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry2      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "EK_S"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry3      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "K"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry4      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "Ou"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry5      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "BG"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry6      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "I_EK"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry7      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "I_K"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry8      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "I_O"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry9      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "Ot"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
   self:PrepareScript(ma_ContScrollBarEntry10      , nil                      , function() 
     MangAdmin.db.char.selectedCont = "J"
     cont=MangAdmin.db.char.selectedCont
-    MangAdmin:TeleScrollUpdate() 
+    TeleScrollUpdate() 
     end)
 end
 
@@ -2295,10 +2295,10 @@ function MangAdmin:InitScrollFrames()
   cont = MangAdmin.db.char.selectedCont
   ma_PopupScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 30, PopupScrollUpdate()) end)
   ma_PopupScrollBar:SetScript("OnShow", function() PopupScrollUpdate() end)
-  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, MangAdmin:TeleScrollUpdate()) end)
-  ma_ZoneScrollBar:SetScript("OnShow", function() self:TeleScrollUpdate() end)
-  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, MangAdmin:SubzoneScrollUpdate()) end)
-  ma_SubzoneScrollBar:SetScript("OnShow", function() self:SubzoneScrollUpdate() end)
+  ma_ZoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, TeleScrollUpdate()) end)
+  ma_ZoneScrollBar:SetScript("OnShow", function() TeleScrollUpdate() end)
+  ma_SubzoneScrollBar:SetScript("OnVerticalScroll", function() FauxScrollFrame_OnVerticalScroll(self, offset, 16, SubzoneScrollUpdate()) end)
+  ma_SubzoneScrollBar:SetScript("OnShow", function() SubzoneScrollUpdate() end)
   ma_ticketscrollframe:SetScrollChild(ma_ticketeditbox)
   self:PrepareScript(ma_ticketeditbox, nil, {{"OnTextChanged", function() ScrollingEdit_OnTextChanged(self, ma_ticketeditbox) end},
     {"OnCursorChanged", function() ScrollingEdit_OnCursorChanged(self, x, y, w, h) end},
@@ -2981,7 +2981,7 @@ function InlineScrollUpdate()
   end
 end
 
-function MangAdmin:TeleScrollUpdate()
+function TeleScrollUpdate()
     cont = MangAdmin.db.char.selectedCont
     --MangAdmin.db.char.selectedCont = cont
     --self:ChatMsg("Wrote cont:" ..cont)
@@ -2997,7 +2997,9 @@ function MangAdmin:TeleScrollUpdate()
     end
     
     if zoneCount > -1 then
-      self:ChatMsg("Zone count:" .. zoneCount)
+      --self:ChatMsg("Zone count:" .. zoneCount)
+      throwaway = ma_ZoneScrollBar.group
+      
       FauxScrollFrame_Update(ma_ZoneScrollBar,zoneCount,12,16);
       for line = 1,12 do
         --lineplusoffset = line + ((MangAdmin.db.account.tickets.page - 1) * 4)  --for paged mode
@@ -3013,9 +3015,9 @@ function MangAdmin:TeleScrollUpdate()
           getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnClick", function()
             MangAdmin.db.char.selectedZone = teleobj.name
             --MangAdmin.db.char.selectedCont = cont
-            MangAdmin:TeleScrollUpdate()
+            TeleScrollUpdate()
             --InlineScrollUpdate(cont)
-            MangAdmin:SubzoneScrollUpdate()
+            SubzoneScrollUpdate()
           end)
           getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnEnter", function() cont = MangAdmin.db.char.selectedCont end)
           getglobal("ma_ZoneScrollBarEntry"..line):SetScript("OnLeave", function() cont = MangAdmin.db.char.selectedCont end)
@@ -3044,11 +3046,11 @@ function pairsByKeys(t, f)
   return iter
 end
 
-function MangAdmin:SubzoneScrollUpdate()
+function SubzoneScrollUpdate()
   cont = MangAdmin.db.char.selectedCont
   local TeleTable = {}
   local subzoneCount = 0
-  --local shownZone = "Alterac Mountains"
+  local shownZone = "Alterac Mountains"
   if MangAdmin.db.char.selectedZone then
     shownZone = MangAdmin.db.char.selectedZone
   end
