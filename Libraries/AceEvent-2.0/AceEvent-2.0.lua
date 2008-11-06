@@ -1,11 +1,11 @@
 --[[
 Name: AceEvent-2.0
-Revision: $Rev: 66043 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceEvent-2.0
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceEvent-2.0
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceEvent-2.0
 Description: Mixin to allow for event handling, scheduling, and inter-addon
              communication.
 Dependencies: AceLibrary, AceOO-2.0
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceEvent-2.0"
-local MINOR_VERSION = "$Revision: 66043 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -277,7 +277,7 @@ function AceEvent:TriggerEvent(event, ...)
 		end
 		local obj = next(tmp)
 		while obj do
-			local continue = nil
+			local cont = nil
 			if throttleTable and throttleTable[obj] then
 				local a1 = ...
 				if a1 == nil then
@@ -286,10 +286,10 @@ function AceEvent:TriggerEvent(event, ...)
 				if not throttleTable[obj][a1] or GetTime() - throttleTable[obj][a1] >= throttleTable[obj][RATE] then
 					throttleTable[obj][a1] = GetTime()
 				else
-					continue = true
+					cont = true
 				end
 			end
-			if not continue then
+			if not cont then
 				local method = tmp[obj]
 				local t = type(method)
 				if t == "string" then

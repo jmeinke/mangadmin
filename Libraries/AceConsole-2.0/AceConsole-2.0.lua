@@ -1,6 +1,6 @@
 ﻿--[[
 Name: AceConsole-2.0
-Revision: $Rev: 67789 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -14,12 +14,14 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceConsole-2.0"
-local MINOR_VERSION = "$Revision: 67789 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
 
 if not AceLibrary:HasInstance("AceOO-2.0") then error(MAJOR_VERSION .. " requires AceOO-2.0.") end
+
+local WotLK = select(4,GetBuildInfo()) >= 30000
 
 -- #AUTODOC_NAMESPACE AceConsole
 
@@ -102,6 +104,19 @@ elseif GetLocale() == "esES" then
 	OPTION_IS_DISABLED = "La opci\195\179n |cffffff7f%s|r est\195\161 desactivada."
 	KEYBINDING_USAGE = "<ALT-CTRL-SHIFT-KEY>"
 	DEFAULT_CONFIRM_MESSAGE = "Are you sure you want to perform `%s'?" -- fix
+elseif GetLocale() == "ruRU" then
+	MAP_ONOFF = { [false] = "|cffff0000Off|r", [true] = "|cff00ff00On|r" }
+	USAGE = "Используйте"
+	IS_CURRENTLY_SET_TO = "|cffffff7f%s|r в настоящее время установлен на |cffffff7f[|r%s|cffffff7f]|r"
+	IS_NOW_SET_TO = "|cffffff7f%s|r тереь установлен |cffffff7f[|r%s|cffffff7f]|r"
+	IS_NOT_A_VALID_OPTION_FOR = "[|cffffff7f%s|r] не действительная опция для |cffffff7f%s|r"
+	IS_NOT_A_VALID_VALUE_FOR = "[|cffffff7f%s|r] не действительное значение для |cffffff7f%s|r"
+	NO_OPTIONS_AVAILABLE = "Нет доступных опцийe"
+	OPTION_HANDLER_NOT_FOUND = "Оператор опции |cffffff7f%q|r не найден."
+	OPTION_HANDLER_NOT_VALID = "Оператор опции не действительный."
+	OPTION_IS_DISABLED = "Опция |cffffff7f%s|r отключена."
+	KEYBINDING_USAGE = "<ALT-CTRL-SHIFT-КЛАВИША>"
+	DEFAULT_CONFIRM_MESSAGE = "Вы уверены что вы хотите выполнить `%s'?"
 else -- enUS
 	MAP_ONOFF = { [false] = "|cffff0000Off|r", [true] = "|cff00ff00On|r" }
 	USAGE = "Usage"
@@ -243,7 +258,7 @@ end
 
 local function literal_tostring_prime(t, depth)
 	if type(t) == "string" then
-		return ("|cff00ff00%q|r"):format((t:gsub("|", "||"))):gsub("[\001-\012\014-\031\128-\255]", escapeChar)
+		return ("|cff00ff00%q|r"):format((t:gsub("|", "||"))):gsub("[%z\001-\009\011-\031\127-\255]", escapeChar)
 	elseif type(t) == "table" then
 		if t == _G then
 			return "|cffffea00_G|r"
@@ -1606,7 +1621,6 @@ local function handlerFunc(self, chat, msg, options)
 			end
 		end
 	end
-	local _G_this = this
 	local kind = (options.type or "group"):lower()
 	local options_p = passTable or options
 	if disabled then
@@ -2274,7 +2288,6 @@ local function handlerFunc(self, chat, msg, options)
 		end
 		return
 	end
-	this = _G_this
 	if Dewdrop then
 		Dewdrop:Refresh()
 	end
@@ -2378,14 +2391,14 @@ function AceConsole:RegisterChatCommand(...) -- slashCommands, options, name
 		handler = options
 		for k,v in pairs(_G) do
 			if handler == v then
-				local k = k
-				handler = function(msg)
-					return _G[k](msg)
+				handler = function(msg, chatFrame)
+					return _G[k](msg, chatFrame)
 				end
+				break
 			end
 		end
 	else
-		function handler(msg)
+		function handler(msg, chatFrame)
 			handlerFunc(self, chat, msg, options)
 		end
 	end

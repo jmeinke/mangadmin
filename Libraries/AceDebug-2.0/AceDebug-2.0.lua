@@ -1,18 +1,18 @@
---[[
+﻿--[[
 Name: AceDebug-2.0
-Revision: $Rev: 34168 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceDebug-2.0
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceDebug-2.0
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceDebug-2.0
 Description: Mixin to allow for simple debugging capabilities.
 Dependencies: AceLibrary, AceOO-2.0
 License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceDebug-2.0"
-local MINOR_VERSION = "$Revision: 34168 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -43,6 +43,9 @@ elseif GetLocale() == "zhCN" then
 elseif GetLocale() == "esES" then
 	DEBUGGING = "Debugging"
 	TOGGLE_DEBUGGING = "Activar/desactivar Debugging."
+elseif GetLocale() == "ruRU" then
+	DEBUGGING = "Отладка"
+	TOGGLE_DEBUGGING = "Вкл/Выкл отладку для этого аддона."
 else -- enUS
 	DEBUGGING = "Debugging"
 	TOGGLE_DEBUGGING = "Toggle debugging for this addon."

@@ -1,6 +1,6 @@
 --[[
 Name: Tablet-2.0
-Revision: $Rev: 55567 $
+Revision: $Rev: 64130 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://www.wowace.com/index.php/Tablet-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Tablet-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 55567 $"):sub(12, -3))
+local MINOR_VERSION = tonumber(("$Revision: 64130 $"):sub(12, -3))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -438,7 +438,7 @@ do
 		if superCategory and not self.noInherit then
 			self.superCategory = superCategory.superCategory
 			for k, v in pairs(superCategory) do
-				if string.find(k, "^child_") then
+				if k:find("^child_") then
 					local k = strsub(k, 7)
 					if self[k] == nil then
 						self[k] = v
@@ -537,7 +537,7 @@ do
 				x['size' .. i] = self['size' .. i]
 				x['justify' .. i] = self['justify' .. i]
 			end
-			if self.checkIcon and string.find(self.checkIcon, "^Interface\\Icons\\") then
+			if self.checkIcon and self.checkIcon:find("^Interface\\Icons\\") then
 				x.checkCoordLeft = self.checkCoordLeft or 0.05
 				x.checkCoordRight = self.checkCoordRight or 0.95
 				x.checkCoordTop = self.checkCoordTop or 0.05
@@ -630,7 +630,8 @@ do
 		if not self.hideBlankLine and not lastWasTitle then
 			local info = new(
 				'blank', true,
-				'fakeChild', true
+				'fakeChild', true,
+				'noInherit', true
 			)
 			self:AddLine(info, 1)
 			del(info)
@@ -656,7 +657,7 @@ do
 		local self = copy(info)
 		if not info.noInherit then
 			for k, v in pairs(category) do
-				if string.find(k, "^child_") then
+				if k:find("^child_") then
 					local k = strsub(k, 7)
 					if self[k] == nil then
 						self[k] = v
@@ -733,7 +734,7 @@ do
 				self['size' .. i] = select(2,self['font' .. i]:GetFont())
 			end
 		end
-		if self.checkIcon and string.find(self.checkIcon, "^Interface\\Icons\\") then
+		if self.checkIcon and self.checkIcon:find("^Interface\\Icons\\") then
 			if not self.checkCoordLeft then
 				self.checkCoordLeft = 0.05
 			end
@@ -2334,7 +2335,7 @@ function Tablet:Close(parent)
 	local detachedData = info.detachedData
 	if detachedData and detachedData.detached then
 		ReleaseDetachedFrame(self, data, detachedData)
-	elseif tooltip.data == data then
+	elseif tooltip and tooltip.data == data then
 		tooltip:Hide()
 		if tooltip.registration then
 			tooltip.registration.tooltip = nil

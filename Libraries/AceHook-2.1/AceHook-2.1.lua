@@ -1,18 +1,18 @@
 --[[
 Name: AceHook-2.1
-Revision: $Rev: 40869 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceHook-2.1
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceHook-2.1
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceHook-2.1
 Description: Mixin to allow for safe hooking of functions, methods, and scripts.
 Dependencies: AceLibrary, AceOO-2.0
 License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceHook-2.1"
-local MINOR_VERSION = "$Revision: 40869 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end

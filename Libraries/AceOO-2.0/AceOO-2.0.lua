@@ -1,18 +1,18 @@
 --[[
 Name: AceOO-2.0
-Revision: $Rev: 38641 $
+Revision: $Rev: 1091 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/index.php/AceOO-2.0
-SVN: http://svn.wowace.com/root/trunk/Ace2/AceOO-2.0
+SVN: http://svn.wowace.com/wowace/trunk/Ace2/AceOO-2.0
 Description: Library to provide an object-orientation framework.
 Dependencies: AceLibrary
 License: MIT
 ]]
 
 local MAJOR_VERSION = "AceOO-2.0"
-local MINOR_VERSION = "$Revision: 38641 $"
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1091 $"):match("(%d+)"))
 
 -- This ensures the code is only executed if the libary doesn't already exist, or is a newer version
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary.") end

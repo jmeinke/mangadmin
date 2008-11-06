@@ -1,8 +1,8 @@
 ﻿/************************************************************************************************************
 **
-** MangAdmin Version 1.0
+** MangAdmin Version 1.3.0.2
 **
-** Copyright (C) 2007 Free Software Foundation, Inc.
+** Copyright (C) 2008 Free Software Foundation, Inc.
 ** License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 ** This is free software: you are free to change and redistribute it.
 ** There is NO WARRANTY, to the extent permitted by law.
@@ -13,13 +13,25 @@
 **
 ** Official Forums: http://www.manground.org/forum/
 ** GoogleCode Website: http://code.google.com/p/mangadmin/
-** Subversion Repository: http://mangadmin.googlecode.com/svn/
+** Subversion Repository: http://mangadmin.googlecode.com/svn/branches/3.0.x
 **
 **    Please report bugs:  http://www.manground.org/forum/index.php?showforum=9
 **
 ************************************************************************************************************/
 
-=CHANGELOG= 
+=CHANGELOG=
+Rev. 125
+  * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
+          on client revisions earlier then 3.0.1
+  *[UPDATE] Updated all external libraries to 3.0.x compatible versions.
+ 
+Rev. 124
+  * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
+          on client revisions earlier then 3.0.1
+  * [UPDATE] Made updates to a number of files to support changes to API witn 3.0.x client versions. Use Diff
+          to see exact changes. No new features added.
+  * [Known Issue] All scroll lists are broken and throw lua errors.
+
 Rev. 119:
   * [UPDATE] TeleportTable.lua updated to support new teleport_target_position.
   * [FIX] A few .go x y z positions in TeleportTable.lua 
