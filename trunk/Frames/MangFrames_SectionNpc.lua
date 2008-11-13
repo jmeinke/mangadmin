@@ -33,16 +33,238 @@ function MangAdmin:CreateNpcSection()
     frm = MangAdmin.db.account.style.color.frames
   }
 
-  FrameLib:BuildFontString({
-    name = "ma_npclabel",
+  FrameLib:BuildFrame({
+    type = "PlayerModel",
+    name = "ma_npcmodelframe",
     group = "npc",
     parent = ma_midframe,
-    text = "This tab for future use",
+    size = {
+      width = 233,
+      height = 300
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = -70,
+      offY = 10
+    },
+    inherits = nil
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_npcmodelrotatelbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotatelbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
     setpoint = {
       pos = "TOPLEFT",
       offX = 10,
       offY = -10
-    }
-  })    
+    },
+    text = "<<="
+  })
   
+  FrameLib:BuildButton({
+    name = "ma_npcmodelrotaterbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_modelrotaterbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 30,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 44,
+      offY = -10
+    },
+    text = "=>>"
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_npckillbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_killbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -10
+    },
+    text = Locale["ma_KillButton"]
+  })
+  
+  FrameLib:BuildButton({
+    name = "ma_respawnbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_respawnbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 100,
+      offY = -34
+    },
+    text = "Respawn"
+  })
+  FrameLib:BuildButton({
+    name = "ma_npcguidbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_guidbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -10
+    },
+    text = Locale["ma_GUIDButton"]
+  })
+    FrameLib:BuildButton({
+    name = "ma_movestackbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_movestackbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 268,
+      offY = -10
+    },
+    text = Locale["ma_MoveStackButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcfreezebutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcfreezebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 268,
+      offY = -34
+    },
+    text = Locale["ma_NPCFreezeButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcunfreeze_randombutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcunfreeze_randombutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 352,
+      offY = -10
+    },
+    text = Locale["ma_NPCUnFreeze_RandomButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcunfreeze_waybutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcunfreeze_waybutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 352,
+      offY = -34
+    },
+    text = Locale["ma_NPCUnFreeze_WayButton"]
+  })
+
+    FrameLib:BuildButton({
+    name = "ma_npcinfobutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcinfobutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -34
+    },
+    text = Locale["ma_NPCInfoButton"]
+  })
+    FrameLib:BuildButton({
+    name = "ma_npcdistancebutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_distancebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 436,
+      offY = -10
+    },
+    text = Locale["ma_DistanceButton"]
+  })
+
 end
