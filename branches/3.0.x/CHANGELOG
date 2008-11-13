@@ -20,6 +20,11 @@
 ************************************************************************************************************/
 
 =CHANGELOG=
+Rev. 128:
+  * Note: Jump in revision numbers is due to svn assigning the next number to a commit, 
+    regardless if it is in trunk or in a branch. This revision follows r126.
+  * Moved NPC specific buttons off the Character tab and onto the NPC tab. 
+
 Rev. 126
   * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
           on client revisions earlier then 3.0.1
