@@ -285,6 +285,7 @@ end
 
 function MangAdmin:PLAYER_TARGET_CHANGED()
   self:ModelChanged()
+  self:NpcModelChanged()
   if UnitIsPlayer("target") then
     ma_savebutton:Enable()
     if UnitIsDead("target") then
@@ -1519,6 +1520,9 @@ function MangAdmin:QuickCommand(v)
   elseif(v == 17) then --.mute
     self:ChatMsg(".mute "..cname)
     self:LogAction("Muted "..cname..".")
+  elseif(v == 18) then --.npc say
+    self:ChatMsg(".npc say "..cname)
+    self:LogAction(".npc say "..cname..".")
   end
 end
 
@@ -1931,6 +1935,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_r4c3button           , Locale["tt_r4c3Button"]         , function() MangAdmin:QuickCommand(15) end)
   self:PrepareScript(ma_r4c4button           , Locale["tt_r4c4Button"]         , function() MangAdmin:QuickCommand(16) end)
   self:PrepareScript(ma_r4c5button           , Locale["tt_r4c5Button"]         , function() MangAdmin:QuickCommand(17) end)
+  self:PrepareScript(ma_npcsaybutton         , "Make selected npc say [parametes]"         , function() MangAdmin:QuickCommand(18) end)
   self:PrepareScript(ma_setjail_a_button     , Locale["tt_SetJail_A_Button"]   , function() MangAdmin:SetJail_A() end)
   self:PrepareScript(ma_setjail_h_button     , Locale["tt_SetJail_H_Button"]   , function() MangAdmin:SetJail_H() end)
   self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
@@ -1946,6 +1951,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_resetsearchbutton    , nil                             , function() MangAdmin:SearchReset() end)
   self:PrepareScript(ma_revivebutton         , nil                             , function() MangAdmin:RevivePlayer() end)
   self:PrepareScript(ma_killbutton           , nil                             , function() MangAdmin:KillSomething() end)
+  self:PrepareScript(ma_npckillbutton        , nil                             , function() MangAdmin:KillSomething() end)
   self:PrepareScript(ma_savebutton           , nil                             , function() MangAdmin:SavePlayer() end)
   self:PrepareScript(ma_dismountbutton       , nil                             , function() MangAdmin:DismountPlayer() end)
   self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
@@ -1955,12 +1961,14 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_hidemapsbutton       , Locale["tt_HideMapsButton"]     , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_gpsbutton            , Locale["tt_GPSButton"]          , function() MangAdmin:GPS() end)
   self:PrepareScript(ma_guidbutton           , Locale["tt_GUIDButton"]         , function() MangAdmin:ShowGUID() end)
+  self:PrepareScript(ma_npcguidbutton        , Locale["tt_GUIDButton"]         , function() MangAdmin:ShowGUID() end)
   self:PrepareScript(ma_movestackbutton      , Locale["tt_MoveStackButton"]    , function() MangAdmin:ShowMove() end)
   self:PrepareScript(ma_npcfreezebutton      , Locale["tt_NPCFreezeButton"]    , function() MangAdmin:NPCFreeze() end)
   self:PrepareScript(ma_npcunfreeze_randombutton , Locale["tt_NPCUnFreeze_RandomButton"]  , function() MangAdmin:NPCUnFreeze_Random() end)
   self:PrepareScript(ma_npcunfreeze_waybutton , Locale["tt_NPCUnFreeze_WayButton"]  , function() MangAdmin:NPCUnFreeze_Way() end)
   self:PrepareScript(ma_npcinfobutton        , Locale["tt_NPCInfoButton"]      , function() MangAdmin:NPCInfo() end)
   self:PrepareScript(ma_pinfobutton          , Locale["tt_PinfoButton"]        , function() MangAdmin:Pinfo() end)
+  self:PrepareScript(ma_npcdistancebutton    , Locale["tt_DistanceButton"]     , function() MangAdmin:Distance() end)
   self:PrepareScript(ma_distancebutton       , Locale["tt_DistanceButton"]     , function() MangAdmin:Distance() end)
   self:PrepareScript(ma_recallbutton         , Locale["tt_RecallButton"]       , function() MangAdmin:Recall() end)
   self:PrepareScript(ma_respawnbutton        , nil                             , function() MangAdmin:Respawn() end)
@@ -1994,6 +2002,8 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_inforefreshbutton    , nil                             , function() MangAdmin:ChatMsg(".server info") end)
   self:PrepareScript(ma_modelrotatelbutton   , Locale["tt_RotateLeft"]         , function() MangAdmin:ModelRotateLeft() end)
   self:PrepareScript(ma_modelrotaterbutton   , Locale["tt_RotateRight"]        , function() MangAdmin:ModelRotateRight() end)
+  self:PrepareScript(ma_npcmodelrotatelbutton   , Locale["tt_RotateLeft"]      , function() MangAdmin:NpcModelRotateLeft() end)
+  self:PrepareScript(ma_npcmodelrotaterbutton   , Locale["tt_RotateRight"]     , function() MangAdmin:NpcModelRotateRight() end)
   self:PrepareScript(ma_frmtrslider          , Locale["tt_FrmTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("frames") end},{"OnValueChanged", function() ma_frmtrsliderText:SetText(string.format("%.2f", ma_frmtrslider:GetValue())) end}})  
   self:PrepareScript(ma_btntrslider          , Locale["tt_BtnTrSlider"]        , {{"OnMouseUp", function() MangAdmin:ChangeTransparency("buttons") end},{"OnValueChanged", function() ma_btntrsliderText:SetText(string.format("%.2f", ma_btntrslider:GetValue())) end}})  
   self:PrepareScript(ma_instantkillbutton    , nil                             , function() self.db.char.instantKillMode = ma_instantkillbutton:GetChecked() end)
@@ -2318,6 +2328,20 @@ function MangAdmin:InitModelFrame()
   ma_modelframe.rotation = 0.61;
   ma_modelframe:SetRotation(ma_modelframe.rotation)
   ma_modelframe:SetUnit("player")
+  ma_npcmodelframe:SetScript("OnUpdate", function() MangAdminNpcModelOnUpdate(arg1) end)
+  ma_npcmodelframe.rotation = 0.61;
+  ma_npcmodelframe:SetRotation(ma_npcmodelframe.rotation)
+  ma_npcmodelframe:SetUnit("player")
+
+end
+
+function MangAdmin:NpcModelChanged()
+  if not self:Selection("none") then
+    ma_npcmodelframe:SetUnit("target")
+  else
+    ma_npcmodelframe:SetUnit("player")
+  end
+  ma_npcmodelframe:RefreshUnit()
 end
 
 function MangAdmin:ModelChanged()
@@ -2327,6 +2351,23 @@ function MangAdmin:ModelChanged()
     ma_modelframe:SetUnit("player")
   end
   ma_modelframe:RefreshUnit()
+end
+
+function MangAdminNpcModelOnUpdate(elapsedTime)
+  if ( ma_npcmodelrotatelbutton:GetButtonState() == "PUSHED" ) then
+    this.rotation = this.rotation + (elapsedTime * 2 * PI * ROTATIONS_PER_SECOND)
+    if ( this.rotation < 0 ) then
+      this.rotation = this.rotation + (2 * PI)
+    end
+    this:SetRotation(this.rotation);
+  end
+  if ( ma_npcmodelrotaterbutton:GetButtonState() == "PUSHED" ) then
+    this.rotation = this.rotation - (elapsedTime * 2 * PI * ROTATIONS_PER_SECOND)
+    if ( this.rotation > (2 * PI) ) then
+      this.rotation = this.rotation - (2 * PI)
+    end
+    this:SetRotation(this.rotation);
+  end
 end
 
 function MangAdminModelOnUpdate(elapsedTime)
@@ -2355,9 +2396,19 @@ function MangAdminLogOnUpdate(elapsedTime)
   end
 end
 
+function MangAdmin:NpcModelRotateLeft()
+  ma_npcmodelframe.rotation = ma_npcmodelframe.rotation - 0.03
+  ma_npcmodelframe:SetRotation(ma_npcmodelframe.rotation)
+  PlaySound("igInventoryRotateCharacter")
+end
 function MangAdmin:ModelRotateLeft()
   ma_modelframe.rotation = ma_modelframe.rotation - 0.03
   ma_modelframe:SetRotation(ma_modelframe.rotation)
+  PlaySound("igInventoryRotateCharacter")
+end
+function MangAdmin:NpcModelRotateRight()
+  ma_npcmodelframe.rotation = ma_npcmodelframe.rotation + 0.03
+  ma_npcmodelframe:SetRotation(ma_npcmodelframe.rotation)
   PlaySound("igInventoryRotateCharacter")
 end
 
