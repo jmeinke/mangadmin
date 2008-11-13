@@ -20,12 +20,14 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
-Rev. 119:
-  * [UPDATE] TeleportTable.lua updated to support new teleport_target_position.
-  * [FIX] A few .go x y z positions in TeleportTable.lua 
+Rev. 127:
+  * Note: Jump in revision numbers is due to svn assigning the next number to a commit, 
+    regardless if it is in trunk or in a branch. This revision follows r119.
+  * Moved NPC specific buttons off the Character tab and onto the NPC tab. 
 
-Rev. 118:
-(unknown change if any)?
+Rev. 119: 
+  * [UPDATE] Misc changes to Teleport lists
+
 Rev. 117:
   * [UPDATE] Updated German localization. (Thanks Yoshi!)
   * [UPDATE] Updated Dutch localization. (Thanks Korhal!)

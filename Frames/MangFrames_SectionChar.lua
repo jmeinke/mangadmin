@@ -189,8 +189,7 @@ function MangAdmin:CreateCharSection()
     },
     text = "=>>"
   })
-  
-  FrameLib:BuildButton({
+   FrameLib:BuildButton({
     name = "ma_killbutton",
     group = "char",
     parent = ma_midframe,
@@ -209,26 +208,6 @@ function MangAdmin:CreateCharSection()
     },
     text = Locale["ma_KillButton"]
   })
-  
-  FrameLib:BuildButton({
-    name = "ma_respawnbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_respawnbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 100,
-      offY = -34
-    },
-    text = "Respawn"
-  })
 
   FrameLib:BuildButton({
     name = "ma_revivebutton",
@@ -245,7 +224,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -58
+      offY = -34
     },
     text = Locale["ma_ReviveButton"]
   })
@@ -265,7 +244,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -82
+      offY = -58
     },
     text = Locale["ma_SaveButton"]
   })
@@ -285,7 +264,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -106
+      offY = -82
     },
     text = Locale["ma_KickButton"]
   })
@@ -305,7 +284,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -130
+      offY = -106
     },
     text = Locale["ma_CooldownButton"]
   })
@@ -325,7 +304,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -154
+      offY = -130
     },
     text = Locale["ma_DemorphButton"]
   })
@@ -345,7 +324,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -178
+      offY = -154
     },
     text = Locale["ma_ShowMapsButton"]
   })
@@ -365,7 +344,7 @@ function MangAdmin:CreateCharSection()
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -202
+      offY = -178
     },
     text = Locale["ma_HideMapsButton"]
   })
@@ -385,7 +364,7 @@ FrameLib:BuildButton({
     setpoint = {
       pos = "TOPLEFT",
       offX = 100,
-      offY = -226
+      offY = -202
     },
     text = Locale["ma_GPSButton"]
   })
@@ -410,105 +389,6 @@ FrameLib:BuildButton({
     text = Locale["ma_GUIDButton"]
   })
 
-    FrameLib:BuildButton({
-    name = "ma_movestackbutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_movestackbutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 184,
-      offY = -34
-    },
-    text = Locale["ma_MoveStackButton"]
-  })
-
-    FrameLib:BuildButton({
-    name = "ma_npcfreezebutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_npcfreezebutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 184,
-      offY = -58
-    },
-    text = Locale["ma_NPCFreezeButton"]
-  })
-
-    FrameLib:BuildButton({
-    name = "ma_npcunfreeze_randombutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_npcunfreeze_randombutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 184,
-      offY = -82
-    },
-    text = Locale["ma_NPCUnFreeze_RandomButton"]
-  })
-
-    FrameLib:BuildButton({
-    name = "ma_npcunfreeze_waybutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_npcunfreeze_waybutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 184,
-      offY = -106
-    },
-    text = Locale["ma_NPCUnFreeze_WayButton"]
-  })
-
-    FrameLib:BuildButton({
-    name = "ma_npcinfobutton",
-    group = "char",
-    parent = ma_midframe,
-    texture = {
-      name = "ma_npcinfobutton_texture",
-      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
-    },
-    size = {
-      width = 80,
-      height = 20
-    },
-    setpoint = {
-      pos = "TOPLEFT",
-      offX = 184,
-      offY = -130
-    },
-    text = Locale["ma_NPCInfoButton"]
-  })
 
     FrameLib:BuildButton({
     name = "ma_pinfobutton",
@@ -525,7 +405,7 @@ FrameLib:BuildButton({
     setpoint = {
       pos = "TOPLEFT",
       offX = 184,
-      offY = -154
+      offY = -34
     },
     text = Locale["ma_PinfoButton"]
   })
@@ -545,7 +425,7 @@ FrameLib:BuildButton({
     setpoint = {
       pos = "TOPLEFT",
       offX = 184,
-      offY = -178
+      offY = -58
     },
     text = Locale["ma_DistanceButton"]
   })
@@ -565,7 +445,7 @@ FrameLib:BuildButton({
     setpoint = {
       pos = "TOPLEFT",
       offX = 184,
-      offY = -202
+      offY = -82
     },
     text = Locale["ma_RecallButton"]
   })
