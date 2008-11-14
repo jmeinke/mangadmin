@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_csCZ()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Czech",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_csCZ()
     ["tabmenu_Server"] = "Server",
     ["tabmenu_Log"] = "Zaznam",
     ["tt_Default"] = "Prejed kurzorem pres element pro aktivaci napovedy!",
-    ["tt_MainButton"] = "Klikni sem pro navrat na hlavni obrazovku MangAdmina.",
+    ["tt_MainButton"] = "Klikni sem pro navrat na hlavni obrazovku TrinityAdmina.",
     ["tt_CharButton"] = "Klikni sem pro prepnuti na editaci postav.",
     ["tt_TeleButton"] = "Klikni sem pro prepnutí na okno s teleportaci.",
     ["tt_TicketButton"] = "Klikni sem pro prepnutí na spravu ticketu.",
     ["tt_MiscButton"] = "Klikni sem pro prepnuti do okna s ostatnim obsahem.",
     ["tt_ServerButton"] = "Klikni sem pro zobrazeni informaci o serveru a pro nastaveni veci tykajicich se serveru.",
-    ["tt_LogButton"] = "Klikni sem pro zobrazení zaznamu vsech akci provedenych MangAdminem.",
-    ["tt_LanguageButton"] = "Klikni sem pro zmenu vychoziho jazyka a restart MangAdmina.",
+    ["tt_LogButton"] = "Klikni sem pro zobrazení zaznamu vsech akci provedenych TrinityAdminem.",
+    ["tt_LanguageButton"] = "Klikni sem pro zmenu vychoziho jazyka a restart TrinityAdmina.",
     ["tt_GMOnButton"] = "Klikni pro aktivaci GM modu.",
     ["tt_GMOffButton"] = "Klikni pro deaktivaci GM modu.",
     ["tt_FlyOnButton"] = "Klikni pro aktivaci Fly modu pro vybranou postavu.",
@@ -117,7 +117,7 @@ function Return_csCZ()
     ["ma_TicketsNewNumber"] = "Mas |cffeda55f%s|r novych ticketu!",
     ["ma_TicketsGoLast"] = "Jdi k poslednimu tvurci ticketu (%s).",
     ["ma_TicketsGetLast"] = "Portni %s k sobe.",
-    ["ma_IconHint"] = "|cffeda55fKlikni|r pro otevreni MangAdmina. |cffeda55fShift-Klik|r pro restart interface. |cffeda55fAlt-Klik|r pro obnoveni poctu ticketu.",
+    ["ma_IconHint"] = "|cffeda55fKlikni|r pro otevreni TrinityAdmina. |cffeda55fShift-Klik|r pro restart interface. |cffeda55fAlt-Klik|r pro obnoveni poctu ticketu.",
     ["ma_Reload"] = "Obnov",
     ["ma_LoadMore"] = "Nacti vic...",
     ["ma_MailRecipient"] = "Prijemce",
@@ -186,7 +186,7 @@ function Return_csCZ()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",

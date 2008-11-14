@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_svSV() 
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Svenska",
     ["realm"] = "|cFF00FF00Kungarike:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Karakt\195\164r:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_svSV()
     ["tabmenu_Server"] = "Server",
     ["tabmenu_Log"] = "Logg",
     ["tt_Default"] = "Flytta din muspekare \195\182ver ett element f\195\182r att aktivera tooltipen!",
-    ["tt_MainButton"] = "Tryck på den h\195\164r knappen f\195\182r att visa MangAdmin huvudmeny.",
+    ["tt_MainButton"] = "Tryck på den h\195\164r knappen f\195\182r att visa TrinityAdmin huvudmeny.",
     ["tt_CharButton"] = "Tryck på den här knappen för att visa ett fönster med specifika karaktär händelser.",
     ["tt_TeleButton"] = "Tryck på den här knappen för att visa ett fönster med teleporterings-funktioner.",
     ["tt_TicketButton"] = "Klicka på den här knappen för att visa ett fönster som visar alla biljetter och låta dig administrera dem.",
     ["tt_MiscButton"] = "Tryck på den här knappen för att visa ett fönster med blandade händelser.",
     ["tt_ServerButton"] = "Tryck på den h\195\164r knappen f\195\182r att \195\182ppna ett f\195\182nster med information om servern på den aktuella realmen.",
-    ["tt_LogButton"] = "Tryck på den h\195\164r knappen f\195\182r att \195\182ppna ett protokoll \195\182ver allting som du/MangAdmin har gjort \195\164n så l\195\164nge.",
-    ["tt_LanguageButton"] = "Tryck på den här knappen för att ändra språket och ladda om MangAdmin.",
+    ["tt_LogButton"] = "Tryck på den h\195\164r knappen f\195\182r att \195\182ppna ett protokoll \195\182ver allting som du/TrinityAdmin har gjort \195\164n så l\195\164nge.",
+    ["tt_LanguageButton"] = "Tryck på den här knappen för att ändra språket och ladda om TrinityAdmin.",
     ["tt_GMOnButton"] = "Klicka för att aktivera din GM-mode.",
     ["tt_GMOffButton"] = "Klicka för att avaktivera din GM-mode.",
     ["tt_FlyOnButton"] = "Klicka för att aktivera Fly-mode för den valda karaktären.",
@@ -117,7 +117,7 @@ function Return_svSV()
     ["ma_TicketsNewNumber"] = "You have |cffeda55f%s|r new tickets!",
     ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
     ["ma_TicketsGetLast"] = "Bring %s to you.",
-    ["ma_IconHint"] = "|cffeda55fClick|r to open MangAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
+    ["ma_IconHint"] = "|cffeda55fClick|r to open TrinityAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
     ["ma_Reload"] = "Reload",
     ["ma_LoadMore"] = "Load more...",
     ["ma_MailRecipient"] = "Recipient",
@@ -186,7 +186,7 @@ function Return_svSV()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",

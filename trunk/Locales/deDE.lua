@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_deDE() 
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "German",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_deDE()
     ["tabmenu_Server"] = "Server",
     ["tabmenu_Log"] = "Log",
     ["tt_Default"] = "Bewege deine Maus \195\188ber ein Element um die jeweils dazugeh\195\182rige Hilfe anzuzeigen!",
-    ["tt_MainButton"] = "Klicke um das Hauptfenster von MangAdmin anzuzeigen.",
+    ["tt_MainButton"] = "Klicke um das Hauptfenster von TrinityAdmin anzuzeigen.",
     ["tt_CharButton"] = "Klicke um ein Fenster mit Charakter-spezifischen Aktionen anzuzeigen.",
     ["tt_TeleButton"] = "Klicke um ein Fenster mit Teleport-M\195\182glichkeiten anzuzeigen.",
     ["tt_TicketButton"] = "Klicke um ein Fenster mit Tickets anzuzeigen und diese zu bearbeiten.",
     ["tt_MiscButton"] = "Klicke um ein Fenster mit verschiedenen Aktionen anzuzeigen.",
     ["tt_ServerButton"] = "Klicke um ein Fenster mit Informationen \195\188ber den Server des aktuellen Realms anzuzeigen.",
-    ["tt_LogButton"] = "Klicke um ein Fenster mit einem Protokoll aller bisher ausgef\195\188hrten Aktionen von MangAdmin anzuzeigen.",
-    ["tt_LanguageButton"] = "Klicke um die Sprache von MangAdmin zu \195\164ndern und anschliessend neu zu laden.",
+    ["tt_LogButton"] = "Klicke um ein Fenster mit einem Protokoll aller bisher ausgef\195\188hrten Aktionen von TrinityAdmin anzuzeigen.",
+    ["tt_LanguageButton"] = "Klicke um die Sprache von TrinityAdmin zu \195\164ndern und anschliessend neu zu laden.",
     ["tt_GMOnButton"] = "Klicke um den GameMaster-Modus zu aktivieren.",
     ["tt_GMOffButton"] = "Klicke um den GameMaster-Modus zu deaktivieren.",
     ["tt_FlyOnButton"] = "Klicke um den Flug-Modus f\195\188r den selektierten Charakter zu aktivieren.",
@@ -117,7 +117,7 @@ function Return_deDE()
     ["ma_TicketsNewNumber"] = "Du hast |cffeda55f%s|r neue Tickets!",
     ["ma_TicketsGoLast"] = "Gehe zum Ersteller des letzten Tickets (%s).",
     ["ma_TicketsGetLast"] = "Bringe ihn mir (%s).",
-    ["ma_IconHint"] = "|cffeda55fKlick|r um MangAdmin zu \195\182ffnen. |cffeda55fShift-Klick|r um das Interface neuzuladen. |cffeda55fAlt-Klick|r um den Ticketzaehler zur\195\188ckzusetzen.",
+    ["ma_IconHint"] = "|cffeda55fKlick|r um TrinityAdmin zu \195\182ffnen. |cffeda55fShift-Klick|r um das Interface neuzuladen. |cffeda55fAlt-Klick|r um den Ticketzaehler zur\195\188ckzusetzen.",
     ["ma_Reload"] = "Neu laden",
     ["ma_LoadMore"] = "Mehr laden...",
     ["ma_MailRecipient"] = "Empf\195\164nger",
@@ -185,7 +185,7 @@ function Return_deDE()
     ["tt_DisplayAccountLevel"] = "Zeigt dein Account Level",
     ["tt_TicketOn"] = "Zeige neue Tickets an.",
     ["tt_TicketOff"] = "Zeige keine neuen Tickets an.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Serversystem:|r ",
     ["info_online"] = "|cFF00FF00Spieler Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximal Online:|r ",

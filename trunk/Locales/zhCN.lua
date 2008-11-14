@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_zhCN()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "简体中文",
     ["realm"] = "|cFF00FF00国度:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00角色:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_zhCN()
     ["tabmenu_Server"] = "服务器",
     ["tabmenu_Log"] = "日志",
     ["tt_Default"] = "将鼠标移动到各元素上即可显示提示!",
-    ["tt_MainButton"] = "单击显示 MangAdmins 主界面.",
+    ["tt_MainButton"] = "单击显示 TrinityAdmin 主界面.",
     ["tt_CharButton"] = "单击显示角色操作窗口.",
     ["tt_TeleButton"] = "单击显示传送操作窗口.",
     ["tt_TicketButton"] = "单击显示求助信息窗口.",
     ["tt_MiscButton"] = "单击显示杂项操作窗口.",
     ["tt_ServerButton"] = "单击显示各种服务器信息, 或执行服务器相关的操作.",
-    ["tt_LogButton"] = "单击显示 MangAdmin 所做的各种操作的记录.",
-    ["tt_LanguageButton"] = "单击更改界面语言并重新载入 MangAdmin.",
+    ["tt_LogButton"] = "单击显示 TrinityAdmin 所做的各种操作的记录.",
+    ["tt_LanguageButton"] = "单击更改界面语言并重新载入 TrinityAdmin.",
     ["tt_GMOnButton"] = "单击激活 GM 模式.",
     ["tt_GMOffButton"] = "单击解除 GM 模式.",
     ["tt_FlyOnButton"] = "单击激活选定角色的飞行模式.",
@@ -117,7 +117,7 @@ function Return_zhCN()
     ["ma_TicketsNewNumber"] = "你有|cffeda55f%s|r 新求助信息!",
     ["ma_TicketsGoLast"] = "转到最新的求助信息(%s).",
     ["ma_TicketsGetLast"] = "打开 %s 求助信息.",
-    ["ma_IconHint"] = "|cffeda55fClick|r 打开MangAdmin. |cffeda55fShift-Click|r 重新装载用户界面. |cffeda55fAlt-Click|r 重置求助信息计数.",
+    ["ma_IconHint"] = "|cffeda55fClick|r 打开TrinityAdmin. |cffeda55fShift-Click|r 重新装载用户界面. |cffeda55fAlt-Click|r 重置求助信息计数.",
     ["ma_Reload"] = "刷新",
     ["ma_LoadMore"] = "装载更多...",
     ["ma_MailRecipient"] = "收信箱",
@@ -186,7 +186,7 @@ function Return_zhCN()
     ["tt_DisplayAccountLevel"] = "显示你的帐号等级",
     ["tt_TicketOn"] = "提示新求助信息.",
     ["tt_TicketOff"] = "不提示新求助信息.",
-    ["info_revision"] = "|cFF00FF00MaNGOS版本:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity版本:|r ",
     ["info_platform"] = "|cFF00FF00服务器平台:|r ",
     ["info_online"] = "|cFF00FF00玩家在线:|r ",
     ["info_maxonline"] = "|cFF00FF00最大在线:|r ",

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_ruRU()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Русский",
     ["realm"] = "|cFF00FF00Реалм:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Чар:|r "..UnitName("player"),

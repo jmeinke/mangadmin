@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -16,10 +16,9 @@
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
 -------------------------------------------------------------------------------------------------------------
-
 function Return_frFR()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "French",
     ["realm"] = "|cFF00FF00Royaume:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Personnage:|r "..UnitName("player"),
@@ -46,7 +45,7 @@ function Return_frFR()
     ["tt_MiscButton"] = "Click to toggle a window with miscellaneous actions.",
     ["tt_ServerButton"] = "Cliquez sur ce bouton pour avoir des infomations sur le serveur.",
     ["tt_LogButton"] = "Cliquez sur ce bouton pour acc\195\169der au protocole de gestion des ench\195\168res.",
-    ["tt_LanguageButton"] = "Appuyez sur ce bouton pour changer la langue et recharger MangAdmin.",
+    ["tt_LanguageButton"] = "Appuyez sur ce bouton pour changer la langue et recharger TrinityAdmin.",
     ["tt_GMOnButton"] = "Cliquez pour activer le GM-mode sur vous.",
     ["tt_GMOffButton"] = "Cliquez pour d\195\169sactiver le GM-mode sur vous.",
     ["tt_FlyOnButton"] = "Cliquez pour activer le Fly-mode pour le personnage selection\195\169.",
@@ -117,7 +116,7 @@ function Return_frFR()
     ["ma_TicketsNewNumber"] = "Vous avez |cffeda55f%s|r nouveaux billets!",
     ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
     ["ma_TicketsGetLast"] = "Get him (%s).",
-    ["ma_IconHint"] = "|cffeda55fCliquez|r pour ouvrir MangAdmin. |cffeda55fShift-Cliquez|r pour recharger l'interface utilisateur. |cffeda55fAlt-Cliquez|r pour recharger le nombre de billet.",
+    ["ma_IconHint"] = "|cffeda55fCliquez|r pour ouvrir TrinityAdmin. |cffeda55fShift-Cliquez|r pour recharger l'interface utilisateur. |cffeda55fAlt-Cliquez|r pour recharger le nombre de billet.",
     ["ma_Reload"] = "Rafraichir",
     ["ma_LoadMore"] = "Charger plus...",
     ["ma_MailRecipient"] = "R\195\169cipient",
@@ -186,7 +185,7 @@ function Return_frFR()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",
