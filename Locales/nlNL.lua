@@ -1,6 +1,6 @@
 ﻿-------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_nlNL()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Dutch",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_nlNL()
     ["tabmenu_Server"] = "Server",
     ["tabmenu_Log"] = "Log",
     ["tt_Default"] = "Ga met uw cursor op een object staan voor meer informatie!",
-    ["tt_MainButton"] = "Open/Sluit MangAdmins Hoofdvenster.",
+    ["tt_MainButton"] = "Open/Sluit TrinityAdmin Hoofdvenster.",
     ["tt_CharButton"] = "Open/Sluit het Karaktervenster.",
     ["tt_TeleButton"] = "Open/Sluit het venster met Teleport mogelijkheden.",
     ["tt_TicketButton"] = "Open/Sluit het Ticketvenster die u de tickets laat beheren.",
     ["tt_MiscButton"] = "Open/Sluit het venster met Overige acties.",
     ["tt_ServerButton"] = "Toon verscheidene server opties en mogelijkheden.",
-    ["tt_LogButton"] = "Toon het log bestand van alle acties uitgevoerd in MangAdmin.",
-    ["tt_LanguageButton"] = "Verander de taal en herlaad MangAdmin.",
+    ["tt_LogButton"] = "Toon het log bestand van alle acties uitgevoerd in TrinityAdmin.",
+    ["tt_LanguageButton"] = "Verander de taal en herlaad TrinityAdmin.",
     ["tt_GMOnButton"] = "Activeer uw GM-mode.",
     ["tt_GMOffButton"] = "Deactiveer uw GM-mode.",
     ["tt_FlyOnButton"] = "Activateer de vlieg-modus van het geselecteerde karakter.",
@@ -117,7 +117,7 @@ function Return_nlNL()
     ["ma_TicketsNewNumber"] = "U heeft |cffeda55f%s|r nieuwe tickets!",
     ["ma_TicketsGoLast"] = "Ga naar laatste ticket aanmaker (%s).",
     ["ma_TicketsGetLast"] = "Breng %s naar u.",
-    ["ma_IconHint"] = "|cffeda55fKlik|r om MangAdmin te openen. |cffeda55fShift-klik|r om de User Interface te herladen. |cffeda55fAlt-klik|r om de tickets opnieuw te tellen.",
+    ["ma_IconHint"] = "|cffeda55fKlik|r om TrinityAdmin te openen. |cffeda55fShift-klik|r om de User Interface te herladen. |cffeda55fAlt-klik|r om de tickets opnieuw te tellen.",
     ["ma_Reload"] = "Herlaad",
     ["ma_LoadMore"] = "Laad meer...",
     ["ma_MailRecipient"] = "Ontvanger",
@@ -186,7 +186,7 @@ function Return_nlNL()
     ["tt_DisplayAccountLevel"] = "Toon uw account level",
     ["tt_TicketOn"] = "Kondig nieuwe tickets aan.",
     ["tt_TicketOff"] = "Kondig geen nieuwe tickets aan.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Spelers Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximaal Online:|r ",

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_huHU()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Magyar",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Karakter:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_huHU()
     ["tabmenu_Server"] = "Szerver",
     ["tabmenu_Log"] = "Napló",
     ["tt_Default"] = "Vidd a kurzort bármelyik gomb fölé infó mutatásához!",
-    ["tt_MainButton"] = "Kattints, hogy megnyissa a MangAdmint.",
+    ["tt_MainButton"] = "Kattints, hogy megnyissa a TrinityAdmint.",
     ["tt_CharButton"] = "Kattints a karakterekre vonatkozó műveleteket tartalmazó ablak megjelenítéséhez.",
     ["tt_TeleButton"] = "Kattints a teleport műveleteket tartalmazó ablak megjelenítéséhez.",
     ["tt_TicketButton"] = "Kattints a ticketek listázásához.",
     ["tt_MiscButton"] = "Kattints az egyéb műveletek megjelenítéséhez.",
     ["tt_ServerButton"] = "Kattins a szerverinformációk és a szerverrel kapcsolatos műveletek megjelenítéséhez.",
-    ["tt_LogButton"] = "Kattints ide a MangAdminnal eddig végrehajtott parancsok naplójához.",
-    ["tt_LanguageButton"] = "Kattints ide a nyelv megváltoztatásához és a MangAdmin újratöltéséhez.",
+    ["tt_LogButton"] = "Kattints ide a TrinityAdminnal eddig végrehajtott parancsok naplójához.",
+    ["tt_LanguageButton"] = "Kattints ide a nyelv megváltoztatásához és a TrinityAdmin újratöltéséhez.",
     ["tt_GMOnButton"] = "GM-mód bekapcsolása.",
     ["tt_GMOffButton"] = "GM-mód kikapcsolása.",
     ["tt_FlyOnButton"] = "Repülés bekapcsolása a kijelölt karakteren.",
@@ -117,7 +117,7 @@ function Return_huHU()
     ["ma_TicketsNewNumber"] = "|cffeda55f%s|r új ticketed van!",
     ["ma_TicketsGoLast"] = "Teleport az utolsó ticket létrehozójához (%s).",
     ["ma_TicketsGetLast"] = "%s idehozása.",
-    ["ma_IconHint"] = "|cffeda55fKattints|r a MangAdmin megnyitásához. |cffeda55fShift-Kattints|r az UI újratöltéséhez. |cffeda55fAlt-Kattints|r a ticket számláló törléséhez.",
+    ["ma_IconHint"] = "|cffeda55fKattints|r a TrinityAdmin megnyitásához. |cffeda55fShift-Kattints|r az UI újratöltéséhez. |cffeda55fAlt-Kattints|r a ticket számláló törléséhez.",
     ["ma_Reload"] = "Újratöltés",
     ["ma_LoadMore"] = "Több betöltése...",
     ["ma_MailRecipient"] = "Címzett",
@@ -186,7 +186,7 @@ function Return_huHU()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",

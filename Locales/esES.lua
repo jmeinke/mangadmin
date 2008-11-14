@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_esES()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Español",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -45,8 +45,8 @@ function Return_esES()
     ["tt_TicketButton"] = "Pulsa para cambiar a una ventana que muestre todos los tickets y administrarlos.",
     ["tt_MiscButton"] = "Pulsa para cambiar a una ventana de acciones varias.",
     ["tt_ServerButton"] = "Pulsa para ver información del servidor y realizar acciones sobre él.",
-    ["tt_LogButton"] = "Pulsa para ver el log de todas las acciones realizadas con MangAdmin.",
-    ["tt_LanguageButton"] = "Pulsa para cambiar el idioma y reiniciar MangAdmin.",
+    ["tt_LogButton"] = "Pulsa para ver el log de todas las acciones realizadas con TrinityAdmin.",
+    ["tt_LanguageButton"] = "Pulsa para cambiar el idioma y reiniciar TrinityAdmin.",
     ["tt_GMOnButton"] = "Pulsa para activar el modo GM.",
     ["tt_GMOffButton"] = "Pulsa para desactivar el modo GM.",
     ["tt_FlyOnButton"] = "Pulsa para activar el modo vuelo para el carácter seleccionado.",
@@ -117,7 +117,7 @@ function Return_esES()
     ["ma_TicketsNewNumber"] = "Tienes |cffeda55f%s|r tickets nuevos!",
     ["ma_TicketsGoLast"] = "Ir al último ticket creado (%s).",
     ["ma_TicketsGetLast"] = "Recoger %s para ti.",
-    ["ma_IconHint"] = "|cffeda55fClick|r para abrir MangAdmin. |cffeda55fShift-Click|r para recargar la interface. |cffeda55fAlt-Click|r para resetear el contador de tickets.",
+    ["ma_IconHint"] = "|cffeda55fClick|r para abrir TrinityAdmin. |cffeda55fShift-Click|r para recargar la interface. |cffeda55fAlt-Click|r para resetear el contador de tickets.",
     ["ma_Reload"] = "Recargar",
     ["ma_LoadMore"] = "Cargar más...",
     ["ma_MailRecipient"] = "Recipiente",
@@ -186,7 +186,7 @@ function Return_esES()
     ["tt_DisplayAccountLevel"] = "Mostrar tu nivel de cuenta",
     ["tt_TicketOn"] = "Anunciar nuevos tickets.",
     ["tt_TicketOff"] = "Anunciar nuevos tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Plataforma:|r ",
     ["info_online"] = "|cFF00FF00Jugadores en linea:|r ",
     ["info_maxonline"] = "|cFF00FF00Máximos en linea:|r ",

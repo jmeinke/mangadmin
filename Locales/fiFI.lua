@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -16,10 +16,9 @@
 -- Subversion Repository: http://mangadmin.googlecode.com/svn/
 --
 -------------------------------------------------------------------------------------------------------------
-
 function Return_fiFI() 
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Suomi",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -39,14 +38,14 @@ function Return_fiFI()
     ["tabmenu_Server"] = "Serveri",
     ["tabmenu_Log"] = "Loki",
     ["tt_Default"] = "Liikuta hiiren kursori kohteen p\195\177\195\177lle n\195\177hd\195\177ksesi neuvoja!",
-    ["tt_MainButton"] = "MangAdminin p\195\177\195\177menu",
+    ["tt_MainButton"] = "TrinityAdminin p\195\177\195\177menu",
     ["tt_CharButton"] = "Click to toggle a window with character-specific actions.",
     ["tt_TeleButton"] = "Click to toggle a window with teleport-functions.",
     ["tt_TicketButton"] = "Click to toggle a window which shows all tickets and lets you administrate them.",
     ["tt_MiscButton"] = "Click to toggle a window with miscellaneous actions.",
     ["tt_ServerButton"] = "N\195\177yt\195\177 serverin realmien nykyinen tila sek\195\177 tee serveriin liittyvi\195\177 muokkauksia.",
-    ["tt_LogButton"] = "N\195\177yt\195\177 MangAdminilla tehtyjen toimenpiteiden loki.",
-    ["tt_LanguageButton"] = "Paina t\195\177\195\177st\195\177 vaihtaaksesi MangAdminin kielen ja uudelleenk\195\177ynnist\195\177\195\177ksesi sen.",
+    ["tt_LogButton"] = "N\195\177yt\195\177 TrinityAdminilla tehtyjen toimenpiteiden loki.",
+    ["tt_LanguageButton"] = "Paina t\195\177\195\177st\195\177 vaihtaaksesi TrinityAdminin kielen ja uudelleenk\195\177ynnist\195\177\195\177ksesi sen.",
     ["tt_GMOnButton"] = "Click to activate your GM-mode.",
     ["tt_GMOffButton"] = "Click to deactivate your GM-mode.",
     ["tt_FlyOnButton"] = "Click to activate the Fly-mode for the selected character.",
@@ -117,7 +116,7 @@ function Return_fiFI()
     ["ma_TicketsNewNumber"] = "You have |cffeda55f%s|r new tickets!",
     ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
     ["ma_TicketsGetLast"] = "Bring %s to you.",
-    ["ma_IconHint"] = "|cffeda55fClick|r to open MangAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
+    ["ma_IconHint"] = "|cffeda55fClick|r to open TrinityAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
     ["ma_Reload"] = "Reload",
     ["ma_LoadMore"] = "Load more...",
     ["ma_MailRecipient"] = "Recipient",
@@ -186,7 +185,7 @@ function Return_fiFI()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",

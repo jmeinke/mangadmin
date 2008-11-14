@@ -1,6 +1,6 @@
 ﻿-------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_enUS()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "English",
     ["realm"] = "|cFF00FF00Realm:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Char:|r "..UnitName("player"),
@@ -41,7 +41,7 @@ function Return_enUS()
     ["tabmenu_NPC"] = "NPCs",
     ["tabmenu_GO"] = "Objects",
     ["tt_Default"] = "Move your cursor over an element to toggle the tooltip!",
-    ["tt_MainButton"] = "Toggle MangAdmins Mainframe.",
+    ["tt_MainButton"] = "Toggle TrinityAdmins Mainframe.",
     ["tt_CharButton"] = "Toggle a window with character-specific actions.",
     ["tt_NpcButton"] = "Toggle a window with npc related functions.",
     ["tt_GOButton"] = "Toggle a window with GObject functions.",
@@ -49,8 +49,8 @@ function Return_enUS()
     ["tt_TicketButton"] = "Toggle a window which shows all tickets and lets you administrate them.",
     ["tt_MiscButton"] = "Toggle a window with miscellaneous actions.",
     ["tt_ServerButton"] = "Show several server informations and do actions concerning the server.",
-    ["tt_LogButton"] = "Show the log of all actions done with MangAdmin.",
-    ["tt_LanguageButton"] = "Change the language and reload MangAdmin.",
+    ["tt_LogButton"] = "Show the log of all actions done with TrinityAdmin.",
+    ["tt_LanguageButton"] = "Change the language and reload TrinityAdmin.",
     ["tt_GMOnButton"] = "Activate your GM-mode.",
     ["tt_GMOffButton"] = "Deactivate your GM-mode.",
     ["tt_FlyOnButton"] = "Activate the Fly-mode for the selected character.",
@@ -193,7 +193,7 @@ function Return_enUS()
     ["ma_TicketsNewNumber"] = "You have |cffeda55f%s|r new tickets!",
     ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
     ["ma_TicketsGetLast"] = "Bring %s to you.",
-    ["ma_IconHint"] = "|cffeda55fClick|r to open MangAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
+    ["ma_IconHint"] = "|cffeda55fClick|r to open TrinityAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
     ["ma_Reload"] = "Reload",
     ["ma_LoadMore"] = "Load more...",
     ["ma_MailRecipient"] = "Recipient",
@@ -262,7 +262,7 @@ function Return_enUS()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",

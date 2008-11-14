@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------
 --
--- MangAdmin Version 1.0
+-- TrinityAdmin Version 1.0
 --
 -- Copyright (C) 2007 Free Software Foundation, Inc.
 -- License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -19,7 +19,7 @@
 
 function Return_liLI()
   return {
-    ["slashcmds"] = { "/mangadmin", "/ma" },
+    ["slashcmds"] = { "/trinityadmin", "/ma" },
     ["lang"] = "Lietuviu",
     ["realm"] = "|cFF00FF00Karalyste:|r "..GetCVar("realmName"),
     ["char"] = "|cFF00FF00Veikejas:|r "..UnitName("player"),
@@ -39,14 +39,14 @@ function Return_liLI()
     ["tabmenu_Server"] = "Serveris",
     ["tabmenu_Log"] = "Irasai",
     ["tt_Default"] = "Uzvesk pelyte and elementu, kad suzinoti ka jie daro!",
-    ["tt_MainButton"] = "Spauskite si mygtuka kad sugrysti i MangAdmins pradzia.",
+    ["tt_MainButton"] = "Spauskite si mygtuka kad sugrysti i TrinityAdmin pradzia.",
     ["tt_CharButton"] = "Click to toggle a window with character-specific actions.",
     ["tt_TeleButton"] = "Click to toggle a window with teleport-functions.",
     ["tt_TicketButton"] = "Click to toggle a window which shows all tickets and lets you administrate them.",
     ["tt_MiscButton"] = "Click to toggle a window with miscellaneous actions.",
     ["tt_ServerButton"] = "Spausk si mygtuka kad pamatytum siek tiek serverio informacijos ir kad galetum atlikti keleta veiksmu susijusiu su serveriu.",
-    ["tt_LogButton"] = "Spausk cia kad rodyti visus veiksmus kurie buvo atlikti MangAdmin priedo pagalba.",
-    ["tt_LanguageButton"] = "Spausk cia kad pakeisti kalba ir perkrauti MangAdmin.",
+    ["tt_LogButton"] = "Spausk cia kad rodyti visus veiksmus kurie buvo atlikti TrinityAdmin priedo pagalba.",
+    ["tt_LanguageButton"] = "Spausk cia kad pakeisti kalba ir perkrauti TrinityAdmin.",
     ["tt_GMOnButton"] = "Click to activate your GM-mode.",
     ["tt_GMOffButton"] = "Click to deactivate your GM-mode.",
     ["tt_FlyOnButton"] = "Click to activate the Fly-mode for the selected character.",
@@ -117,7 +117,7 @@ function Return_liLI()
     ["ma_TicketsNewNumber"] = "You have |cffeda55f%s|r new tickets!",
     ["ma_TicketsGoLast"] = "Go to last ticket creator (%s).",
     ["ma_TicketsGetLast"] = "Bring %s to you.",
-    ["ma_IconHint"] = "|cffeda55fClick|r to open MangAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
+    ["ma_IconHint"] = "|cffeda55fClick|r to open TrinityAdmin. |cffeda55fShift-Click|r to reload the user interface. |cffeda55fAlt-Click|r to reset the ticket count.",
     ["ma_Reload"] = "Reload",
     ["ma_LoadMore"] = "Load more...",
     ["ma_MailRecipient"] = "Recipient",
@@ -186,7 +186,7 @@ function Return_liLI()
     ["tt_DisplayAccountLevel"] = "Display your account level",
     ["tt_TicketOn"] = "Announce new tickets.",
     ["tt_TicketOff"] = "Don't announce new tickets.",
-    ["info_revision"] = "|cFF00FF00MaNGOS Revision:|r ",
+    ["info_revision"] = "|cFF00FF00Trinity Revision:|r ",
     ["info_platform"] = "|cFF00FF00Server Platform:|r ",
     ["info_online"] = "|cFF00FF00Players Online:|r ",
     ["info_maxonline"] = "|cFF00FF00Maximum Online:|r ",
