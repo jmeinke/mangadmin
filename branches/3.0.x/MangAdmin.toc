@@ -1,20 +1,21 @@
-## Name: MangAdmin
 ## Interface: 30000
 ## Title: MangAdmin
-## Version: 1.3.0.2
-## DefaultState: Enabled
-## OptionalDeps: AceLibrary, AceEvent-2.0, AceHook-2.1, AceDebug-2.0, AceLocale-2.2, AceConsole-2.0, AceAddon-2.0
+## Author: MangRound Dev team
+## Version: 1.3.0.3
 ## Notes: This addon only works with MaNGOS-Servers and 3.0.x clients.
+## URL: http://www.manground.org
+## Name: MangAdmin
 ## License: GPLv3
 ## X-Date: 6.November 2008
 ## X-eMail: josh.developer@gmail.com
 ## X-Website: http://www.manground.org/forum/
+## OptionalDeps: AceLibrary,AceEvent-2.0,AceHook-2.1,AceDebug-2.0,AceLocale-2.2,AceConsole-2.0,AceAddon-2.0
+## DefaultState: Enabled
+## LoadOnDemand: 0
 ## SavedVariables: MangAdminDb
 ## SavedVariablesPerCharacter: MangAdminDbPerChar
-
 Libraries\AceLibrary\AceLibrary.lua
 Libraries\AceOO-2.0\AceOO-2.0.lua
-
 Libraries\AceEvent-2.0\AceEvent-2.0.lua
 Libraries\AceHook-2.1\AceHook-2.1.lua
 Libraries\AceDB-2.0\AceDB-2.0.lua
@@ -27,7 +28,6 @@ Libraries\DewDrop-2.0\DewDrop-2.0.lua
 Libraries\FrameLib-1.0\FrameLib-1.0.lua
 Libraries\FuBarPlugin-2.0\FuBarPlugin-2.0.lua
 Libraries\Graph-1.0\Graph-1.0.lua
-
 Locales\enUS.lua
 Locales\deDE.lua
 Locales\frFR.lua
@@ -45,13 +45,9 @@ Locales\ptPT.lua
 Locales\ruRU.lua
 Locales\nlNL.lua
 Locales\strings.lua
-
 TeleportTable.lua
-## Core File
 MangAdmin.lua
 MangLinkifier.lua
-
-## Frames
 Frames\MangFrames_Start.lua
 Frames\MangFrames_Tabs.lua
 Frames\MangFrames_MiniMenu.lua
@@ -62,12 +58,10 @@ Frames\MangFrames_SectionMain.lua
 Frames\MangFrames_SectionTele.lua
 Frames\MangFrames_SectionLog.lua
 Frames\MangFrames_SectionChar.lua
+Frames\MangFrames_SectionChar2.lua
 Frames\MangFrames_SectionTicket.lua
 Frames\MangFrames_SectionMisc.lua
 Frames\MangFrames_SectionServer.lua
 Frames\MangFrames_SectionNpc.lua
 Frames\MangFrames_SectionGO.lua
-
-## Frame Generation
 MangFrames.lua
-

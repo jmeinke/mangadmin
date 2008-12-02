@@ -20,6 +20,29 @@
 ************************************************************************************************************/
 
 =CHANGELOG=
+Rev. 129: 
+  * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
+          on client revisions earlier than 3.0.1
+  * [ADD] Added .aura and .unaura to CHAR and NPC tab
+  * [ADD] Added .npc yell to NPC tab
+  * [MOD] Moved buttons around on Char and NPC tabs.
+  * [ADD] Added .npc say to NPC tab
+  * [ADD] Added .npc playemote to NPC tab. Note: There are too many emotes to fit on the screen. 
+	Will examine other solutions.
+  * [ADD] Added .modify morph to CHAR and NPC tabs
+  * [ADD] Added .demorph to CHAR and NPC tabs
+  * [MOD] Split Char tab into two tabs, now named Character and Char2. Moved parameterised commands to Char2
+  * [ADD] Added .damage command to Char2
+  * [ADD] Added .quest add to Char2
+  * [ADD] Added .quest complete to Char2
+  * [ADD] Added .quest remove to Char2
+  * [ADD] Added .unmute to Char2
+  * [ADD] Added .hidearea to Char2
+  * [ADD] Added .showarea to Char2
+  * [ADD] Added .honor add to Char2
+  * [ADD] Added .honor update to Char2
+
+
 Rev. 128:
   * Note: Jump in revision numbers is due to svn assigning the next number to a commit, 
     regardless if it is in trunk or in a branch. This revision follows r126.

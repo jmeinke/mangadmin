@@ -261,9 +261,195 @@ function MangAdmin:CreateNpcSection()
     },
     setpoint = {
       pos = "TOPLEFT",
-      offX = 436,
-      offY = -10
+      offX = 100,
+      offY = -58
     },
     text = Locale["ma_DistanceButton"]
   })
+  
+    FrameLib:BuildFontString({
+    name = "ma_npcparameterboxtext",
+    group = "npc",
+    parent = ma_midframe,
+    text = "Parameter(s)",
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -150,
+      offY = -110
+    }
+  })
+  
+    FrameLib:BuildFrame({
+    type = "EditBox",
+    name = "ma_npccharactertarget",
+    group = "npc",
+    parent = ma_midframe,
+    size = {
+      width = 200,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -50,
+      offY = -125
+    },
+    inherits = "InputBoxTemplate"
+  })
+
+FrameLib:BuildButton({
+    name = "ma_npcsaybutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcsaybutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -330,
+      offY = -150
+    },
+    text = "NPC Say"
+    })
+
+FrameLib:BuildButton({
+    name = "ma_npcyellbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcyellbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -246,
+      offY = -150
+    },
+    text = "NPC Yell"
+    })
+
+  FrameLib:BuildFrame({
+    name = "ma_npcemotedropdown",
+    group = "npc",
+    parent = ma_midframe,
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -90,
+      offY = -10
+    },
+    inherits = "UIDropDownMenuTemplate"
+  })
+
+  FrameLib:BuildButton({
+    name = "ma_npcemotebutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcemotebutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -10,
+      offY = -15
+    },
+    text = "PlayEmote"
+  })
+
+FrameLib:BuildButton({
+    name = "ma_npcmorphbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcmorphbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -413,
+      offY = -150
+    },
+    text = Locale["Morph"]
+    })
+
+  FrameLib:BuildButton({
+    name = "ma_npcdemorphbutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcdemorphbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 184,
+      offY = -58
+    },
+    text = "Demorph"
+  })
+
+FrameLib:BuildButton({
+    name = "ma_npcaurabutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcaurabutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -162,
+      offY = -150
+    },
+    text = "Aura"
+    })
+
+FrameLib:BuildButton({
+    name = "ma_npcunaurabutton",
+    group = "npc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_npcunaurabutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 80,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPRIGHT",
+      offX = -78,
+      offY = -150
+    },
+    text = "UnAura"
+    })
+
 end
