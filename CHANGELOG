@@ -20,7 +20,7 @@
 ************************************************************************************************************/
 
 =CHANGELOG=
-Rev. 129: 
+Rev. 156: 
   * NOTE: This revision is only compatible with 3.0.x versions of the client. It will not run properly
           on client revisions earlier than 3.0.1
   * [ADD] Added .aura and .unaura to CHAR and NPC tab
