@@ -43,7 +43,7 @@ function MangAdmin:CreateStartFrames()
     },
     draggable = true,
     size = {
-      width = 680,
+      width = 750,
       height = 440
     },
     setpoint = {
@@ -60,7 +60,7 @@ function MangAdmin:CreateStartFrames()
       color = {color.bg.r, color.bg.g, color.bg.b, transparency.bg}
     },
     size = {
-      width = 670,
+      width = 750,
       height = 22
     },
     setpoint = {
@@ -79,7 +79,7 @@ function MangAdmin:CreateStartFrames()
       color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
-      width = 675,
+      width = 750,
       height = 80
     },
     setpoint = {
@@ -97,7 +97,7 @@ function MangAdmin:CreateStartFrames()
       color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
-      width = 675,
+      width = 750,
       height = 254
     },
     setpoint = {
@@ -115,12 +115,12 @@ function MangAdmin:CreateStartFrames()
       color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
-      width = 374,
+      width = 409,
       height = 100
     },
     setpoint = {
       pos = "TOP",
-      offX = -150.5,
+      offX = -168.5,
       offY = -338
     },
     inherits = nil
@@ -134,12 +134,12 @@ function MangAdmin:CreateStartFrames()
       color = {color.frm.r, color.frm.g, color.frm.b, transparency.frm}
     },
     size = {
-      width = 300,
+      width = 335,
       height = 100
     },
     setpoint = {
       pos = "TOP",
-      offX = 187.5,
+      offX = 205.5,
       offY = -338
     },
     inherits = nil
@@ -179,7 +179,7 @@ function MangAdmin:CreateStartFrames()
     name = "ma_revtext",
     group = "bg",
     parent = ma_topframe,
-    text = "v3 r01 ALPHA",
+    text = "v1.3.0.3 r129",
     setpoint = {
       pos = "BOTTOMLEFT",
       offX = 15,

@@ -543,6 +543,7 @@ end
 function MangAdmin:HideAllGroups()
   FrameLib:HandleGroup("main", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("char", function(frame) frame:Hide() end)
+  FrameLib:HandleGroup("char2", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("npc", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("go", function(frame) frame:Hide() end)
   FrameLib:HandleGroup("tele", function(frame) frame:Hide() end)
@@ -1183,13 +1184,9 @@ function MangAdmin:Cooldown()
 end
 
 function MangAdmin:Demorph()
-  if self:Selection("player") or self:Selection("self") or self:Selection("none") then
     local player = UnitName("target") or UnitName("player")
     self:ChatMsg(".demorph")
     self:LogAction("Demorphed player "..player..".")
-  else
-    self:Print(Locale["selectionerror1"])
-  end
 end
 
 function MangAdmin:GPS()
@@ -1466,9 +1463,9 @@ function MangAdmin:ReloadTable(tablename)
     end
   end
 end
-
 function MangAdmin:QuickCommand(v)
   local cname = ma_charactertarget:GetText()
+  local npccname = ma_npccharactertarget:GetText()
   if(v == 1) then --.ban
     self:ChatMsg(".ban "..cname)
     self:LogAction("Banned player: "..cname..".")
@@ -1521,8 +1518,56 @@ function MangAdmin:QuickCommand(v)
     self:ChatMsg(".mute "..cname)
     self:LogAction("Muted "..cname..".")
   elseif(v == 18) then --.npc say
-    self:ChatMsg(".npc say "..cname)
-    self:LogAction(".npc say "..cname..".")
+    self:ChatMsg(".npc say "..npccname)
+    self:LogAction(".npc say "..npccname..".")
+  elseif(v == 19) then --.npc yell
+    self:ChatMsg(".npc yell "..npccname)
+    self:LogAction(".npc yell "..npccname..".")
+  elseif(v == 20) then --.modify morph
+    self:ChatMsg(".modify morph "..cname)
+    self:LogAction(".modify morph "..cname..".")
+  elseif(v == 21) then --.modify morph
+    self:ChatMsg(".modify morph "..npccname)
+    self:LogAction(".modify morph "..npccname..".")
+  elseif(v == 22) then --.aura
+    self:ChatMsg(".aura "..cname)
+    self:LogAction(".aura "..cname..".")
+  elseif(v == 23) then --.unaura
+    self:ChatMsg(".unaura "..cname)
+    self:LogAction(".unaura "..cname..".")
+  elseif(v == 24) then --.aura (npc)
+    self:ChatMsg(".aura "..npccname)
+    self:LogAction(".aura "..npccname..".")
+  elseif(v == 25) then --.unaura (npc)
+    self:ChatMsg(".unaura "..npccname)
+    self:LogAction(".unaura "..npccname..".")
+  elseif(v == 26) then --.damage
+    self:ChatMsg(".damage "..cname)
+    self:LogAction(".damage "..cname..".")
+  elseif(v == 27) then --.quest add
+    self:ChatMsg(".quest add "..cname)
+    self:LogAction(".quest add "..cname..".")
+  elseif(v == 28) then --.quest complete
+    self:ChatMsg(".quest complete "..cname)
+    self:LogAction(".quest complete "..cname..".")
+  elseif(v == 29) then --.quest remove
+    self:ChatMsg(".quest remove "..cname)
+    self:LogAction(".quest remove "..cname..".")
+  elseif(v == 30) then --.unmute
+    self:ChatMsg(".unmute "..cname)
+    self:LogAction(".unmute "..cname..".")
+  elseif(v == 31) then --.hidearea
+    self:ChatMsg(".hidearea "..cname)
+    self:LogAction(".hidearea "..cname..".")
+  elseif(v == 32) then --.showarea
+    self:ChatMsg(".showarea "..cname)
+    self:LogAction(".showarea "..cname..".")
+  elseif(v == 33) then --.honor add
+    self:ChatMsg(".honor add "..cname)
+    self:LogAction(".honor add "..cname..".")
+  elseif(v == 34) then --.honor update
+    self:ChatMsg(".honor update ")
+    self:LogAction(".honor update.")
   end
 end
 
@@ -1536,6 +1581,11 @@ function MangAdmin:ChangeWeather(status)
     self:ChatMsg(".wchange "..status)
     self:LogAction("Changed weather ("..status..").")
   end
+end
+
+function MangAdmin:NpcEmote(emote)
+    self:ChatMsg(".npc playemote "..emote)
+    self:LogAction("Played emote ("..emote..").")
 end
 
 function MangAdmin:UpdateMailBytesLeft()
@@ -1867,6 +1917,7 @@ function MangAdmin:InitButtons()
   -- start tab buttons
   self:PrepareScript(ma_tabbutton_main       , Locale["tt_MainButton"]         , function() MangAdmin:InstantGroupToggle("main") end)
   self:PrepareScript(ma_tabbutton_char       , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
+  self:PrepareScript(ma_tabbutton_char2      , Locale["tt_Char2Button"]        , function() MangAdmin:InstantGroupToggle("char2") end)
   self:PrepareScript(ma_tabbutton_npc        , Locale["tt_NpcButton"]          , function() MangAdmin:InstantGroupToggle("npc"); end)
   self:PrepareScript(ma_tabbutton_go         , Locale["tt_GOButton"]           , function() MangAdmin:InstantGroupToggle("go"); end)
   self:PrepareScript(ma_tabbutton_tele       , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele"); end)
@@ -1879,6 +1930,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_mm_logoframe         , nil                             , function() MangAdmin:OnClick() end)
   self:PrepareScript(ma_mm_mainbutton        , Locale["tt_MainButton"]         , function() MangAdmin:InstantGroupToggle("main") end)
   self:PrepareScript(ma_mm_charbutton        , Locale["tt_CharButton"]         , function() MangAdmin:InstantGroupToggle("char") end)
+  self:PrepareScript(ma_mm_char2button       , Locale["tt_Char2Button"]        , function() MangAdmin:InstantGroupToggle("char2") end)
   self:PrepareScript(ma_mm_npcbutton         , Locale["tt_NpcButton"]          , function() MangAdmin:InstantGroupToggle("npc") end)
   self:PrepareScript(ma_mm_gobutton          , Locale["tt_GOButton"]           , function() MangAdmin:InstantGroupToggle("go") end)
   self:PrepareScript(ma_mm_telebutton        , Locale["tt_TeleButton"]         , function() MangAdmin:InstantGroupToggle("tele") end)
@@ -1935,11 +1987,27 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_r4c3button           , Locale["tt_r4c3Button"]         , function() MangAdmin:QuickCommand(15) end)
   self:PrepareScript(ma_r4c4button           , Locale["tt_r4c4Button"]         , function() MangAdmin:QuickCommand(16) end)
   self:PrepareScript(ma_r4c5button           , Locale["tt_r4c5Button"]         , function() MangAdmin:QuickCommand(17) end)
-  self:PrepareScript(ma_npcsaybutton         , "Make selected npc say [parametes]"         , function() MangAdmin:QuickCommand(18) end)
+  self:PrepareScript(ma_npcsaybutton         , "Make selected npc say [parameters]"         , function() MangAdmin:QuickCommand(18) end)
+  self:PrepareScript(ma_npcyellbutton        , "Make selected npc yell [parameters]"         , function() MangAdmin:QuickCommand(19) end)
   self:PrepareScript(ma_setjail_a_button     , Locale["tt_SetJail_A_Button"]   , function() MangAdmin:SetJail_A() end)
   self:PrepareScript(ma_setjail_h_button     , Locale["tt_SetJail_H_Button"]   , function() MangAdmin:SetJail_H() end)
+  self:PrepareScript(ma_damagebutton         , Locale["tt_DamageButton"]       , function() MangAdmin:QuickCommand(26) end) 
+  self:PrepareScript(ma_unmutebutton         , Locale["tt_UnMuteButton"]       , function() MangAdmin:QuickCommand(30) end) 
+  self:PrepareScript(ma_questaddbutton       , Locale["tt_QuestAddButton"]     , function() MangAdmin:QuickCommand(27) end) 
+  self:PrepareScript(ma_questcompletebutton  , Locale["tt_QuestCompleteButton"], function() MangAdmin:QuickCommand(28) end) 
+  self:PrepareScript(ma_questremovebutton    , Locale["tt_QuestRemoveButton"]  , function() MangAdmin:QuickCommand(29) end) 
+  self:PrepareScript(ma_hideareabutton       , Locale["tt_HideAreaButton"]     , function() MangAdmin:QuickCommand(31) end) 
+  self:PrepareScript(ma_showareabutton       , Locale["tt_ShowAreaButton"]     , function() MangAdmin:QuickCommand(32) end) 
+  self:PrepareScript(ma_honoraddbutton       , Locale["tt_HonorAddButton"]     , function() MangAdmin:QuickCommand(33) end) 
+  self:PrepareScript(ma_honorupdatebutton    , Locale["tt_HonorUpdateButton"]  , function() MangAdmin:QuickCommand(34) end) 
   self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
-  self:PrepareScript(ma_jailhbutton          , Locale["tt_JailHButton"]        , function() MangAdmin:JailH() end)
+  self:PrepareScript(ma_jailabutton          , Locale["tt_JailAButton"]        , function() MangAdmin:JailA() end)
+  self:PrepareScript(ma_charmorphbutton      , "Parameters = #DisplayID [[Enter the DisplayID of the morph you want to apply]]"        , function() MangAdmin:QuickCommand(20) end)
+  self:PrepareScript(ma_charaurabutton       , "Parameters = #AuraID [[Enter the AuraID of the aura you want to apply]]"        , function() MangAdmin:QuickCommand(22) end)
+  self:PrepareScript(ma_charunaurabutton     , "Parameters = #AuraID [[Enter the AuraID of the aura you want to remove]]"        , function() MangAdmin:QuickCommand(23) end)
+  self:PrepareScript(ma_npcaurabutton       , "Parameters = #AuraID [[Enter the AuraID of the aura you want to apply]]"        , function() MangAdmin:QuickCommand(24) end)
+  self:PrepareScript(ma_npcunaurabutton     , "Parameters = #AuraID [[Enter the AuraID of the aura you want to remove]]"        , function() MangAdmin:QuickCommand(25) end)
+  self:PrepareScript(ma_npcmorphbutton       , "Parameters = #DisplayID [[Enter the DisplayID of the morph you want to apply]]"        , function() MangAdmin:QuickCommand(21) end)
   self:PrepareScript(ma_unjailbutton         , Locale["tt_UnJailButton"]       , function() MangAdmin:UnJail() end)
   --self:PrepareScript(ma_learnallbutton       , nil                             , function() MangAdmin:LearnSpell("all") end)
   --self:PrepareScript(ma_learncraftsbutton    , nil                             , function() MangAdmin:LearnSpell("all_crafts") end)
@@ -1957,6 +2025,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_kickbutton           , Locale["tt_KickButton"]         , function() MangAdmin:KickPlayer() end)
   self:PrepareScript(ma_cooldownbutton       , Locale["tt_CooldownButton"]     , function() MangAdmin:Cooldown() end)
   self:PrepareScript(ma_demorphbutton        , Locale["tt_DemorphButton"]      , function() MangAdmin:Demorph() end)
+  self:PrepareScript(ma_npcdemorphbutton     , "Demorphs selected NPC"         , function() MangAdmin:Demorph() end)
   self:PrepareScript(ma_showmapsbutton       , Locale["tt_ShowMapsButton"]     , function() MangAdmin:ToggleMaps(1) end)
   self:PrepareScript(ma_hidemapsbutton       , Locale["tt_HideMapsButton"]     , function() MangAdmin:ToggleMaps(0) end)
   self:PrepareScript(ma_gpsbutton            , Locale["tt_GPSButton"]          , function() MangAdmin:GPS() end)
@@ -1997,6 +2066,7 @@ function MangAdmin:InitButtons()
   self:PrepareScript(ma_loadtablebutton      , nil                             , function() MangAdmin:ReloadTable(UIDropDownMenu_GetSelectedValue(ma_reloadtabledropdown)) end)
   self:PrepareScript(ma_loadscriptsbutton    , nil                             , function() MangAdmin:ReloadScripts() end)
   self:PrepareScript(ma_changeweatherbutton  , nil                             , function() MangAdmin:ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weatherdropdown)) end)
+  self:PrepareScript(ma_npcemotebutton       , nil                             , function() MangAdmin:NpcEmote(UIDropDownMenu_GetSelectedValue(ma_npcemotedropdown)) end)
   self:PrepareScript(ma_resetbutton          , nil                             , function() MangAdmin:Reset(UIDropDownMenu_GetSelectedValue(ma_resetdropdown)) end)
   self:PrepareScript(ma_learnlangbutton      , nil                             , function() MangAdmin:LearnSpell(UIDropDownMenu_GetSelectedValue(ma_learnlangdropdown)) end)
   self:PrepareScript(ma_inforefreshbutton    , nil                             , function() MangAdmin:ChatMsg(".server info") end)
@@ -2145,6 +2215,93 @@ function MangAdmin:InitDropDowns()
   UIDropDownMenu_Initialize(ma_weatherdropdown, WeatherDropDownInitialize)
   UIDropDownMenu_SetWidth(ma_weatherdropdown, 100)
   UIDropDownMenu_SetButtonWidth(ma_weatherdropdown, 20)
+
+  --NPC EMOTE
+  local function NpcEmoteDropDownInitialize()
+    local level = 1
+    local info = UIDropDownMenu_CreateInfo()
+    local buttons = {
+      {"None","0"},
+      {"Talk","1"},
+      {"Bow","2"},
+      {"Wave","3"},
+      {"Cheer","4"},
+      {"Exclamation","5"},
+      {"Question","6"},
+      {"Eat","7"},
+      {"Dance","10"},
+      {"Laugh","11"},
+      {"Sleep","12"},
+      {"Rude","14"},
+      {"Roar","15"},
+      {"Kneel","16"},
+      {"Kiss","17"},
+      {"Cry","18"},
+      {"Chicken","19"},
+      {"Beg","20"},
+      {"Applaud","21"},
+      {"Shout","22"},
+      {"Flex","23"},
+      {"Shy","24"},
+      {"Point","25"},
+      {"Stand","26"},
+      {"ReadyUnarmed","27"},
+      {"Work","28"},
+      {"Point","29"},
+      {"None","30"},
+      {"Wound","33"},
+      {"WoundCritical","34"},
+      {"AttackUnarmed","35"},
+      {"Attack1H","36"},
+      {"Attack2H","37"},
+      {"Attack2H","38"},
+      {"ParryUnarmed","39"},
+      {"ParryShield","43"},
+      {"ReadyUnarmed","44"},
+      {"Ready1H","45"},
+      {"ReadyBow","48"},
+      {"SpellCast","51"},
+      {"Battleroar","53"},
+      {"SpecialAttack1H","54"},
+      {"Kick","60"},
+      {"AttackThrow","61"},
+      {"Stun","64"},
+      {"Salute","66"},
+      {"UseStand","69"},
+      {"CheerArmed","71"},
+      {"EatArmed","92"},
+      {"StunArmed","93"},
+      {"Dance","94"},
+      {"SaluteArmed","113"},
+      {"UseArmed","133"},
+      {"LaughArmed","153"},
+      {"WorkArmed","173"},
+      {"ReadyRifle","213"},
+      {"MineArmed","233"},
+      {"ChopArmed","234"},
+      {"GolfClap","253"},
+      {"Yes","273"},
+      {"No","274"},
+      {"Train","275"},
+      {"Ready1H","333"},
+      {"AtEase","313"},
+      {"SpellKneel","353"}
+    }
+    for k,v in pairs(buttons) do
+      info.text = v[1]
+      info.value = v[2]
+      info.func = function() UIDropDownMenu_SetSelectedValue(ma_npcemotedropdown, this.value) end
+      info.checked = nil
+      --info.notCheckable = true
+      info.icon = nil
+      info.keepShownOnClick = nil
+      UIDropDownMenu_AddButton(info, level)
+    end
+    UIDropDownMenu_SetSelectedValue(ma_npcemotedropdown, Locale:GetLocale())
+  end
+  UIDropDownMenu_Initialize(ma_npcemotedropdown, NpcEmoteDropDownInitialize)
+  UIDropDownMenu_SetWidth(ma_npcemotedropdown, 100)
+  UIDropDownMenu_SetButtonWidth(ma_npcemotedropdown, 20)
 
   --LANGUAGE
   local function LangDropDownInitialize()
