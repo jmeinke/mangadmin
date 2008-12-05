@@ -138,7 +138,6 @@ Locale:RegisterTranslations("deDE", function() return Return_deDE() end)
 Locale:RegisterTranslations("frFR", function() return Return_frFR() end)
 Locale:RegisterTranslations("itIT", function() return Return_itIT() end)
 Locale:RegisterTranslations("fiFI", function() return Return_fiFI() end)
-Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
 Locale:RegisterTranslations("svSV", function() return Return_svSV() end)
 Locale:RegisterTranslations("liLI", function() return Return_liLI() end)
 Locale:RegisterTranslations("roRO", function() return Return_roRO() end)
@@ -156,7 +155,6 @@ Strings:RegisterTranslations("deDE", function() return ReturnStrings_deDE() end)
 Strings:RegisterTranslations("frFR", function() return ReturnStrings_frFR() end)
 Strings:RegisterTranslations("itIT", function() return ReturnStrings_itIT() end)
 Strings:RegisterTranslations("fiFI", function() return ReturnStrings_fiFI() end)
-Strings:RegisterTranslations("plPL", function() return ReturnStrings_plPL() end)
 Strings:RegisterTranslations("svSV", function() return ReturnStrings_svSV() end)
 Strings:RegisterTranslations("liLI", function() return ReturnStrings_liLI() end)
 Strings:RegisterTranslations("roRO", function() return ReturnStrings_roRO() end)
@@ -2069,7 +2067,6 @@ function MangAdmin:InitDropDowns()
       {"Hungarian","huHU"},
       {"Italian","itIT"},
       {"Lithuanian","liLI"},
-      {"Polish","plPL"},
       {"Portuguese","ptPT"},
       {"Romanian","roRO"},
       {"Russian","ruRU"},

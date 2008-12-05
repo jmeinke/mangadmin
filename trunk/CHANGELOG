@@ -20,6 +20,16 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 168:
+  * [UPDATE] Misc changes to Teleport lists(again)
+  * [UPDATE] temp fix for the plPL eror in MangAdmin.lua
+
+Deleted the following
+line 141 Locale:RegisterTranslations("plPL", function() return Return_plPL() end)
+line 159 Strings:RegisterTranslations("plPL", function() return ReturnStrings_plPL() end) 
+line 2072 {"Polish","plPL"},
+
+
 Rev. 127:
   * Note: Jump in revision numbers is due to svn assigning the next number to a commit, 
     regardless if it is in trunk or in a branch. This revision follows r119.
