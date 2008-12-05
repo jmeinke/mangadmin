@@ -540,22 +540,6 @@ elseif cont == "K" then
       ["Wildwind Peak"] = ".go -3771.735107 -11438.273438 319.723480 530",
       ["Wrathscale Point"] = ".go -4886.84 -11846.2 18.5994 530",
     },
-    ["Barrens"] = {
-      ["Bael Modan"] = ".go -4095.7 -2305.74 124.914 1",
-      ["Camp Taurajo"] = ".go -2388.95 -1918.82 96.7422 1",
-      ["Field of Giants"] = ".go -3120.86 -2327.89 93.1243 1",
-      ["Fray Island"] = ".go -1679.300049 -4328.959961 2.585910 1",
-      ["Lushwater Oasis"] = ".go -964.776 -2039.74 81.3491 1",
-      ["Northwatch Hold"] = ".go -1986.584106 -3688.249756 18.316187 1",
-      ["Ratchet"] = ".go -943.935 -3715.49 11.8385 1",
-      ["Razorfen Downs Entrance"] = ".go -4319.38 -2110.38 80.8662 1",
-      ["The Crossroads"] = ".go -456.263 -2652.7 95.615 1",
-      ["The Forgotten Pools"] = ".go 90.100304 -1943.439941 79.472702 1",
-      ["The Great Lift"] = ".go -4619.15 -1850.91 86.0563 1",
-      ["The Merchant Cost"] = ".go -1719.08 -3824.99 12.0836 1",
-      ["The Sludge Fen"] = ".go 1059.54 -3003.53 91.6441 1",
-      ["The Stagnant Oasis"] = ".go -1330.17 -3120.07 91.6667 1",
-    },
     ["Bloodmyst Isle"] = {
       ["Amberweb Pass"] = ".go -1631.36 -10671.5 143.441 530",
       ["Axxarien"] = ".go -1504.03 -11406.3 67.8893 530",
@@ -786,6 +770,22 @@ elseif cont == "K" then
       ["Starbreeze Village"] = ".go 9881.339844 448.189240 1302.783569 1",
       ["The Oracle Glade"] = ".go 10661.183594 1875.747314 1323.455933 1",
       ["Wellspring Lake"] = ".go 10376.837891 1625.690552 1288.906250 1",
+    },
+	["The Barrens"] = {
+      ["Bael Modan"] = ".go -4095.7 -2305.74 124.914 1",
+      ["Camp Taurajo"] = ".go -2388.95 -1918.82 96.7422 1",
+      ["Field of Giants"] = ".go -3120.86 -2327.89 93.1243 1",
+      ["Fray Island"] = ".go -1679.300049 -4328.959961 2.585910 1",
+      ["Lushwater Oasis"] = ".go -964.776 -2039.74 81.3491 1",
+      ["Northwatch Hold"] = ".go -1986.584106 -3688.249756 18.316187 1",
+      ["Ratchet"] = ".go -943.935 -3715.49 11.8385 1",
+      ["Razorfen Downs Entrance"] = ".go -4319.38 -2110.38 80.8662 1",
+      ["The Crossroads"] = ".go -456.263 -2652.7 95.615 1",
+      ["The Forgotten Pools"] = ".go 90.100304 -1943.439941 79.472702 1",
+      ["The Great Lift"] = ".go -4619.15 -1850.91 86.0563 1",
+      ["The Merchant Cost"] = ".go -1719.08 -3824.99 12.0836 1",
+      ["The Sludge Fen"] = ".go 1059.54 -3003.53 91.6441 1",
+      ["The Stagnant Oasis"] = ".go -1330.17 -3120.07 91.6667 1",
     },
     ["The Exodar"] = {
       ["Seat of the Naaru"] = ".go -3826.68 -11686.9 -107.044 530",
@@ -1172,6 +1172,75 @@ elseif cont == "BG" then
   }
 elseif cont == "I_EK" then
   return {
+    ["Blackrock Depths"] = {
+      ["Blackrock Depths"] = ".go 459.455994 27.085884 -70.655228 230",
+	},
+	["Blackrock Spire - Upper"] = {
+	  ["Blackrock Spire - Upper"] = ".go 79.99 -233.34 52.02 229",
+	},
+	["Blackwing Lair"] = {
+      ["Blackwing Lair"] = ".go -7653.554688 -1093.969116 404.183105 469",
+	 },
+	["The Deadmines"] = {
+      ["The Deadmines"] = ".go -16.40 -383.07 61.78 36",
+	},
+	  ["Gnomeregan"] = {
+	  ["Gnomeregan"] = ".go -337.437408 -0.258742 -152.845917 90",
+      ["Gnomeregan Train Depot"] = ".go -4858.270020 756.434875 244.922714 0",
+	},
+	["Karazhan"] = {
+	  ["Karazhan"] = ".go -11109.36 -2002.97 49.9 532",
+	  ["Karazhan Netherspace Tower"] = ".go -10844.8 -2271.81 424.578 532",
+    },
+	["Magisters' Terrace"] = {
+	  ["Magisters' Terrace - Outside"] = ".go 12885.49 -7311.92 65.52 530",
+    },
+	["Molten Core"] = {
+      ["The Molten Core"] = ".go 1071.902954 -488.489014 -108.219124 409",
+	},
+  	["Naxxramas"] = {
+	  ["Naxxramas"] = ".go 3005.870 -3435.010 293.882 533",
+      ["Naxxramas - Sapphiron's Lair"] = ".go 3498.270 -5349.450 144.968 533",
+	},
+	["Scholomance"] = {
+	  ["Scholomance"] = ".go 199.427017 126.463890 134.911682 289",
+	},
+	["Shadowfang Keep"] = {
+	  ["Shadowfang Keep"] = ".go -228.19 2110.56 76.89 33",
+	},
+	["Scarlet Monastery Armory"] = {
+	  ["Scarlet Monastery Armory"] = ".go 1608.380005 -320.500000 18.670000 189",
+	},
+	["Scarlet Monastery Cathedral"] = {
+      ["Scarlet Monastery Cathedral"] = ".go 855.109985 1320.760010 18.670000 189",
+	},
+	["Scarlet Monastery Graveyard"] = {
+      ["Scarlet Monastery Graveyard"] = ".go 1688.57 1052.42 18.68 189",
+	},
+	["Scarlet Monastery Library"] = {
+      ["Scarlet Monastery Library"] = ".go 254.989990 -206.820007 18.677361 189",
+	},
+	["The Stockade"] = {
+	  ["Stormwind Stockade"] = ".go 49.821239 0.870144 -16.713627 34",
+	},
+	["Stratholme"] = {
+	  ["Stratholme"] = ".go 3593.15 -3646.56 138.50 329",
+    },
+	["Temple of Atal'Hakkar"] = {
+	  ["Temple of Atal'Hakkar"] = ".go -314.229004 99.879997 -131.848694 109",
+	},
+	["Sunwell Plateau"] = {
+	  ["Sunwell Plateau - Outside"] = ".go 12593.9 -6776.8 14.64 530",
+	},
+	["Uldaman"] = {
+	  ["Uldaman"] = ".go -228.192993 46.160198 -46.018631 70",
+	},
+	["Zul'Aman"] = {
+	  ["Zul'Aman"] = ".go 120 1772 43.441681 568",
+	},
+	["Zul'Gurub"] = {
+	  ["Zul'Gurub"] = ".go -11916.095703 -1239.402832 92.287262 309",
+	},
   }
 elseif cont == "I_K" then
   return {
@@ -1190,10 +1259,69 @@ elseif cont == "I_K" then
       ["The Black Morass - Dark Portal"] = ".go -2033.498413 7120.973633 22.664389 269",
       ["The Black Morass - Entrance"] = ".go -8732.529297 -4220.262695 -209.499771 1",
     },
-
-  }
+    ["Blackfathom Deeps"] = {
+	  ["Blackfathom Deeps"] = ".go -152.983551 106.329994 -40.095310 48",
+	  },
+    ["Dire Maul East"] = {
+	  ["Dire Maul East"] = ".go 47.629997 -155.270004 -2.714379 429",
+	  },
+    ["Dire Maul North"] = {
+      ["Dire Maul North"] = ".go 254.588248 -24.739523 -2.560616 429",
+	  },
+    ["Dire Maul West"] = {
+      ["Dire Maul West"] = ".go 34.35 160.70 -3.47 429",
+	  },
+	["Maraudon"] = {
+	  ["Maraudon"] = ".go 1019.69 -458.31 -43.43 349",
+	  },
+    ["Onyxia's Lair"] = {
+	  ["Onyxia's Lair"] = ".go 29.454847 -68.960884 -6.984023 249",
+	  },
+    ["Ragefire Chasm"] = {
+      ["Ragefire Chasm"] = ".go 1.784903 -14.368461 -17.553291 389",
+	},
+    ["Razorfen Downs "] = {
+	  ["Razorfen Downs "] = ".go 2591.989502 1101.246460 51.859333 129",
+	  },
+	["Razorfen Kraul"] = {
+	  ["Razorfen Kraul"] = ".go 1941.789551 1543.693604 81.661453 47",
+	  },
+	["Ahn'Qiraj"] = {
+	  ["Temple of Ahn'Qiraj"] = ".go -8231.330078 2010.599976 129.330505 531",
+	  ["The Ruins of Ahn'Qiraj"] = ".go -8429.743164 1512.136475 31.907234 509",
+	  },
+	["Wailing Caverns"] = {
+	  ["Wailing Caverns"] = ".go -160.004120 131.63653 -74.079254 43",
+	  },
+	  ["Zul'Farrak"] = {
+	  ["Zul'Farrak"] = ".go 1221.820557 840.745728 8.976474 209",
+	  },
+	  }
 elseif cont == "I_O" then
   return {
+      ["Instances BC"] = {
+      ["Auchindoun - Auchenai Crypts"] = ".go 0 0 0 558",
+      ["Auchindoun - Mana-Tombs"] = ".go 0.013477 0.930826 -0.954333 557",
+      ["Auchindoun - Sethekk Halls"] = ".go 0 0 0.006213 556",
+      ["Auchindoun - Shadow Labyrinth"] = ".go 0 0 -1.12795 555",
+      ["Azshara Crater Alliance Entrance"] = ".go 1064.89 -16.6092 317.148 37",
+      ["Azshara Crater Horde Entrance"] = ".go -124.097 856.033 298.296 37",
+      ["The Black Temple - Entrance"] = ".go 97.688789 1002.600830 -86.826843 564",
+      ["The Black Temple - Door to Illidan"] = ".go 756.352966 306.667480 312.207428 564",
+      ["Coilfang Reservoir - Serpentshrine Cavern"] = ".go 42.980713 -27.924601 -70.534996 548",
+      ["Coilfang Reservoir - The Slave Pens"] = ".go 0 0 -1.09796 547",
+      ["Coilfang Reservoir - The Steamvault"] = ".go 0 0 -4.19087 545",
+      ["Coilfang Reservoir - The Underbog"] = ".go 0 0 -2.75242 546",
+      ["Gruul's Lair"] = ".go 65.5905 41.0931 -4.77545 565",
+      ["Hellfire Citadel - Hellfire Ramparts"] = ".go -1348.61 1651.06 68.8195 543",
+      ["Hellfire Citadel - Magtheridon's Lair"] = ".go 188.158 25.3929 67.933 544",
+      ["Hellfire Citadel - The Blood Furnace"] = ".go -3.41257 2.00423 -44.2242 542",
+      ["Hellfire Citadel - The Shattered Halls"] = ".go -0.509273 3.83735 -13.1962 540",
+      ["Tempest Keep - The Arcatraz"] = ".go 0 0 -0.205504 552",
+      ["Tempest Keep - The Botanica"] = ".go 0 0 -1.59128 553",
+      ["Tempest Keep - The Eye"] = ".go 0 0 -2.42833 550",
+      ["Tempest Keep - The Mechanaar"] = ".go 0 0 -1.81282 554",
+  },
   }
 elseif cont == "J" then
   return {
@@ -1236,69 +1364,8 @@ elseif cont == "Ot" then
       ["Wetlands Hidden spot"] = ".go -3857 -3485 579.640198 0",
       ["Zul'Gurub - Alter of storms"] = ".go -12029 -2584 -29 309",
       ["Zul'Gurub Stranglethorn Vale"] = ".go -12332.519531 -1859.805664 130.321091 0",
-    },
-    ["Instances"] = {
-      ["Ahn'Qiraj"] = ".go -8231.330078 2010.599976 129.330505 531",
-      ["Blackfathom Deeps"] = ".go -152.983551 106.329994 -40.095310 48",
-      ["Blackrock Depths"] = ".go 459.455994 27.085884 -70.655228 230",
-      ["Blackrock Spire"] = ".go 79.99 -233.34 52.02 229",
-      ["Blackwing Lair"] = ".go -7653.554688 -1093.969116 404.183105 469",
-      ["Dire Maul East"] = ".go 47.629997 -155.270004 -2.714379 429",
-      ["Dire Maul North"] = ".go 254.588248 -24.739523 -2.560616 429",
-      ["Dire Maul West"] = ".go 34.35 160.70 -3.47 429",
-      ["Gnomeregan"] = ".go -337.437408 -0.258742 -152.845917 90",
-      ["Gnomeregan Train Depot"] = ".go -4858.270020 756.434875 244.922714 0",
-      ["Maraudon"] = ".go 1019.69 -458.31 -43.43 349",
-      ["Naxxramas"] = ".go 3005.870 -3435.010 293.882 533",
-      ["Naxxramas - Sapphiron's Lair"] = ".go 3498.270 -5349.450 144.968 533",
-      ["Onyxia's Lair"] = ".go 29.454847 -68.960884 -6.984023 249",
-      ["Ragefire Chasm"] = ".go 1.784903 -14.368461 -17.553291 389",
-      ["Razorfen Downs "] = ".go 2591.989502 1101.246460 51.859333 129",
-      ["Razorfen Kraul"] = ".go 1941.789551 1543.693604 81.661453 47",
-      ["Ruins of Ahn'Qiraj"] = ".go -8429.743164 1512.136475 31.907234 509",
-      ["Scarlet Monastery Armory"] = ".go 1608.380005 -320.500000 18.670000 189",
-      ["Scarlet Monastery Cathedral"] = ".go 855.109985 1320.760010 18.670000 189",
-      ["Scarlet Monastery Graveyard"] = ".go 1688.57 1052.42 18.68 189",
-      ["Scarlet Monastery Library"] = ".go 254.989990 -206.820007 18.677361 189",
-      ["Scholomance"] = ".go 199.427017 126.463890 134.911682 289",
-      ["Shadowfang Keep"] = ".go -228.19 2110.56 76.89 33",
-      ["Stormwind Stockade"] = ".go 49.821239 0.870144 -16.713627 34",
-      ["Stormwind Vault"] = ".go -0.91 40.57 -24.23 35",
-      ["Stratholme"] = ".go 3593.15 -3646.56 138.50 329",
-      ["Temple of Atal'Hakkar"] = ".go -314.229004 99.879997 -131.848694 109",
-      ["The Deadmines"] = ".go -16.40 -383.07 61.78 36",
-      ["The Molten Core"] = ".go 1071.902954 -488.489014 -108.219124 409",
-      ["Uldaman"] = ".go -228.192993 46.160198 -46.018631 70",
-      ["The Wailing Caverns"] = ".go -160.004120 131.63653 -74.079254 43",
-      ["Zul'Farrak"] = ".go 1221.820557 840.745728 8.976474 209",
-      ["Zul'Gurub"] = ".go -11916.095703 -1239.402832 92.287262 309",
-    },
-    ["Instances BC"] = {
-      ["Auchindoun - Auchenai Crypts"] = ".go 0 0 0 558",
-      ["Auchindoun - Mana-Tombs"] = ".go 0.013477 0.930826 -0.954333 557",
-      ["Auchindoun - Sethekk Halls"] = ".go 0 0 0.006213 556",
-      ["Auchindoun - Shadow Labyrinth"] = ".go 0 0 -1.12795 555",
-      ["Azshara Crater Alliance Entrance"] = ".go 1064.89 -16.6092 317.148 37",
-      ["Azshara Crater Horde Entrance"] = ".go -124.097 856.033 298.296 37",
-      ["The Black Temple - Entrance"] = ".go 97.688789 1002.600830 -86.826843 564",
-      ["The Black Temple - Door to Illidan"] = ".go 756.352966 306.667480 312.207428 564",
-      ["Coilfang Reservoir - Serpentshrine Cavern"] = ".go 42.980713 -27.924601 -70.534996 548",
-      ["Coilfang Reservoir - The Slave Pens"] = ".go 0 0 -1.09796 547",
-      ["Coilfang Reservoir - The Steamvault"] = ".go 0 0 -4.19087 545",
-      ["Coilfang Reservoir - The Underbog"] = ".go 0 0 -2.75242 546",
-      ["Gruul's Lair"] = ".go 65.5905 41.0931 -4.77545 565",
-      ["Hellfire Citadel - Hellfire Ramparts"] = ".go -1348.61 1651.06 68.8195 543",
-      ["Hellfire Citadel - Magtheridon's Lair"] = ".go 188.158 25.3929 67.933 544",
-      ["Hellfire Citadel - The Blood Furnace"] = ".go -3.41257 2.00423 -44.2242 542",
-      ["Hellfire Citadel - The Shattered Halls"] = ".go -0.509273 3.83735 -13.1962 540",
-      ["Karazhan"] = ".go -11109.36 -2002.97 49.9 532",
-      ["Karazhan Netherspace Tower"] = ".go -10844.8 -2271.81 424.578 532",      
-      ["Tempest Keep - The Arcatraz"] = ".go 0 0 -0.205504 552",
-      ["Tempest Keep - The Botanica"] = ".go 0 0 -1.59128 553",
-      ["Tempest Keep - The Eye"] = ".go 0 0 -2.42833 550",
-      ["Tempest Keep - The Mechanaar"] = ".go 0 0 -1.81282 554",
-      ["Zul'Aman"] = ".go 120 1772 43.441681 568",
-    },
+      },
+
     ["Unfinished Regions"] = {
       ["Behind The Greymane Wall"] = ".go -987.449 1585.69 53.4298 0",
       ["Dalaran Inside the Dome"] = ".go 258 351 41.9076 0",
