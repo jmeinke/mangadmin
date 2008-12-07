@@ -20,6 +20,10 @@
 ************************************************************************************************************/
 
 =CHANGELOG= 
+Rev. 169:
+  * Added 166 new locations for both Kalimdor and Eastern Kingdom Instances to teleportTable.lua
+    Please check teleport_changelog for information on the changed.
+
 Rev. 168:
   * [UPDATE] Misc changes to Teleport lists(again)
   * [UPDATE] temp fix for the plPL eror in MangAdmin.lua
